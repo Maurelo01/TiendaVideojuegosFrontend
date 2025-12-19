@@ -1,4 +1,4 @@
-import { Usuario } from "./usuario.model";
+import { Usuario } from "./usuario";
 
 export interface UsuarioGamer extends Usuario 
 {
