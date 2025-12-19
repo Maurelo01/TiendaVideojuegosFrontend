@@ -1,0 +1,53 @@
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card tarjeta-nordica p-4">
+                <div class="card-body">
+                    <h2 class="texto-nordico text-center fw-bold mb-4">Publicar un Videojuego Nuevo</h2>
+                    <div *ngIf="mensajeError" class="alert alert-danger">{{ mensajeError }}</div>
+                    <div *ngIf="mensajeExito" class="alert alert-success">{{ mensajeExito }}</div>
+                    <form (ngSubmit)="onSubmit()">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold small text-secondary">Titutlo del juego</label>
+                                <input type="text" class="form-control rounded-3" [(ngModel)]="juego.titulo" name="titulo" required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Precio</label>
+                                <input type="number" class="form-control rounded-3" [(ngModel)]="juego.precio" name="precio" required min="0">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold small text-secondary">Descripción</label>
+                            <textarea class="form-control rounded-3" rows="3" [(ngModel)]="juego.descripcion" name="descripcion" required></textarea>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <label class="form-label fw-bold small text-secondary">Requisitos Minimos</label>
+                                <input type="text" class="form-control rounded-3" [(ngModel)]="juego.recursosMinimos" name="recursos" placeholder="Ej: 8GB RAM, i5..." required>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold small text-secondary">Clasificación</label>
+                                <select class="form-select rounded-3" [(ngModel)]="juego.clasificacionEdad" name="clasificacion">
+                                    <option value="E">E (Todos)</option>
+                                    <option value="T">T (Adolescentes)</option>
+                                    <option value="M">M (Maduros 17+)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold small text-secondary">Portada</label>
+                            <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*" required>
+                            <div *ngIf="imagenPrevisualizacion" class="mt-3 text-center">
+                                <img [src]="imagenPrevisualizacion" class="img-fluid rounded-3 shadow-sm" style="max-height: 200px;">
+                            </div>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn boton-nordico rounded-3">Publicar Juego</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
