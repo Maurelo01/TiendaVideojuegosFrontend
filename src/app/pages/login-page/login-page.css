@@ -1,0 +1,45 @@
+.contenedor-login 
+{
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tarjeta-nordica 
+{
+    background-color: white;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.boton-nordico 
+{
+    background-color: var(--azul-nordico);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el mouse por encima del botón */
+.boton-nordico:hover 
+{
+    background-color: var(--azul-nordico-claro); 
+    transform: translateY(-2px);
+}
+
+.form-control 
+{
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+}
+
+.form-control:focus 
+{
+    box-shadow: none;
+    border-color: var(--azul-nordico-claro);
+}

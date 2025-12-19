@@ -1,1 +1,52 @@
-<p>login-page works!</p>
+<div class="contenedor-login">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4">
+                <div class="card tarjeta-nordica p-4">
+                    <div class="card-body">
+                        <div class="text-center mb-4">
+                            <h2 class="texto-nordico fw-bold">Bienvenido</h2>
+                            <p class="text-muted small">Inicia sesion para continuar</p>
+                        </div>
+                        <div *ngIf="error" class="alert alert-danger text-center p-2 mb-3 shadow-sm rounded-3 border-0">
+                            <small>{{ error }}</small>
+                        </div>
+                        <form (ngSubmit)="onLogin()">
+                            <div class="mb-3">
+                                <label for="correo" class="form-label text-secondary fw-bold small">Correo Electronico</label>
+                                <input type="email" 
+                                       id="correo" 
+                                       class="form-control rounded-3" 
+                                       [(ngModel)]="correo" 
+                                       name="correo" 
+                                       placeholder="nombre@ejemplo.com"
+                                       required>
+                            </div>
+                            <div class="mb-4">
+                                <label for="contrasena" class="form-label text-secondary fw-bold small">Contraseña</label>
+                                <input type="contrasena" 
+                                       id="contrasena" 
+                                       class="form-control rounded-3" 
+                                       [(ngModel)]="contrasena" 
+                                       name="contrasena" 
+                                       placeholder="••••••••"
+                                       required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn boton-nordico rounded-3">
+                                    Iniciar Sesión
+                                </button>
+                            </div>
+
+                        </form>
+
+                        <div class="text-center mt-4">
+                            <p class="small text-muted mb-0">¿No tienes cuenta?</p>
+                            <a href="/registro" class="texto-nordico text-decoration-none fw-bold">Crea una cuenta</a>
+                        </div>
+                    </div>
+                </div>
+                </div>
+        </div>
+    </div>
+</div>

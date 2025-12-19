@@ -1,1 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+:root 
+{
+    --azul-nordico: #2c3e50;
+    --azul-nordico-claro: #3498db;
+    --gris-nordico: #ecf0f1;
+    --texto-gris: #7f8c8d;
+}
+
+body, html 
+{
+    height: 100%;
+    background-color: var(--gris-nordico);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.texto-nordico 
+{
+    color: var(--azul-nordico);
+}
