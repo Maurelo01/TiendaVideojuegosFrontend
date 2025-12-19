@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
-import { UsuarioGamer } from '../../../models/usuario-gamer.model';
+import { UsuarioGamer } from '../../../models/usuario-gamer';
 
 @Component({
   selector: 'app-registro-page',
