@@ -20,7 +20,6 @@ export class Videojuegos
 
   publicarJuego(juego: Videojuego): Observable<any> 
   {
-    // Ajusta la URL si tu endpoint es diferente, ej: /api/videojuegos/publicar o solo /api/videojuegos
     return this.http.post(`${this.API_URL}`, juego, this.httpOptions);
   }
 

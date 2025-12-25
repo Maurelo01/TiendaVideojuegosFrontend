@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { Videojuegos } from '../../videojuegoServices/videojuegos';
 import { Videojuego } from '../../../models/videojuego';
 import { AuthService } from '../../../services/auth.service';
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.css']
 })
@@ -17,6 +18,7 @@ export class HomePage implements OnInit
   juegos: Videojuego[] = [];
   cargando: boolean = true;
   usuarioNombre: string | null = null;
+  esEmpresa: boolean = false;
 
   constructor
   (
@@ -31,6 +33,7 @@ export class HomePage implements OnInit
     if (usuario) 
     {
       this.usuarioNombre = (usuario as any).nickname || usuario.correo;
+      this.esEmpresa = usuario.rol === 'EMPRESA';
     }
     this.cargarCatalogo();
   }

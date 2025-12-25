@@ -1,9 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
     <div class="container">
         <a class="navbar-brand fw-bold" href="#">Tienda de Videojuegos</a>
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-center gap-3">
             <span *ngIf="usuarioNombre" class="text-light me-3">Bienvenido a la tienda, {{ usuarioNombre }}</span>
-            <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()">Salir</button>
+            <button *ngIf="esEmpresa" class="btn btn-success btn-sm fw-bold" routerLink="/publicar"> + Publicar Juego </button>
+            <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
         </div>
     </div>
 </nav>
