@@ -5,4 +5,5 @@ export interface Usuario
     contraseña: string;
     rol: string; // 'ADMIN', 'EMPRESA', 'GAMER'
     fechaRegistro?: string;
+    idEmpresa?: number;
 }
