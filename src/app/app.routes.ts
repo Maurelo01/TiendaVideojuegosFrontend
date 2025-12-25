@@ -10,5 +10,4 @@ export const routes: Routes = [
     { path: 'home', component: HomePage },
     { path: 'publicar', component: PublicarJuegoComponent },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
-    { path: 'home', component: LoginPage }
 ];

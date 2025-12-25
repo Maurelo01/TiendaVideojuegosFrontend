@@ -42,7 +42,7 @@ export class PublicarJuegoComponent
     const usuario = this.authService.obtenerUsuarioActual();
     if (usuario && usuario.rol === 'EMPRESA') 
     {
-      this.juego.idEmpresa = usuario.idUsuario || 0; 
+      this.juego.idEmpresa = usuario.idEmpresa || 0; 
     }
     else 
     {

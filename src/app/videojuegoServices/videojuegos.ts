@@ -20,7 +20,7 @@ export class Videojuegos
 
   publicarJuego(juego: Videojuego): Observable<any> 
   {
-    return this.http.post(`${this.API_URL}`, juego, this.httpOptions);
+    return this.http.post(`${this.API_URL}`, juego, { ...this.httpOptions, responseType: 'text'});
   }
 
   obtenerJuegos(): Observable<Videojuego[]> 

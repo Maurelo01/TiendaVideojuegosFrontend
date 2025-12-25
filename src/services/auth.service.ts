@@ -42,7 +42,6 @@ export class AuthService
   logout(): void 
   {
     sessionStorage.removeItem('usuario_actual');
-    window.location.reload(); 
   }
 
   estaLogueado(): boolean 
