@@ -15,7 +15,8 @@ import { Videojuego } from '../../../models/videojuego';
 })
 export class PublicarJuegoComponent 
 {
-  juego: Videojuego = {
+  juego: Videojuego = 
+  {
     idJuego: 0,
     idEmpresa: 0,
     titulo: '',
@@ -26,7 +27,6 @@ export class PublicarJuegoComponent
     estado: 'ACTIVO',
     imagen: ''
   };
-
 
   mensajeError: string = '';
   mensajeExito: string = '';
@@ -66,7 +66,7 @@ export class PublicarJuegoComponent
     }
   }
 
-  onSubmit(): void 
+  onSubmit(): void
   {
     this.videojuegos.publicarJuego(this.juego).subscribe
     (
