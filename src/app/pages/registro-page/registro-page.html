@@ -9,51 +9,51 @@
                             <p class="text-muted small">Bienvenido a la comunidad</p>
                         </div>
                         <div *ngIf="error" class="alert alert-danger text-center shadow-sm border-0">{{ error }}</div>
-                        <div *ngIf="success" class="alert alert-success text-center shadow-sm border-0">{{ success }}</div>
+                        <div *ngIf="success" class="alert alert-success text-center shadow-sm border-0">{{ success }}
+                        </div>
                         <form (ngSubmit)="onRegistro()" #registroForm="ngForm">
                             <h6 class="texto-nordico border-bottom pb-2 mb-3">Datos de Acceso</h6>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-secondary small fw-bold">Nickname</label>
-                                    <input type="text" class="form-control rounded-3" [(ngModel)]="gamer.nickname" name="nickname" required>
+                                    <input type="text" class="form-control rounded-3" [(ngModel)]="gamer.nickname"
+                                        name="nickname" required>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-secondary small fw-bold">Correo</label>
-                                    <input type="email" class="form-control rounded-3" [(ngModel)]="gamer.correo" name="correo" required>
+                                    <input type="email" class="form-control rounded-3" [(ngModel)]="gamer.correo"
+                                        name="correo" required>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-secondary small fw-bold">Contraseña</label>
-                                    <input type="password" 
-                                           class="form-control rounded-3" 
-                                           [(ngModel)]="contrasena" 
-                                           name="contrasena" 
-                                           required 
-                                           minlength="8">
+                                    <input type="password" class="form-control rounded-3" [(ngModel)]="contrasena"
+                                        name="contrasena" required minlength="8">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label text-secondary small fw-bold">Confirma tu Contraseña</label>
-                                    <input type="password" 
-                                           class="form-control rounded-3" 
-                                           [(ngModel)]="confirmarContrasena" 
-                                           name="confirmarContrasena" 
-                                           required>
+                                    <label class="form-label text-secondary small fw-bold">Confirma tu
+                                        Contraseña</label>
+                                    <input type="password" class="form-control rounded-3"
+                                        [(ngModel)]="confirmarContrasena" name="confirmarContrasena" required>
                                 </div>
                             </div>
                             <h6 class="texto-nordico border-bottom pb-2 mb-3 mt-2">Datos Personales</h6>
                             <div class="mb-3">
                                 <label class="form-label text-secondary small fw-bold">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control rounded-3" [(ngModel)]="gamer.fechaNacimiento" name="fechaNacimiento" required>
+                                <input type="date" class="form-control rounded-3" [(ngModel)]="gamer.fechaNacimiento"
+                                    name="fechaNacimiento" required>
                             </div>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-secondary small fw-bold">Teléfono</label>
-                                    <input type="text" class="form-control rounded-3" [(ngModel)]="gamer.telefono" name="telefono">
+                                    <input type="text" class="form-control rounded-3" [(ngModel)]="gamer.telefono"
+                                        name="telefono">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label text-secondary small fw-bold">País</label>
-                                    <select class="form-select rounded-3 form-control" [(ngModel)]="gamer.pais" name="pais" required>
+                                    <select class="form-select rounded-3 form-control" [(ngModel)]="gamer.pais"
+                                        name="pais" required>
                                         <option value="" disabled selected>Selecciona...</option>
                                         <option value="Guatemala">Guatemala</option>
                                         <option value="Afganistan">Afganistan</option>
@@ -65,7 +65,8 @@
                                 </div>
                             </div>
                             <div class="d-grid mt-4">
-                                <button type="submit" class="btn boton-nordico rounded-3" [disabled]="!registroForm.valid">
+                                <button type="submit" class="btn boton-nordico rounded-3"
+                                    [disabled]="!registroForm.valid">
                                     Registrarse
                                 </button>
                             </div>
