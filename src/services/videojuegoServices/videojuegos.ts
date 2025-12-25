@@ -12,7 +12,7 @@ export class Videojuegos
   private readonly API_URL = 'http://localhost:8080/TiendaVideojuegos/api/videojuegos';
 
   constructor(private http: HttpClient) { }
-  
+
   private httpOptions = 
   {
     headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -27,5 +27,4 @@ export class Videojuegos
   {
     return this.http.get<Videojuego[]>(this.API_URL);
   }
-
 }

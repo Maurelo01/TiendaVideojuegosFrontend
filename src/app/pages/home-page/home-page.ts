@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Videojuegos } from '../../videojuegoServices/videojuegos';
+import { Videojuegos } from '../../../services/videojuegoServices/videojuegos';
 import { Videojuego } from '../../../models/videojuego';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
@@ -19,6 +19,7 @@ export class HomePage implements OnInit
   cargando: boolean = true;
   usuarioNombre: string | null = null;
   esEmpresa: boolean = false;
+  esAdmin: boolean = false;
 
   constructor
   (
@@ -34,6 +35,7 @@ export class HomePage implements OnInit
     {
       this.usuarioNombre = (usuario as any).nickname || usuario.correo;
       this.esEmpresa = usuario.rol === 'EMPRESA';
+      this.esAdmin = usuario.rol === 'ADMIN';
     }
     this.cargarCatalogo();
   }

@@ -2,14 +2,15 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Videojuegos } from '../../videojuegoServices/videojuegos';
+import { RouterLink } from '@angular/router';
+import { Videojuegos } from '../../../services/videojuegoServices/videojuegos';
 import { AuthService } from '../../../services/auth.service';
 import { Videojuego } from '../../../models/videojuego';
 
 @Component({
   selector: 'app-publicar-juego',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './publicar-juego.html',
   styleUrls: ['./publicar-juego.css']
 })
