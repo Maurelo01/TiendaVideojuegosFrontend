@@ -42,4 +42,9 @@ export class VideojuegosService
   {
     return this.http.put(`${this.API_URL}/${idJuego}/activar`, {}, { responseType: 'text' });
   }
+
+  editarJuego(id: number, juego: Videojuego): Observable<any>
+  {
+    return this.http.put(`${this.API_URL}/${id}`, juego, { ...this.httpOptions, responseType: 'text' });
+  }
 }
