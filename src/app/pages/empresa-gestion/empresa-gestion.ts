@@ -28,6 +28,21 @@ export class EmpresaGestion implements OnInit
         contrasena: '',
         fechaNacimiento: ''
     };
+
+    modoEdicionJuego: boolean = false;
+    juegoEnEdicion: Videojuego =
+    {
+        idJuego: 0,
+        idEmpresa: 0,
+        titulo: '',
+        descripcion: '',
+        precio: 0,
+        recursosMinimos: '',
+        clasificacionEdad: 'E',
+        estado: '',
+        imagen: ''
+    };
+
     seccionActiva: 'juegos' | 'empleados' = 'juegos';
     mensaje: string = '';
     error: string = '';
@@ -47,9 +62,6 @@ export class EmpresaGestion implements OnInit
             this.idEmpresa = usuario.idEmpresa || 0;
             this.nombreUsuario = (usuario as any).nickname || usuario.correo;
             this.cargarDatos();
-        }
-        else
-        {
         }
     }
 
@@ -79,6 +91,63 @@ export class EmpresaGestion implements OnInit
                 error: (err) => console.error(err)
             }
         );
+    }
+
+    iniciarEdicion(juego: Videojuego)
+    {
+        this.juegoEnEdicion = { ...juego }; 
+        this.modoEdicionJuego = true;
+        this.seccionActiva = 'juegos';
+        setTimeout(() => 
+        {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 100);
+    }
+
+    cancelarEdicion()
+    {
+        this.modoEdicionJuego = false;
+        this.juegoEnEdicion = { idJuego: 0, idEmpresa: 0, titulo: '', descripcion: '', precio: 0, recursosMinimos: '', clasificacionEdad: 'E', estado: '', imagen: '' };
+    }
+
+    guardarEdicionJuego() 
+    {
+        if (!this.juegoEnEdicion.titulo || !this.juegoEnEdicion.descripcion || this.juegoEnEdicion.precio < 0)
+        {
+            this.mostrarError('Por favor verifica los campos obligatorios.');
+            return;
+        }
+
+        this.videojuegosService.editarJuego(this.juegoEnEdicion.idJuego, this.juegoEnEdicion).subscribe
+        (
+            {
+                next: (resp) => 
+                {
+                    this.mostrarMensaje('Juego actualizado exitosamente.');
+                    this.modoEdicionJuego = false;
+                    this.cargarJuegos();
+                },
+                error: (err) => 
+                {
+                    this.mostrarError('Error al actualizar: ' + (err.error || err.message));
+                }
+            }
+        );
+    }
+
+    onFileSelected(event: any): void 
+    {
+        const archivo = event.target.files[0];
+        if (archivo) 
+        {
+            const reader = new FileReader();
+            reader.onload = () => 
+            {
+                const base64String = reader.result as string;
+                this.juegoEnEdicion.imagen = base64String.split(',')[1];
+            };
+            reader.readAsDataURL(archivo);
+        }
     }
 
     cambiarEstadoJuego(juego: Videojuego) 
@@ -166,12 +235,12 @@ export class EmpresaGestion implements OnInit
     mostrarMensaje(msg: string)
     {
         this.mensaje = msg;
-        setTimeout(() => this.mensaje = '', 3000);
+        setTimeout(() => this.mensaje = '', 5000);
     }
 
     mostrarError(msg: string)
     {
         this.error = msg;
-        setTimeout(() => this.error = '', 5000);
+        setTimeout(() => this.error = '', 10000);
     }
 }

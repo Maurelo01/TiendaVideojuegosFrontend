@@ -32,7 +32,59 @@
         <div class="d-flex justify-content-end mb-3">
             <button class="btn btn-success" routerLink="/publicar"> + Publicar Nuevo Juego </button>
         </div>
+        <div *ngIf="modoEdicionJuego" class="card shadow-sm mb-4 border-warning">
+            <div class="card-header bg-warning-subtle fw-bold text-dark">
+                <i class="bi bi-pencil-square"></i> Editando: {{ juegoEnEdicion.titulo }}
+            </div>
+            <div class="card-body">
+                <form (ngSubmit)="guardarEdicionJuego()">
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small">Título</label>
+                            <input type="text" class="form-control" [(ngModel)]="juegoEnEdicion.titulo"
+                                name="editTitulo" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Precio</label>
+                            <input type="number" class="form-control" [(ngModel)]="juegoEnEdicion.precio"
+                                name="editPrecio" required min="0">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label small">Clasificación</label>
+                            <select class="form-select" [(ngModel)]="juegoEnEdicion.clasificacionEdad"
+                                name="editClasif">
+                                <option value="E">E (Todos)</option>
+                                <option value="T">T (Adolescentes)</option>
+                                <option value="M">M (Maduros)</option>
+                            </select>
+                        </div>
+                    </div>
 
+                    <div class="mb-3">
+                        <label class="form-label small">Descripción</label>
+                        <textarea class="form-control" rows="3" [(ngModel)]="juegoEnEdicion.descripcion" name="editDesc"
+                            required></textarea>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label small">Recursos Mínimos</label>
+                            <input type="text" class="form-control" [(ngModel)]="juegoEnEdicion.recursosMinimos"
+                                name="editRecursos">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label small">Actualizar Imagen (Opcional)</label>
+                            <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
+                        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="table-responsive">
             <table class="table table-hover align-middle shadow-sm">
                 <thead class="table-dark">
@@ -54,7 +106,7 @@
                             </span>
                         </td>
                         <td class="text-end">
-                            <button class="btn btn-sm btn-outline-primary me-2">Editar</button>
+                            <button class="btn btn-sm btn-outline-primary me-2" (click)="iniciarEdicion(juego)">Editar</button>
 
                             <button *ngIf="juego.estado === 'ACTIVO'" class="btn btn-sm btn-outline-danger"
                                 (click)="cambiarEstadoJuego(juego)">
@@ -122,7 +174,8 @@
                         </div>
                         <div class="mb-2">
                             <label class="small">Contraseña</label>
-                            <input type="password" class="form-control form-control-sm" [(ngModel)]="nuevoEmpleado.contrasena" name="pass" required>
+                            <input type="password" class="form-control form-control-sm"
+                                [(ngModel)]="nuevoEmpleado.contrasena" name="pass" required>
                         </div>
                         <div class="mb-3">
                             <label class="small">Fecha Nacimiento</label>
