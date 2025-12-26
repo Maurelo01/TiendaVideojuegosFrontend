@@ -41,7 +41,14 @@ export class LoginPage
       error: (err) => 
       {
         console.error('Error de login:', err);
-        this.error = 'Credenciales incorrectas o error de conexión.';
+        if (err.error) 
+        {
+            this.error = err.error; 
+        }
+        else 
+        {
+            this.error = 'Credenciales incorrectas o error de conexión.';
+        }
       }
     });
   }
