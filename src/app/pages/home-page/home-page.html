@@ -9,6 +9,8 @@
                 Gestionar Empresa </button>
             <button *ngIf="esAdmin" class="btn btn-info btn-sm fw-bold text-white" routerLink="/admin/categorias">
                 Configuracion de Categorías </button>
+            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
+                routerLink="/admin/empresas"> Gestionar Empresas </button>
             <button class="btn btn-outline-light btn-sm" routerLink="/mi-perfil"> Mi Perfil </button>
             <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
         </div>
