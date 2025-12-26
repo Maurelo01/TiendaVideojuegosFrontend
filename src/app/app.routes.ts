@@ -8,6 +8,7 @@ import { PublicarJuegoComponent } from './pages/publicar-juego/publicar-juego';
 import { PerfilGamerComponent } from './pages/perfil-gamer/perfil-gamer';
 import { PerfilEmpresaComponent } from './pages/perfil-empresa/perfil-empresa';
 import { AdminEmpresas } from './pages/admin-empresas/admin-empresas';
+import { AdminConfiguracion } from './pages/admin-configuracion/admin-configuracion';
 
 export const routes: Routes = [
     { path: 'login', component: LoginPage },
@@ -19,5 +20,6 @@ export const routes: Routes = [
     { path: 'mi-perfil', component: PerfilGamerComponent },
     { path: 'ver-empresa/:id', component: PerfilEmpresaComponent },
     { path: 'admin/empresas', component: AdminEmpresas },
+    { path: 'admin/config', component: AdminConfiguracion },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];
