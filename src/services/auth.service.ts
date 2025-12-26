@@ -48,4 +48,14 @@ export class AuthService
   {
     return this.obtenerUsuarioActual() !== null;
   }
+
+  actualizarSesion(datosNuevos: any): void 
+  {
+    const usuarioActual = this.obtenerUsuarioActual();
+    if (usuarioActual) 
+    {
+      const usuarioActualizado = { ...usuarioActual, ...datosNuevos };
+      this.guardarSesion(usuarioActualizado);
+    }
+  }
 }
