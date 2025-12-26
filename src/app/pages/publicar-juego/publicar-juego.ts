@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RouterLink } from '@angular/router';
-import { Videojuegos } from '../../../services/videojuegoServices/videojuegos';
+import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
 import { AuthService } from '../../../services/auth.service';
 import { Videojuego } from '../../../models/videojuego';
 
@@ -35,7 +35,7 @@ export class PublicarJuegoComponent
 
   constructor
   (
-    private videojuegos: Videojuegos, 
+    private videojuegosService: VideojuegosService, 
     private authService: AuthService,
     private router: Router
   ) 
@@ -69,7 +69,7 @@ export class PublicarJuegoComponent
 
   onSubmit(): void
   {
-    this.videojuegos.publicarJuego(this.juego).subscribe
+    this.videojuegosService.publicarJuego(this.juego).subscribe
     (
       {
         next: (resp) => 

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { Videojuegos } from '../../../services/videojuegoServices/videojuegos';
+import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
 import { Videojuego } from '../../../models/videojuego';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
@@ -23,7 +23,7 @@ export class HomePage implements OnInit
 
   constructor
   (
-    private videojuegos: Videojuegos,
+    private videojuegosService: VideojuegosService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -34,15 +34,27 @@ export class HomePage implements OnInit
     if (usuario) 
     {
       this.usuarioNombre = (usuario as any).nickname || usuario.correo;
-      this.esEmpresa = usuario.rol === 'EMPRESA';
-      this.esAdmin = usuario.rol === 'ADMIN';
+      if (usuario.rol === 'EMPRESA') 
+      {
+        this.usuarioNombre = `${usuario.nombreEmpleado} - ${usuario.nombreEmpresaAux}`;
+        this.esEmpresa = true;
+      }
+      else if (usuario.rol === 'ADMIN')
+      {
+        this.usuarioNombre = 'Administrador';
+        this.esAdmin = true;
+      }
+      else 
+      {
+        this.usuarioNombre = usuario.nickname || usuario.correo;
+      }
     }
     this.cargarCatalogo();
   }
 
   cargarCatalogo(): void 
   {
-    this.videojuegos.obtenerJuegos().subscribe
+    this.videojuegosService.obtenerJuegos().subscribe
     (
       {
         next: (data) => 

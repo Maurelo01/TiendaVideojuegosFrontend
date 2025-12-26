@@ -4,7 +4,9 @@
         <div class="d-flex align-items-center gap-3">
             <span *ngIf="usuarioNombre" class="text-light me-3">Bienvenido a la tienda, {{ usuarioNombre }}</span>
             <button *ngIf="esEmpresa" class="btn btn-success btn-sm fw-bold" routerLink="/publicar"> + Publicar Juego </button>
-            <button *ngIf="esAdmin" class="btn btn-info btn-sm fw-bold text-white" routerLink="/admin/categorias"> Configuracion de Categorías </button>
+            <button *ngIf="esEmpresa" class="btn btn-warning btn-sm fw-bold me-2" routerLink="/empresa/dashboard"> Gestionar Empresa </button>
+            <button *ngIf="esAdmin" class="btn btn-info btn-sm fw-bold text-white" routerLink="/admin/categorias">
+                Configuracion de Categorías </button>
             <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
         </div>
     </div>
