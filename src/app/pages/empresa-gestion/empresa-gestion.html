@@ -1,0 +1,139 @@
+<div class="container mt-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="texto-nordico m-0">Panel de Empresa</h2>
+            <p class="text-muted small m-0">Gestión de catálogo y personal</p>
+        </div>
+        <button class="btn btn-outline-secondary" routerLink="/home">
+            <i class="bi bi-arrow-left"></i> Volver al Inicio
+        </button>
+    </div>
+
+    <div *ngIf="mensaje" class="alert alert-success shadow-sm">{{ mensaje }}</div>
+    <div *ngIf="error" class="alert alert-danger shadow-sm">{{ error }}</div>
+
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link cursor-pointer" [class.active]="seccionActiva === 'juegos'"
+                (click)="seccionActiva = 'juegos'">
+                Mis Juegos
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link cursor-pointer" [class.active]="seccionActiva === 'empleados'"
+                (click)="seccionActiva = 'empleados'">
+                Gestión de Personal
+            </a>
+        </li>
+    </ul>
+
+    <div *ngIf="seccionActiva === 'juegos'">
+        <div class="d-flex justify-content-end mb-3">
+            <button class="btn btn-success" routerLink="/publicar"> + Publicar Nuevo Juego </button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-hover align-middle shadow-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Título</th>
+                        <th>Precio</th>
+                        <th>Estado</th>
+                        <th class="text-end">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let juego of misJuegos">
+                        <td>{{ juego.titulo }}</td>
+                        <td>${{ juego.precio }}</td>
+                        <td>
+                            <span class="badge" [class.bg-success]="juego.estado === 'ACTIVO'"
+                                [class.bg-warning]="juego.estado !== 'ACTIVO'">
+                                {{ juego.estado }}
+                            </span>
+                        </td>
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-outline-primary me-2">Editar</button>
+
+                            <button *ngIf="juego.estado === 'ACTIVO'" class="btn btn-sm btn-outline-danger"
+                                (click)="cambiarEstadoJuego(juego)">
+                                Suspender
+                            </button>
+
+                            <button *ngIf="juego.estado !== 'ACTIVO'" class="btn btn-sm btn-outline-success"
+                                (click)="cambiarEstadoJuego(juego)">
+                                Activar
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="misJuegos.length === 0">
+                        <td colspan="4" class="text-center py-4 text-muted">Aún no has publicado juegos.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div *ngIf="seccionActiva === 'empleados'" class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white fw-bold">Lista de Empleados</div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th class="text-end">Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let emp of empleados">
+                                <td>{{ emp.nombreEmpleado }}</td>
+                                <td>{{ emp.correo }}</td>
+                                <td class="text-end">
+                                    <button class="btn btn-sm btn-outline-danger"
+                                        (click)="eliminarEmpleado(emp.idUsuario)">
+                                        Eliminar
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-dark text-white">Agregar Nuevo Empleado</div>
+                <div class="card-body">
+                    <form (ngSubmit)="crearEmpleado()">
+                        <div class="mb-2">
+                            <label class="small">Nombre</label>
+                            <input type="text" class="form-control form-control-sm"
+                                [(ngModel)]="nuevoEmpleado.nombreEmpleado" name="nombre" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Correo</label>
+                            <input type="email" class="form-control form-control-sm" [(ngModel)]="nuevoEmpleado.correo"
+                                name="correo" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="small">Contraseña</label>
+                            <input type="password" class="form-control form-control-sm" [(ngModel)]="nuevoEmpleado.contrasena" name="pass" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="small">Fecha Nacimiento</label>
+                            <input type="date" class="form-control form-control-sm"
+                                [(ngModel)]="nuevoEmpleado.fechaNacimiento" name="fecha" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">Registrar Empleado</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

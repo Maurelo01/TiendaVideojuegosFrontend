@@ -7,7 +7,7 @@ import { Videojuego } from '../../models/videojuego';
 @Injectable({
   providedIn: 'root'
 })
-export class Videojuegos 
+export class VideojuegosService
 {
   private readonly API_URL = 'http://localhost:8080/TiendaVideojuegos/api/videojuegos';
 
@@ -26,5 +26,20 @@ export class Videojuegos
   obtenerJuegos(): Observable<Videojuego[]> 
   {
     return this.http.get<Videojuego[]>(this.API_URL);
+  }
+
+  obtenerPorEmpresa(idEmpresa: number): Observable<Videojuego[]> 
+  {
+    return this.http.get<Videojuego[]>(`${this.API_URL}/empresa/${idEmpresa}`);
+  }
+
+  suspenderJuego(idJuego: number): Observable<any> 
+  {
+    return this.http.put(`${this.API_URL}/${idJuego}/suspender`, {}, { responseType: 'text' });
+  }
+
+  activarJuego(idJuego: number): Observable<any> 
+  {
+    return this.http.put(`${this.API_URL}/${idJuego}/activar`, {}, { responseType: 'text' });
   }
 }
