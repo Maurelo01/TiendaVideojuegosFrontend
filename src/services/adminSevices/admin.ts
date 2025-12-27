@@ -83,4 +83,24 @@ export class AdminService
     {
         return this.http.put(`${this.API_URL}/config`, config, { ...this.httpOptions, responseType: 'text' });
     }
+
+    listarBanners(): Observable<any[]> 
+    {
+        return this.http.get<any[]>(`${this.API_URL}/banner`);
+    }
+
+    agregarBanner(banner: any): Observable<any> 
+    {
+        return this.http.post(`${this.API_URL}/banner`, banner, { ...this.httpOptions, responseType: 'text' });
+    }
+
+    editarBanner(banner: any): Observable<any> 
+    {
+        return this.http.put(`${this.API_URL}/banner`, banner, { ...this.httpOptions, responseType: 'text' });
+    }
+
+    eliminarBanner(id: number): Observable<any> 
+    {
+        return this.http.delete(`${this.API_URL}/banner/${id}`, { responseType: 'text' });
+    }
 }

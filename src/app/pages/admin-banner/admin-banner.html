@@ -1,0 +1,88 @@
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Gestión de Banner Principal</h2>
+        <button class="btn btn-outline-secondary" routerLink="/home">
+            <i class="bi bi-arrow-left"></i> Volver
+        </button>
+    </div>
+
+    <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div class="card shadow-sm mb-5" [ngClass]="{'border-warning': modoEdicion, 'border-primary': !modoEdicion}">
+        <div class="card-header text-white"
+            [ngClass]="{'bg-warning text-dark': modoEdicion, 'bg-primary': !modoEdicion}">
+            {{ modoEdicion ? 'Editar Banner Existente' : 'Agregar Nuevo Banner' }}
+        </div>
+        <div class="card-body">
+            <form (ngSubmit)="guardarBanner()">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Juego a destacar</label>
+                        <select class="form-select" [(ngModel)]="nuevoBanner.idJuego" name="juegoSelect" required>
+                            <option value="0"> Selecciona un juego </option>
+                            <option *ngFor="let j of listaJuegos" [value]="j.idJuego">
+                                {{ j.titulo }}
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">Título</label>
+                        <input type="text" class="form-control" [(ngModel)]="nuevoBanner.titulo" name="titulo">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label class="form-label">
+                            {{ modoEdicion ? 'Cambiar Imagen (Opcional)' : 'Imagen (1920x600)' }}
+                        </label>
+                        <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
+                    </div>
+
+                    <div class="col-md-2 mt-4">
+                        <label class="form-label"> Lugar </label>
+                        <input type="number" class="form-control" [(ngModel)]="nuevoBanner.lugar" name="lugar" min="1"
+                            required>
+                    </div>
+
+                    <div class="col-12 text-end d-flex justify-content-end gap-2">
+                        <button *ngIf="modoEdicion" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
+                            Cancelar Edición
+                        </button>
+                        <button type="submit" class="btn px-5"
+                            [ngClass]="{'btn-warning': modoEdicion, 'btn-success': !modoEdicion}">
+                            {{ modoEdicion ? 'Guardar Cambios' : 'Publicar Banner' }}
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <h4>Banners Activos</h4>
+    <div class="row">
+        <div class="col-md-4 mb-3" *ngFor="let b of banners">
+            <div class="card h-100 shadow-sm">
+                <img [src]="'data:image/jpeg;base64,' + b.imagenUrl" class="card-img-top"
+                    style="height: 150px; object-fit: cover;">
+
+                <div class="card-body">
+                    <h6 class="card-title fw-bold">{{ b.titulo }}</h6>
+                    <p class="small text-muted mb-1">Juego: {{ b.nombreJuego }}</p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="badge bg-primary fs-6">Lugar: {{ b.lugar }}</span>
+
+                        <button class="btn btn-sm btn-outline-warning" (click)="iniciarEdicion(b)">
+                            <i class="bi bi-pencil"></i> Editar
+                        </button>
+                        
+                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarBanner(b.idBanner)">
+                                <i class="bi bi-trash"></i> Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
