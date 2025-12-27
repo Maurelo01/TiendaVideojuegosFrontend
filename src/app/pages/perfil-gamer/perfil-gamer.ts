@@ -21,6 +21,8 @@ export class PerfilGamerComponent implements OnInit
     idUsuario: number = 0;
     modoEdicion: boolean = false;
     contrasena: string = '';
+    imagenPrevisualizacion: string | null = null;
+    gamerEdicion: any = {};
     mensaje: string = '';
     error: string = '';
 
@@ -55,6 +57,10 @@ export class PerfilGamerComponent implements OnInit
                     this.gamer = data;
                     this.gamerEdit = {...data};
                     this.contrasena = '';
+                    if (this.gamerEdicion.avatar) 
+                    {
+                        this.imagenPrevisualizacion = 'data:image/jpeg;base64,' + this.gamerEdit.avatar;
+                    }
                 },
                 error: (err) => this.error = 'Error cargando perfil.'
             }
@@ -70,6 +76,10 @@ export class PerfilGamerComponent implements OnInit
         {
             this.gamerEdit = {...this.gamer,};
             this.contrasena = '';
+            if (this.gamerEdicion.avatar) 
+            {
+                this.imagenPrevisualizacion = 'data:image/jpeg;base64,' + this.gamerEdit.avatar;
+            }
         }
     }
 
@@ -78,17 +88,30 @@ export class PerfilGamerComponent implements OnInit
         this.modoEdicion = false;
         this.error = '';
         this.contrasena = '';
+        if (this.gamer && this.gamer.avatar) 
+        {
+            this.imagenPrevisualizacion = 'data:image/jpeg;base64,' + this.gamer.avatar;
+        }
+        else
+        {
+            this.imagenPrevisualizacion = null;
+        }
     }
 
     guardarCambios()
     {
+        if (!this.gamerEdit.nickname || !this.gamerEdit.telefono)
+        {
+            this.error = "Nickname y teléfono son obligatorios";
+            return;
+        }
         if (this.contrasena && this.contrasena.trim() !== '')
         {
             this.gamerEdit.contraseña = this.contrasena;
         }
         else
         {
-            this.gamerEdit.contraseña = ''; 
+            delete this.gamerEdicion.contraseña; 
         }
         this.usuarioService.actualizarPerfilGamer(this.idUsuario, this.gamerEdit).subscribe
         (
@@ -96,8 +119,11 @@ export class PerfilGamerComponent implements OnInit
                 next: (resp) => 
                 {
                     this.mensaje = 'Perfil actualizado correctamente.';
-                    this.authService.actualizarSesion({nickname: this.gamerEdit.nickname});
-                    setTimeout(() => {window.location.reload();}, 1000);
+                    if (this.gamerEdit.nickname !== this.gamer?.nickname)
+                    {
+                        this.authService.actualizarSesion({nickname: this.gamerEdit.nickname});
+                    }
+                    setTimeout(() => {window.location.reload();}, 500);
                     this.modoEdicion = false;
                 },
                 error: (err) => 
@@ -106,5 +132,21 @@ export class PerfilGamerComponent implements OnInit
                 }
             }
         );
+    }
+
+    onFileSelected(event: any)
+    {
+        const file = event.target.files[0];
+        if (file)
+        {
+            const reader = new FileReader();
+            reader.onload = () => 
+            {
+                const base64 = reader.result as string;
+                this.imagenPrevisualizacion = base64;
+                this.gamerEdit.avatar = base64.split(',')[1]; 
+            };
+            reader.readAsDataURL(file);
+        }
     }
 }
