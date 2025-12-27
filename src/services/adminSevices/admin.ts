@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Categoria } from '../../models/categoria';
+import { Configuracion } from '../../models/configuracion';
 
 @Injectable({
   providedIn: 'root'
@@ -71,5 +72,35 @@ export class AdminService
     activarEmpresa(id: number): Observable<any> 
     {
         return this.http.put(`${this.API_URL}/empresas/${id}/activar`, {}, { responseType: 'text' });
+    }
+
+    obtenerConfiguracion(): Observable<Configuracion>
+    {
+        return this.http.get<Configuracion>(`${this.API_URL}/config`);
+    }
+
+    actualizarComision(config: Configuracion): Observable<any>
+    {
+        return this.http.put(`${this.API_URL}/config`, config, { ...this.httpOptions, responseType: 'text' });
+    }
+
+    listarBanners(): Observable<any[]> 
+    {
+        return this.http.get<any[]>(`${this.API_URL}/banner`);
+    }
+
+    agregarBanner(banner: any): Observable<any> 
+    {
+        return this.http.post(`${this.API_URL}/banner`, banner, { ...this.httpOptions, responseType: 'text' });
+    }
+
+    editarBanner(banner: any): Observable<any> 
+    {
+        return this.http.put(`${this.API_URL}/banner`, banner, { ...this.httpOptions, responseType: 'text' });
+    }
+
+    eliminarBanner(id: number): Observable<any> 
+    {
+        return this.http.delete(`${this.API_URL}/banner/${id}`, { responseType: 'text' });
     }
 }

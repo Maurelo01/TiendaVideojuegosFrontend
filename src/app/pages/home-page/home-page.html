@@ -11,11 +11,48 @@
                 Configuracion de Categorías </button>
             <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
                 routerLink="/admin/empresas"> Gestionar Empresas </button>
+            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/admin/config">
+                Configuración Global </button>
+            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/admin/banner">
+                Seleccionar Banners Principales </button>
             <button class="btn btn-outline-light btn-sm" routerLink="/mi-perfil"> Mi Perfil </button>
             <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
         </div>
     </div>
 </nav>
+<div *ngIf="banners.length > 0" id="carruselPrincipal" class="carousel slide shadow-sm mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button *ngFor="let b of banners; let i = index" type="button" data-bs-target="#carruselPrincipal"
+            [attr.data-bs-slide-to]="i" [class.active]="i === 0" [attr.aria-current]="i === 0 ? 'true' : null">
+        </button>
+    </div>
+    <div class="carousel-inner">
+        <div class="carousel-item" *ngFor="let b of banners; let i = index" [class.active]="i === 0">
+            <img [src]="'data:image/jpeg;base64,' + b.imagenUrl" class="d-block w-100"
+                style="height: 450px; object-fit: cover;" alt="{{ b.titulo }}">
+            <div class="carousel-caption d-none d-md-block" *ngIf="b.titulo">
+                <div class="bg-dark bg-opacity-75 d-inline-block px-4 py-2 rounded">
+                    <h3>{{ b.titulo }}</h3>
+                    <p class="mb-0" *ngIf="b.nombreJuego"> Disponible ahora: {{ b.nombreJuego }}!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+    </button>
+</div>
+<div *ngIf="banners.length === 0" class="bg-dark text-white text-center py-5 mb-5">
+    <div class="container">
+        <h1 class="display-4 fw-bold">Bienvenido a la Tienda</h1>
+        <p class="lead">Explora nuestro catálogo completo de videojuegos digitales.</p>
+    </div>
+</div>
 <div class="container mb-5">
     <div class="text-center mb-5">
         <h2 class="texto-nordico fw-bold">Catálogo Destacado</h2>
