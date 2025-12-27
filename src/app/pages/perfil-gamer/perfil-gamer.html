@@ -12,16 +12,21 @@
             <div *ngIf="!modoEdicion && gamer">
                 <div class="row mb-4 align-items-center">
                     <div class="col-md-4 text-center">
-                        <img src="https://ui-avatars.com/api/?name={{gamer.nickname}}&background=random&size=150" class="rounded-circle shadow mb-3" alt="Avatar">
+                        <img [src]="gamer.avatar ? 'data:image/jpeg;base64,' + gamer.avatar : 'https://ui-avatars.com/api/?name=' + gamer.nickname + '&background=random&size=150'"
+                            class="rounded-circle shadow mb-3 border border-3 border-light"
+                            style="width: 150px; height: 150px; object-fit: cover;" alt="Avatar">
+
                         <h4 class="fw-bold">{{ gamer.nickname }}</h4>
                         <span class="badge bg-info text-dark"> Gamer </span>
                     </div>
                     <div class="col-md-8">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item bg-transparent"><strong>Correo:</strong> {{ gamer.correo }}</li>
-                            <li class="list-group-item bg-transparent"><strong>Teléfono:</strong> {{ gamer.telefono || 'No registrado' }}</li>
+                            <li class="list-group-item bg-transparent"><strong>Teléfono:</strong> {{ gamer.telefono ||
+                                'No registrado' }}</li>
                             <li class="list-group-item bg-transparent"><strong>País:</strong> {{ gamer.pais || 'No especificado' }}</li>
-                            <li class="list-group-item bg-transparent"><strong>Fecha Nacimiento:</strong> {{gamer.fechaNacimiento | date:'longDate' }}</li>
+                            <li class="list-group-item bg-transparent"><strong>Fecha Nacimiento:</strong>
+                                {{gamer.fechaNacimiento | date:'longDate' }}</li>
                             <li class="list-group-item bg-transparent">
                                 <strong>Saldo en Cartera:</strong>
                                 <span class="text-success fw-bold ms-2">${{ gamer.saldoCartera | number:'1.2-2'}}</span>
@@ -36,6 +41,21 @@
 
             <div *ngIf="modoEdicion">
                 <form (ngSubmit)="guardarCambios()">
+                    <div class="text-center mb-4">
+                        <div class="position-relative d-inline-block">
+                            <img [src]="imagenPrevisualizacion || (gamerEdit.avatar ? 'data:image/jpeg;base64,' + gamerEdit.avatar : 'https://ui-avatars.com/api/?name=' + gamerEdit.nickname + '&background=random&size=150')"
+                                class="rounded-circle shadow border"
+                                style="width: 150px; height: 150px; object-fit: cover;" alt="Previsualización">
+
+                            <label class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle shadow"
+                                style="width: 40px; height: 40px; padding-top: 8px; cursor: pointer;"
+                                title="Cambiar foto">
+                                <i class="bi bi-camera-fill"></i> <input type="file" (change)="onFileSelected($event)"
+                                    accept="image/*" hidden>
+                            </label>
+                        </div>
+                        <div class="form-text mt-2">Haz clic en el icono para cambiar tu foto</div>
+                    </div>
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label">Nickname</label>
@@ -62,8 +82,8 @@
                                 contraseña.
                             </div>
                             <label class="form-label">Nueva Contraseña</label>
-                            <input type="password" class="form-control" [(ngModel)]="contrasena"
-                                name="passNew" placeholder="********">
+                            <input type="password" class="form-control" [(ngModel)]="contrasena" name="passNew"
+                                placeholder="********">
                         </div>
                     </div>
 
