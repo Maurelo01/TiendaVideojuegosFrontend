@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders } from '@angular/common/http';
-import { HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Videojuego } from '../../models/videojuego';
+import { Videojuego, Multimedia } from '../../models/videojuego';
 
 @Injectable({
   providedIn: 'root'
@@ -46,5 +45,20 @@ export class VideojuegosService
   editarJuego(id: number, juego: Videojuego): Observable<any>
   {
     return this.http.put(`${this.API_URL}/${id}`, juego, { ...this.httpOptions, responseType: 'text' });
+  }
+
+  obtenerMultimedia(idJuego: number): Observable<Multimedia[]>
+  {
+    return this.http.get<Multimedia[]>(`${this.API_URL}/${idJuego}/multimedia`);
+  }
+
+  agregarMultimedia(idJuego: number, lista: Multimedia[]): Observable<any>
+  {
+    return this.http.post(`${this.API_URL}/${idJuego}/multimedia`, lista, { ...this.httpOptions, responseType: 'text' });
+  }
+
+  eliminarMultimedia(idMedia: number): Observable<any>
+  {
+    return this.http.delete(`${this.API_URL}/multimedia/${idMedia}`, { responseType: 'text' });
   }
 }

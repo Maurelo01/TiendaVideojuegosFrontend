@@ -5,7 +5,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { EmpresaService } from '../../../services/empresaServices/empresa';
 import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
-import { Videojuego } from '../../../models/videojuego';
+import { Videojuego, Multimedia } from '../../../models/videojuego';
 
 @Component({
     selector: 'app-empresa-dashboard',
@@ -29,7 +29,6 @@ export class EmpresaGestion implements OnInit
         fechaNacimiento: ''
     };
 
-    modoEdicionJuego: boolean = false;
     juegoEnEdicion: Videojuego =
     {
         idJuego: 0,
@@ -43,6 +42,10 @@ export class EmpresaGestion implements OnInit
         imagen: ''
     };
 
+    modoEdicionJuego: boolean = false;
+    galeriaActual: Multimedia[] = [];
+    archivosParaSubir: Multimedia[] = [];
+    cargandoMedia: boolean = false;
     seccionActiva: 'juegos' | 'empleados' = 'juegos';
     mensaje: string = '';
     error: string = '';
@@ -98,10 +101,30 @@ export class EmpresaGestion implements OnInit
         this.juegoEnEdicion = { ...juego }; 
         this.modoEdicionJuego = true;
         this.seccionActiva = 'juegos';
+        this.galeriaActual = [];
+        this.archivosParaSubir = [];
+        this.cargarMultimediaJuego(juego.idJuego);
         setTimeout(() => 
         {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }, 100);
+    }
+
+    cargarMultimediaJuego(idJuego: number) 
+    {
+        this.cargandoMedia = true;
+        this.videojuegosService.obtenerMultimedia(idJuego).subscribe({
+            next: (data) => 
+            {
+                this.galeriaActual = data || [];
+                this.cargandoMedia = false;
+            },
+            error: (err) => 
+            {
+                console.error('Error cargando multimedia', err);
+                this.cargandoMedia = false;
+            }
+        });
     }
 
     cancelarEdicion()
@@ -123,8 +146,7 @@ export class EmpresaGestion implements OnInit
             {
                 next: (resp) => 
                 {
-                    this.mostrarMensaje('Juego actualizado exitosamente.');
-                    this.modoEdicionJuego = false;
+                    this.mostrarMensaje('Datos del juego actualizados exitosamente.');
                     this.cargarJuegos();
                 },
                 error: (err) => 
@@ -132,7 +154,7 @@ export class EmpresaGestion implements OnInit
                     this.mostrarError('Error al actualizar: ' + (err.error || err.message));
                 }
             }
-        );
+        );       
     }
 
     onFileSelected(event: any): void 
@@ -148,6 +170,68 @@ export class EmpresaGestion implements OnInit
             };
             reader.readAsDataURL(archivo);
         }
+    }
+
+    onMultimediaSelected(event: any)
+    {
+        const archivos = event.target.files;
+        if (archivos && archivos.length > 0)
+        {
+            for (let i = 0; i < archivos.length; i++)
+            {
+                const file = archivos[i];
+                const reader = new FileReader();
+                reader.onload = (e: any) =>
+                {
+                    const base64Completo = e.target.result;
+                    const tipo = file.type.startsWith('video') ? 'VIDEO' : 'IMAGEN';
+                    const contenidoPuro = base64Completo.split(',')[1];
+                    this.archivosParaSubir.push
+                    (
+                        {
+                            tipo: tipo,
+                            contenido: contenidoPuro,
+                            idJuego: this.juegoEnEdicion.idJuego
+                        }
+                    );
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+
+    subirMultimedia() 
+    {
+        if (this.archivosParaSubir.length === 0) return;
+        this.videojuegosService.agregarMultimedia(this.juegoEnEdicion.idJuego, this.archivosParaSubir).subscribe
+        (
+            {
+                next: () => 
+                {
+                    this.mostrarMensaje('Galería actualizada exitosamente.');
+                    this.archivosParaSubir = [];
+                    this.cargarMultimediaJuego(this.juegoEnEdicion.idJuego);
+                },
+                error: (err) => this.mostrarError('Error subiendo archivos: ' + err.message)
+            }
+        );
+    }
+
+    borrarMultimedia(idMedia: number | undefined)
+    {
+        if (!idMedia) return;
+        if (!confirm('¿Borrar este archivo de la galería?')) return;
+        this.videojuegosService.eliminarMultimedia(idMedia).subscribe
+        (
+            {
+                next: () => 
+                {
+                    this.mostrarMensaje('Archivo eliminado.');
+                    this.galeriaActual = this.galeriaActual.filter(m => m.idMedia !== idMedia);
+                },
+                error: (err) => this.mostrarError('Error al borrar.')
+            }
+        );
     }
 
     cambiarEstadoJuego(juego: Videojuego) 
