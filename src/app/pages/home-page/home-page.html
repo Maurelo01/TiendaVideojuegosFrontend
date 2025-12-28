@@ -17,7 +17,8 @@
                 Seleccionar Banners Principales </button>
             <button class="btn btn-outline-light btn-sm" routerLink="/mi-perfil"> Mi Perfil </button>
             <button *ngIf="!esEmpresa && !esAdmin" class="btn btn-outline-info btn-sm fw-bold text-white me-2" routerLink="/mi-biblioteca">
-            <i class="bi bi-collection-play"></i> Mi Biblioteca </button>
+                <i class="bi bi-collection-play"></i> Mi Biblioteca 
+            </button>
             <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
         </div>
     </div>
@@ -133,10 +134,15 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white border-0 pb-3 text-center">
-                    <button *ngIf="!esEmpresa && !esAdmin" class="btn w-100 rounded-3 mb-2 fw-bold" [ngClass]="{
+                    <button 
+                        *ngIf="!esEmpresa && !esAdmin" 
+                        class="btn w-100 rounded-3 mb-2 fw-bold"
+                        [ngClass]="{
                             'btn-success': !juego.yaLoTiene,
                             'btn-secondary': juego.yaLoTiene
-                        }" [disabled]="juego.yaLoTiene" (click)="abrirModalCompra(juego)">
+                        }"
+                        [disabled]="juego.yaLoTiene"
+                        (click)="abrirModalCompra(juego)">
                         <span *ngIf="!juego.yaLoTiene">
                             <i class="bi bi-cart-plus"></i> Comprar ${{ juego.precio }}
                         </span>
@@ -147,8 +153,8 @@
 
                     <button class="btn boton-nordico w-100 rounded-3 mb-2">Ver Detalles</button>
                     <button class="btn btn-sm btn-link text-decoration-none w-100"
-                        [routerLink]="['/ver-empresa', juego.idEmpresa]">
-                        Ver Empresa Creadora
+                        [routerLink]="['/ver-empresa', juego.idEmpresa]"> 
+                        Ver Empresa Creadora 
                     </button>
                 </div>
             </div>
@@ -190,18 +196,29 @@
                         <label class="form-label small fw-bold text-secondary">
                             <i class="bi bi-calendar3"></i> Fecha de Compra
                         </label>
-                        <input type="date" class="form-control" [(ngModel)]="fechaSimulada" readonly
+                        <input 
+                            type="date" 
+                            class="form-control" 
+                            [(ngModel)]="fechaSimulada"
+                            readonly
                             style="background-color: #f8f9fa; cursor: not-allowed;">
+                        <small class="text-muted">La fecha se establece automáticamente al momento de la compra</small>
                     </div>
 
                 </div>
 
                 <div class="modal-footer border-0" *ngIf="!mensajeCompra">
-                    <button type="button" class="btn btn-outline-secondary" (click)="cerrarModalCompra()"
+                    <button 
+                        type="button" 
+                        class="btn btn-outline-secondary"
+                        (click)="cerrarModalCompra()"
                         [disabled]="procesandoCompra">
                         Cancelar
                     </button>
-                    <button type="button" class="btn btn-success px-4 fw-bold" (click)="confirmarCompra()"
+                    <button 
+                        type="button" 
+                        class="btn btn-success px-4 fw-bold" 
+                        (click)="confirmarCompra()"
                         [disabled]="procesandoCompra">
                         <span *ngIf="procesandoCompra" class="spinner-border spinner-border-sm me-2"></span>
                         <i *ngIf="!procesandoCompra" class="bi bi-credit-card me-1"></i>
