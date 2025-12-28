@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/adminSevices/admin';
 import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
 import { Videojuego } from '../../../models/videojuego';
+import { Categoria } from '../../../models/categoria';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home-page',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, RouterLink, FormsModule],
   templateUrl: './home-page.html',
   styleUrls: ['./home-page.css']
 })
@@ -23,6 +25,11 @@ export class HomePage implements OnInit
   esAdmin: boolean = false;
   banners: any[] = [];
   juegosDestacados: Videojuego[] = [];
+  categorias: Categoria[] = [];
+  textoBusqueda: string = '';
+  categoriaSeleccionada: number = 0;
+  buscando: boolean = false;
+
   constructor
   (
     private adminService: AdminService,
@@ -55,6 +62,7 @@ export class HomePage implements OnInit
     this.cargarCatalogo();
     this.cargarBanners();
     this.cargarJuegos();
+    this.cargarCategorias();
   }
 
   cargarCatalogo(): void 
@@ -87,6 +95,56 @@ export class HomePage implements OnInit
       },
       error: (err) => console.error('Error al cargar banners', err)
     });
+  }
+
+  cargarCategorias()
+  {
+    this.videojuegosService.obtenerCategorias().subscribe
+    (
+      {
+        next: (data) => 
+        {
+          this.categorias = data;
+        },
+        error: (err) => console.error('Error cargando categorías', err)
+      }
+    );
+  }
+
+  buscar()
+  {
+    if (!this.textoBusqueda.trim() && this.categoriaSeleccionada === 0)
+    {
+      this.cargarCatalogo();
+      return;
+    }
+    this.buscando = true;
+    this.videojuegosService.buscarJuegos
+    (
+      this.textoBusqueda,
+      this.categoriaSeleccionada > 0 ? this.categoriaSeleccionada : undefined
+    ).subscribe
+    (
+      {
+        next: (data) => 
+        {
+          this.juegos = data;
+          this.buscando = false;
+        },
+        error: (err) => 
+        {
+          console.error('Error en búsqueda', err);
+          this.buscando = false;
+        }
+      }
+    );
+  }
+
+  limpiarFiltros()
+  {
+    this.textoBusqueda = '';
+    this.categoriaSeleccionada = 0;
+    this.cargarCatalogo();
   }
 
   cargarJuegos() 

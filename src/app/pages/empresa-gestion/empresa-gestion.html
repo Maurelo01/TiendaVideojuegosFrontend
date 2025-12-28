@@ -41,15 +41,15 @@
             <div class="card-body">
                 <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-datos-tab" data-bs-toggle="pill" 
-                            data-bs-target="#pills-datos" type="button" role="tab" aria-controls="pills-datos" 
+                        <button class="nav-link active" id="pills-datos-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-datos" type="button" role="tab" aria-controls="pills-datos"
                             aria-selected="true">
                             Datos Básicos
                         </button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-media-tab" data-bs-toggle="pill" 
-                            data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media" 
+                        <button class="nav-link" id="pills-media-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media"
                             aria-selected="false">
                             Galería Multimedia
                         </button>
@@ -57,8 +57,8 @@
                 </ul>
 
                 <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-datos" role="tabpanel" 
-                        aria-labelledby="pills-datos-tab">    
+                    <div class="tab-pane fade show active" id="pills-datos" role="tabpanel"
+                        aria-labelledby="pills-datos-tab">
                         <form (ngSubmit)="guardarEdicionJuego()">
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
@@ -72,7 +72,7 @@
                                         name="editPrecio" required min="0" step="0.01">
                                 </div>
                                 <div class="col-md-3">
-                                    <label class="form-label small">Clasificación</label>
+                                    <label class="form-label small">Clasificación de edad</label>
                                     <select class="form-select" [(ngModel)]="juegoEnEdicion.clasificacionEdad"
                                         name="editClasif">
                                         <option value="E">E (Todos)</option>
@@ -80,29 +80,48 @@
                                         <option value="M">M (Maduros)</option>
                                     </select>
                                 </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Categorías del Juego</label>
+                                    <div class="card p-2 bg-light" style="max-height: 150px; overflow-y: auto;">
+
+                                        <div *ngIf="todasLasCategorias.length === 0" class="text-muted small">
+                                            No hay categorías registradas en el sistema.
+                                        </div>
+
+                                        <div class="form-check" *ngFor="let cat of todasLasCategorias">
+                                            <input class="form-check-input" type="checkbox" [value]="cat.idCategoria"
+                                                [checked]="esCategoriaSeleccionada(cat.idCategoria)"
+                                                (change)="onCategoriaChange(cat.idCategoria, $event)">
+                                            <label class="form-check-label small">
+                                                {{ cat.nombreCategoria }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">Selecciona todas las que apliquen.</small>
+                                </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label small">Descripción</label>
-                                <textarea class="form-control" rows="3" [(ngModel)]="juegoEnEdicion.descripcion" 
+                                <textarea class="form-control" rows="3" [(ngModel)]="juegoEnEdicion.descripcion"
                                     name="editDesc" required></textarea>
                             </div>
 
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
                                     <label class="form-label small">Recursos Mínimos</label>
-                                    <input type="text" class="form-control" 
-                                        [(ngModel)]="juegoEnEdicion.recursosMinimos" name="editRecursos">
+                                    <input type="text" class="form-control" [(ngModel)]="juegoEnEdicion.recursosMinimos"
+                                        name="editRecursos">
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label small">Actualizar Portada</label>
-                                    <input type="file" class="form-control" (change)="onFileSelected($event)" 
+                                    <input type="file" class="form-control" (change)="onFileSelected($event)"
                                         accept="image/*">
                                 </div>
                             </div>
 
                             <div class="d-flex justify-content-end gap-2">
-                                <button type="button" class="btn btn-secondary" 
+                                <button type="button" class="btn btn-secondary"
                                     (click)="cancelarEdicion()">Cancelar</button>
                                 <button type="submit" class="btn btn-warning">
                                     <i class="bi bi-save"></i> Guardar Cambios
@@ -110,14 +129,13 @@
                             </div>
                         </form>
                     </div>
-                    
-                    <div class="tab-pane fade" id="pills-media" role="tabpanel" 
-                        aria-labelledby="pills-media-tab">
+
+                    <div class="tab-pane fade" id="pills-media" role="tabpanel" aria-labelledby="pills-media-tab">
                         <div class="mb-4 border-bottom pb-3">
                             <label class="form-label fw-bold">Agregar a la Galería</label>
                             <div class="input-group">
-                                <input type="file" class="form-control" multiple 
-                                    (change)="onMultimediaSelected($event)" accept="image/*,video/*">
+                                <input type="file" class="form-control" multiple (change)="onMultimediaSelected($event)"
+                                    accept="image/*,video/*">
                                 <button class="btn btn-primary" type="button" (click)="subirMultimedia()"
                                     [disabled]="archivosParaSubir.length === 0">
                                     <i class="bi bi-cloud-upload"></i> Subir {{ archivosParaSubir.length }} archivo(s)
@@ -136,15 +154,15 @@
                         <div class="row g-3">
                             <div class="col-6 col-md-3" *ngFor="let media of galeriaActual">
                                 <div class="card h-100 position-relative">
-                                    <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" 
-                                        style="z-index: 10;" (click)="borrarMultimedia(media.idMedia)" 
-                                        type="button" title="Eliminar">
+                                    <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1"
+                                        style="z-index: 10;" (click)="borrarMultimedia(media.idMedia)" type="button"
+                                        title="Eliminar">
                                         <i class="bi bi-trash"></i>
                                     </button>
 
-                                    <img *ngIf="media.tipo === 'IMAGEN'" 
+                                    <img *ngIf="media.tipo === 'IMAGEN'"
                                         [src]="'data:image/png;base64,' + media.contenido"
-                                        class="card-img-top object-fit-cover" style="height: 120px;" 
+                                        class="card-img-top object-fit-cover" style="height: 120px;"
                                         [alt]="'Imagen de ' + juegoEnEdicion.titulo">
 
                                     <div *ngIf="media.tipo === 'VIDEO'"
@@ -158,7 +176,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div *ngIf="galeriaActual.length === 0 && !cargandoMedia" 
+                            <div *ngIf="galeriaActual.length === 0 && !cargandoMedia"
                                 class="col-12 text-center text-muted py-4">
                                 <i class="bi bi-images fs-1 d-block mb-2"></i>
                                 No hay multimedia extra.
@@ -190,19 +208,16 @@
                             </span>
                         </td>
                         <td class="text-end">
-                            <button class="btn btn-sm btn-outline-primary me-2"
-                                (click)="iniciarEdicion(juego)">
+                            <button class="btn btn-sm btn-outline-primary me-2" (click)="iniciarEdicion(juego)">
                                 <i class="bi bi-pencil"></i> Editar
                             </button>
 
-                            <button *ngIf="juego.estado === 'ACTIVO'" 
-                                class="btn btn-sm btn-outline-danger"
+                            <button *ngIf="juego.estado === 'ACTIVO'" class="btn btn-sm btn-outline-danger"
                                 (click)="cambiarEstadoJuego(juego)">
                                 <i class="bi bi-pause-circle"></i> Suspender
                             </button>
 
-                            <button *ngIf="juego.estado !== 'ACTIVO'" 
-                                class="btn btn-sm btn-outline-success"
+                            <button *ngIf="juego.estado !== 'ACTIVO'" class="btn btn-sm btn-outline-success"
                                 (click)="cambiarEstadoJuego(juego)">
                                 <i class="bi bi-play-circle"></i> Activar
                             </button>
@@ -271,8 +286,8 @@
                         </div>
                         <div class="mb-2">
                             <label class="small">Correo</label>
-                            <input type="email" class="form-control form-control-sm" 
-                                [(ngModel)]="nuevoEmpleado.correo" name="correo" required>
+                            <input type="email" class="form-control form-control-sm" [(ngModel)]="nuevoEmpleado.correo"
+                                name="correo" required>
                         </div>
                         <div class="mb-2">
                             <label class="small">Contraseña</label>
@@ -292,5 +307,5 @@
             </div>
         </div>
     </div>
-    
+
 </div>
