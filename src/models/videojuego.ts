@@ -10,3 +10,11 @@ export interface Videojuego
     estado: string;
     imagen?: string;
 }
+
+export interface Multimedia 
+{
+    idMedia?: number;
+    idJuego?: number;
+    contenido: string;
+    tipo: 'IMAGEN' | 'VIDEO';
+}

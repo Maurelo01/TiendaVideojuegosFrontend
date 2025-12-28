@@ -1,5 +1,4 @@
 <div class="container mt-5">
-
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h2 class="texto-nordico m-0">Panel de Empresa</h2>
@@ -30,61 +29,146 @@
 
     <div *ngIf="seccionActiva === 'juegos'">
         <div class="d-flex justify-content-end mb-3">
-            <button class="btn btn-success" routerLink="/publicar"> + Publicar Nuevo Juego </button>
+            <button class="btn btn-success" routerLink="/publicar">
+                <i class="bi bi-plus-circle"></i> Publicar Nuevo Juego
+            </button>
         </div>
+
         <div *ngIf="modoEdicionJuego" class="card shadow-sm mb-4 border-warning">
             <div class="card-header bg-warning-subtle fw-bold text-dark">
                 <i class="bi bi-pencil-square"></i> Editando: {{ juegoEnEdicion.titulo }}
             </div>
             <div class="card-body">
-                <form (ngSubmit)="guardarEdicionJuego()">
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label small">Título</label>
-                            <input type="text" class="form-control" [(ngModel)]="juegoEnEdicion.titulo"
-                                name="editTitulo" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label small">Precio</label>
-                            <input type="number" class="form-control" [(ngModel)]="juegoEnEdicion.precio"
-                                name="editPrecio" required min="0">
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label small">Clasificación</label>
-                            <select class="form-select" [(ngModel)]="juegoEnEdicion.clasificacionEdad"
-                                name="editClasif">
-                                <option value="E">E (Todos)</option>
-                                <option value="T">T (Adolescentes)</option>
-                                <option value="M">M (Maduros)</option>
-                            </select>
-                        </div>
-                    </div>
+                <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-datos-tab" data-bs-toggle="pill" 
+                            data-bs-target="#pills-datos" type="button" role="tab" aria-controls="pills-datos" 
+                            aria-selected="true">
+                            Datos Básicos
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-media-tab" data-bs-toggle="pill" 
+                            data-bs-target="#pills-media" type="button" role="tab" aria-controls="pills-media" 
+                            aria-selected="false">
+                            Galería Multimedia
+                        </button>
+                    </li>
+                </ul>
 
-                    <div class="mb-3">
-                        <label class="form-label small">Descripción</label>
-                        <textarea class="form-control" rows="3" [(ngModel)]="juegoEnEdicion.descripcion" name="editDesc"
-                            required></textarea>
-                    </div>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-datos" role="tabpanel" 
+                        aria-labelledby="pills-datos-tab">    
+                        <form (ngSubmit)="guardarEdicionJuego()">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Título</label>
+                                    <input type="text" class="form-control" [(ngModel)]="juegoEnEdicion.titulo"
+                                        name="editTitulo" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Precio</label>
+                                    <input type="number" class="form-control" [(ngModel)]="juegoEnEdicion.precio"
+                                        name="editPrecio" required min="0" step="0.01">
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="form-label small">Clasificación</label>
+                                    <select class="form-select" [(ngModel)]="juegoEnEdicion.clasificacionEdad"
+                                        name="editClasif">
+                                        <option value="E">E (Todos)</option>
+                                        <option value="T">T (Adolescentes)</option>
+                                        <option value="M">M (Maduros)</option>
+                                    </select>
+                                </div>
+                            </div>
 
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label small">Recursos Mínimos</label>
-                            <input type="text" class="form-control" [(ngModel)]="juegoEnEdicion.recursosMinimos"
-                                name="editRecursos">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label small">Actualizar Imagen (Opcional)</label>
-                            <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
-                        </div>
-                    </div>
+                            <div class="mb-3">
+                                <label class="form-label small">Descripción</label>
+                                <textarea class="form-control" rows="3" [(ngModel)]="juegoEnEdicion.descripcion" 
+                                    name="editDesc" required></textarea>
+                            </div>
 
-                    <div class="d-flex justify-content-end gap-2">
-                        <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
-                        <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label small">Recursos Mínimos</label>
+                                    <input type="text" class="form-control" 
+                                        [(ngModel)]="juegoEnEdicion.recursosMinimos" name="editRecursos">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small">Actualizar Portada</label>
+                                    <input type="file" class="form-control" (change)="onFileSelected($event)" 
+                                        accept="image/*">
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2">
+                                <button type="button" class="btn btn-secondary" 
+                                    (click)="cancelarEdicion()">Cancelar</button>
+                                <button type="submit" class="btn btn-warning">
+                                    <i class="bi bi-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                    
+                    <div class="tab-pane fade" id="pills-media" role="tabpanel" 
+                        aria-labelledby="pills-media-tab">
+                        <div class="mb-4 border-bottom pb-3">
+                            <label class="form-label fw-bold">Agregar a la Galería</label>
+                            <div class="input-group">
+                                <input type="file" class="form-control" multiple 
+                                    (change)="onMultimediaSelected($event)" accept="image/*,video/*">
+                                <button class="btn btn-primary" type="button" (click)="subirMultimedia()"
+                                    [disabled]="archivosParaSubir.length === 0">
+                                    <i class="bi bi-cloud-upload"></i> Subir {{ archivosParaSubir.length }} archivo(s)
+                                </button>
+                            </div>
+                            <small class="text-muted">Selecciona imágenes o videos para la galería del juego.</small>
+                        </div>
+
+                        <h6 class="fw-bold">Contenido Actual</h6>
+                        <div *ngIf="cargandoMedia" class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando galería...</span>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3" *ngFor="let media of galeriaActual">
+                                <div class="card h-100 position-relative">
+                                    <button class="btn btn-danger btn-sm position-absolute top-0 end-0 m-1" 
+                                        style="z-index: 10;" (click)="borrarMultimedia(media.idMedia)" 
+                                        type="button" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+
+                                    <img *ngIf="media.tipo === 'IMAGEN'" 
+                                        [src]="'data:image/png;base64,' + media.contenido"
+                                        class="card-img-top object-fit-cover" style="height: 120px;" 
+                                        [alt]="'Imagen de ' + juegoEnEdicion.titulo">
+
+                                    <div *ngIf="media.tipo === 'VIDEO'"
+                                        class="card-img-top bg-dark text-white d-flex align-items-center justify-content-center"
+                                        style="height: 120px;">
+                                        <i class="bi bi-play-circle fs-1"></i>
+                                    </div>
+
+                                    <div class="card-footer p-1 text-center small bg-light">
+                                        {{ media.tipo }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div *ngIf="galeriaActual.length === 0 && !cargandoMedia" 
+                                class="col-12 text-center text-muted py-4">
+                                <i class="bi bi-images fs-1 d-block mb-2"></i>
+                                No hay multimedia extra.
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
         <div class="table-responsive">
             <table class="table table-hover align-middle shadow-sm">
                 <thead class="table-dark">
@@ -106,21 +190,29 @@
                             </span>
                         </td>
                         <td class="text-end">
-                            <button class="btn btn-sm btn-outline-primary me-2" (click)="iniciarEdicion(juego)">Editar</button>
-
-                            <button *ngIf="juego.estado === 'ACTIVO'" class="btn btn-sm btn-outline-danger"
-                                (click)="cambiarEstadoJuego(juego)">
-                                Suspender
+                            <button class="btn btn-sm btn-outline-primary me-2"
+                                (click)="iniciarEdicion(juego)">
+                                <i class="bi bi-pencil"></i> Editar
                             </button>
 
-                            <button *ngIf="juego.estado !== 'ACTIVO'" class="btn btn-sm btn-outline-success"
+                            <button *ngIf="juego.estado === 'ACTIVO'" 
+                                class="btn btn-sm btn-outline-danger"
                                 (click)="cambiarEstadoJuego(juego)">
-                                Activar
+                                <i class="bi bi-pause-circle"></i> Suspender
+                            </button>
+
+                            <button *ngIf="juego.estado !== 'ACTIVO'" 
+                                class="btn btn-sm btn-outline-success"
+                                (click)="cambiarEstadoJuego(juego)">
+                                <i class="bi bi-play-circle"></i> Activar
                             </button>
                         </td>
                     </tr>
                     <tr *ngIf="misJuegos.length === 0">
-                        <td colspan="4" class="text-center py-4 text-muted">Aún no has publicado juegos.</td>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                            <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                            Aún no has publicado juegos.
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -130,7 +222,9 @@
     <div *ngIf="seccionActiva === 'empleados'" class="row">
         <div class="col-md-8">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-white fw-bold">Lista de Empleados</div>
+                <div class="card-header bg-white fw-bold">
+                    <i class="bi bi-people"></i> Lista de Empleados
+                </div>
                 <div class="card-body p-0">
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
@@ -147,8 +241,14 @@
                                 <td class="text-end">
                                     <button class="btn btn-sm btn-outline-danger"
                                         (click)="eliminarEmpleado(emp.idUsuario)">
-                                        Eliminar
+                                        <i class="bi bi-trash"></i> Eliminar
                                     </button>
+                                </td>
+                            </tr>
+                            <tr *ngIf="empleados.length === 0">
+                                <td colspan="3" class="text-center py-4 text-muted">
+                                    <i class="bi bi-person-x fs-1 d-block mb-2"></i>
+                                    No hay empleados registrados.
                                 </td>
                             </tr>
                         </tbody>
@@ -159,7 +259,9 @@
 
         <div class="col-md-4">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-dark text-white">Agregar Nuevo Empleado</div>
+                <div class="card-header bg-dark text-white">
+                    <i class="bi bi-person-plus"></i> Agregar Nuevo Empleado
+                </div>
                 <div class="card-body">
                     <form (ngSubmit)="crearEmpleado()">
                         <div class="mb-2">
@@ -169,8 +271,8 @@
                         </div>
                         <div class="mb-2">
                             <label class="small">Correo</label>
-                            <input type="email" class="form-control form-control-sm" [(ngModel)]="nuevoEmpleado.correo"
-                                name="correo" required>
+                            <input type="email" class="form-control form-control-sm" 
+                                [(ngModel)]="nuevoEmpleado.correo" name="correo" required>
                         </div>
                         <div class="mb-2">
                             <label class="small">Contraseña</label>
@@ -182,11 +284,13 @@
                             <input type="date" class="form-control form-control-sm"
                                 [(ngModel)]="nuevoEmpleado.fechaNacimiento" name="fecha" required>
                         </div>
-                        <button type="submit" class="btn btn-primary btn-sm w-100">Registrar Empleado</button>
+                        <button type="submit" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-check-circle"></i> Registrar Empleado
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
+    
 </div>
