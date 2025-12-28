@@ -9,6 +9,7 @@ export interface Videojuego
     clasificacionEdad: string;
     estado: string;
     imagen?: string;
+    idsCategorias?: number[];
 }
 
 export interface Multimedia 

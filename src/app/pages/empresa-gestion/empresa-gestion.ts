@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { EmpresaService } from '../../../services/empresaServices/empresa';
 import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
 import { Videojuego, Multimedia } from '../../../models/videojuego';
+import { Categoria } from '../../../models/categoria';
 
 @Component({
     selector: 'app-empresa-dashboard',
@@ -39,7 +40,8 @@ export class EmpresaGestion implements OnInit
         recursosMinimos: '',
         clasificacionEdad: 'E',
         estado: '',
-        imagen: ''
+        imagen: '',
+        idsCategorias: []
     };
 
     modoEdicionJuego: boolean = false;
@@ -47,6 +49,7 @@ export class EmpresaGestion implements OnInit
     archivosParaSubir: Multimedia[] = [];
     cargandoMedia: boolean = false;
     seccionActiva: 'juegos' | 'empleados' = 'juegos';
+    todasLasCategorias: Categoria[] = [];
     mensaje: string = '';
     error: string = '';
 
@@ -72,6 +75,18 @@ export class EmpresaGestion implements OnInit
     {
         this.cargarJuegos();
         this.cargarEmpleados();
+        this.cargarListaCategorias();
+    }
+
+    cargarListaCategorias() 
+    {
+        this.videojuegosService.obtenerCategorias().subscribe
+        (
+            {
+                next: (data) => this.todasLasCategorias = data,
+                error: (err) => console.error("Error cargando categorías", err)
+            }
+        );
     }
 
     cargarJuegos() 
@@ -104,6 +119,10 @@ export class EmpresaGestion implements OnInit
         this.galeriaActual = [];
         this.archivosParaSubir = [];
         this.cargarMultimediaJuego(juego.idJuego);
+        if (!this.juegoEnEdicion.idsCategorias)
+        {
+            this.juegoEnEdicion.idsCategorias = [];
+        }
         setTimeout(() => 
         {
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -130,7 +149,7 @@ export class EmpresaGestion implements OnInit
     cancelarEdicion()
     {
         this.modoEdicionJuego = false;
-        this.juegoEnEdicion = { idJuego: 0, idEmpresa: 0, titulo: '', descripcion: '', precio: 0, recursosMinimos: '', clasificacionEdad: 'E', estado: '', imagen: '' };
+        this.juegoEnEdicion = { idJuego: 0, idEmpresa: 0, titulo: '', descripcion: '', precio: 0, recursosMinimos: '', clasificacionEdad: 'E', estado: '', imagen: '', idsCategorias: [] };
     }
 
     guardarEdicionJuego() 
@@ -156,6 +175,26 @@ export class EmpresaGestion implements OnInit
             }
         );       
     }
+
+    onCategoriaChange(idCat: number, event: any)
+    {
+        const checked = event.target.checked;
+        if (!this.juegoEnEdicion.idsCategorias) this.juegoEnEdicion.idsCategorias = [];
+        if (checked)
+        {
+            this.juegoEnEdicion.idsCategorias.push(idCat);
+        }
+        else
+        {
+            this.juegoEnEdicion.idsCategorias = this.juegoEnEdicion.idsCategorias.filter((id: number) => id !== idCat);
+        }
+    }
+
+    esCategoriaSeleccionada(idCat: number): boolean 
+    {
+        return this.juegoEnEdicion.idsCategorias?.includes(idCat) || false;
+    }
+
 
     onFileSelected(event: any): void 
     {

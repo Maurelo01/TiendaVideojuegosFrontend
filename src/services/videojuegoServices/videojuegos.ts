@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Videojuego, Multimedia } from '../../models/videojuego';
+import { Categoria } from '../../models/categoria';
 
 @Injectable({
   providedIn: 'root'
@@ -60,5 +61,25 @@ export class VideojuegosService
   eliminarMultimedia(idMedia: number): Observable<any>
   {
     return this.http.delete(`${this.API_URL}/multimedia/${idMedia}`, { responseType: 'text' });
+  }
+
+  obtenerCategorias(): Observable<Categoria[]> 
+  {
+    return this.http.get<Categoria[]>('http://localhost:8080/TiendaVideojuegos/api/admin/categorias');
+  }
+
+  buscarJuegos(titulo?: string, idCategoria?: number): Observable<Videojuego[]>
+  {
+    let params = new HttpParams();
+    if (titulo && titulo.trim())
+    {
+      params = params.set('titulo', titulo.trim());
+    }
+    if (idCategoria && idCategoria > 0)
+    {
+      params = params.set('idCategoria', idCategoria.toString());
+    }
+
+    return this.http.get<Videojuego[]>(`${this.API_URL}/buscar`, { params });
   }
 }
