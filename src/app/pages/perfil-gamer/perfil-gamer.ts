@@ -23,6 +23,8 @@ export class PerfilGamerComponent implements OnInit
     contrasena: string = '';
     imagenPrevisualizacion: string | null = null;
     gamerEdicion: any = {};
+    mostrarModalRecarga: boolean = false;
+    montoRecarga: number = 0;
     mensaje: string = '';
     error: string = '';
 
@@ -76,7 +78,7 @@ export class PerfilGamerComponent implements OnInit
         {
             this.gamerEdit = {...this.gamer,};
             this.contrasena = '';
-            if (this.gamerEdicion.avatar) 
+            if (this.gamer.avatar) 
             {
                 this.imagenPrevisualizacion = 'data:image/jpeg;base64,' + this.gamerEdit.avatar;
             }
@@ -148,5 +150,46 @@ export class PerfilGamerComponent implements OnInit
             };
             reader.readAsDataURL(file);
         }
+    }
+
+    abrirRecarga() 
+    {
+        this.montoRecarga = 0;
+        this.mostrarModalRecarga = true;
+        this.mensaje = '';
+        this.error = '';
+    }
+
+    cerrarRecarga() 
+    {
+        this.mostrarModalRecarga = false;
+    }
+
+    confirmarRecarga() 
+    {
+        if (this.montoRecarga <= 0) 
+        {
+            alert("Por favor ingresa un monto válido mayor a 0.");
+            return;
+        }
+        this.usuarioService.recargarSaldo(this.idUsuario, this.montoRecarga).subscribe(
+            {
+                next: (res: any) => 
+                {
+                    if (this.gamer) 
+                    {
+                        const saldoNuevo = res.nuevoSaldo !== undefined ? res.nuevoSaldo : (this.gamer.saldoCartera || 0) + this.montoRecarga;
+                        this.gamer.saldoCartera = saldoNuevo;
+                    }
+                    this.mensaje = '¡Recarga exitosa! Tu nuevo saldo está disponible.';
+                    this.cerrarRecarga();
+                },
+                error: (err) => 
+                {
+                    console.error(err);
+                    alert('Error al recargar: ' + (err.error?.mensaje || err.message || 'Intente más tarde'));
+                }
+            }
+        );
     }
 }

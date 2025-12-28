@@ -31,4 +31,10 @@ export class UsuarioService
     {
         return this.http.get<any>(`${this.API_URL}/empresa/publica/${idEmpresa}`);
     }
+
+    recargarSaldo(idUsuario: number, monto: number): Observable<any>
+    {
+        const body = { monto: monto };
+        return this.http.post(`${this.API_URL}/gamer/${idUsuario}/recargar`, body, {headers: new HttpHeaders({ 'Content-Type': 'application/json' })});
+    }
 }
