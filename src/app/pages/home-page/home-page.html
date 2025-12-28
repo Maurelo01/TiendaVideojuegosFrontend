@@ -131,10 +131,82 @@
                     </div>
                 </div>
                 <div class="card-footer bg-white border-0 pb-3 text-center">
-                    <button class="btn boton-nordico w-100 rounded-3">Ver Detalles</button>
-                    <button class="btn btn-sm btn-link text-decoration-none"
-                        [routerLink]="['/ver-empresa', juego.idEmpresa]"> Ver Empresa Creadora </button>
+                    <button *ngIf="!esEmpresa && !esAdmin" class="btn w-100 rounded-3 mb-2 fw-bold" [ngClass]="{
+                            'btn-success': !juego.yaLoTiene,
+                            'btn-secondary': juego.yaLoTiene
+                        }" [disabled]="juego.yaLoTiene" (click)="abrirModalCompra(juego)">
+                        <span *ngIf="!juego.yaLoTiene">
+                            <i class="bi bi-cart-plus"></i> Comprar ${{ juego.precio }}
+                        </span>
+                        <span *ngIf="juego.yaLoTiene">
+                            <i class="bi bi-check-circle-fill"></i> En tu Biblioteca
+                        </span>
+                    </button>
+
+                    <button class="btn boton-nordico w-100 rounded-3 mb-2">Ver Detalles</button>
+                    <button class="btn btn-sm btn-link text-decoration-none w-100"
+                        [routerLink]="['/ver-empresa', juego.idEmpresa]">
+                        Ver Empresa Creadora
+                    </button>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" [style.display]="mostrarModalCompra ? 'block' : 'none'"
+        style="background: rgba(0,0,0,0.6)">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg">
+
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-cart-check"></i> Confirmar Compra
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" (click)="cerrarModalCompra()"></button>
+                </div>
+
+                <div class="modal-body p-4" *ngIf="juegoSeleccionadoCompra">
+
+                    <div *ngIf="errorCompra" class="alert alert-danger shadow-sm">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorCompra }}
+                    </div>
+                    <div *ngIf="mensajeCompra" class="alert alert-success shadow-sm">
+                        <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeCompra }}
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-3 border">
+                        <img [src]="juegoSeleccionadoCompra.imagen ? 'data:image/jpeg;base64,' + juegoSeleccionadoCompra.imagen : 'https://placehold.co/100'"
+                            class="rounded shadow-sm" width="80" height="80" style="object-fit: cover;">
+                        <div class="ms-3">
+                            <h5 class="mb-1 fw-bold">{{ juegoSeleccionadoCompra.titulo }}</h5>
+                            <span class="badge bg-primary">{{ juegoSeleccionadoCompra.clasificacionEdad }}</span>
+                            <span class="text-success fw-bold ms-2 fs-5">${{ juegoSeleccionadoCompra.precio }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" *ngIf="!mensajeCompra">
+                        <label class="form-label small fw-bold text-secondary">
+                            <i class="bi bi-calendar3"></i> Fecha de Compra
+                        </label>
+                        <input type="date" class="form-control" [(ngModel)]="fechaSimulada" readonly
+                            style="background-color: #f8f9fa; cursor: not-allowed;">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer border-0" *ngIf="!mensajeCompra">
+                    <button type="button" class="btn btn-outline-secondary" (click)="cerrarModalCompra()"
+                        [disabled]="procesandoCompra">
+                        Cancelar
+                    </button>
+                    <button type="button" class="btn btn-success px-4 fw-bold" (click)="confirmarCompra()"
+                        [disabled]="procesandoCompra">
+                        <span *ngIf="procesandoCompra" class="spinner-border spinner-border-sm me-2"></span>
+                        <i *ngIf="!procesandoCompra" class="bi bi-credit-card me-1"></i>
+                        {{ procesandoCompra ? 'Procesando...' : 'Confirmar Pago' }}
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>

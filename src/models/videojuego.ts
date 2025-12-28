@@ -10,6 +10,7 @@ export interface Videojuego
     estado: string;
     imagen?: string;
     idsCategorias?: number[];
+    yaLoTiene?: boolean;
 }
 
 export interface Multimedia 
