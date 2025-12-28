@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
 import { AuthService } from '../../../services/auth.service';
 import { Videojuego } from '../../../models/videojuego';
+import { Categoria } from '../../../models/categoria';
 
 @Component({
   selector: 'app-publicar-juego',
@@ -26,9 +27,12 @@ export class PublicarJuegoComponent
     recursosMinimos: '',
     clasificacionEdad: 'E',
     estado: 'ACTIVO',
-    imagen: ''
+    imagen: '',
+    idsCategorias: []
   };
 
+  idEmpresa: number = 0;
+  todasLasCategorias: Categoria[] = [];
   mensajeError: string = '';
   mensajeExito: string = '';
   imagenPrevisualizacion: string | null = null; // Para mostrar la imagen seleccionada
@@ -38,16 +42,44 @@ export class PublicarJuegoComponent
     private videojuegosService: VideojuegosService, 
     private authService: AuthService,
     private router: Router
-  ) 
+  ) {}
+  ngOnInit(): void 
   {
     const usuario = this.authService.obtenerUsuarioActual();
     if (usuario && usuario.rol === 'EMPRESA') 
     {
-      this.juego.idEmpresa = usuario.idEmpresa || 0; 
+      this.idEmpresa = usuario.idEmpresa || 0;
+      this.juego.idEmpresa = this.idEmpresa;
+      this.cargarCategorias(); 
     }
-    else 
+    else
     {
       this.router.navigate(['/home']);
+    }
+  }
+
+  cargarCategorias() 
+  {
+    this.videojuegosService.obtenerCategorias().subscribe
+    (
+      {
+        next: (data) => this.todasLasCategorias = data,
+        error: (err) => console.error('Error cargando categorías', err)
+      }
+    );
+  }
+
+  onCategoriaChange(idCat: number, event: any)
+  {
+    const checked = event.target.checked;
+    if (!this.juego.idsCategorias) this.juego.idsCategorias = [];
+    if (checked) 
+    {
+      this.juego.idsCategorias.push(idCat);
+    }
+    else
+    {
+      this.juego.idsCategorias = this.juego.idsCategorias.filter(id => id !== idCat);
     }
   }
 
