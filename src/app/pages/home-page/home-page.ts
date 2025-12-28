@@ -4,10 +4,12 @@ import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AdminService } from '../../../services/adminSevices/admin';
 import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
+import { ComprasService, SolicitudCompra } from '../../../services/compras';
 import { Videojuego } from '../../../models/videojuego';
 import { Categoria } from '../../../models/categoria';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-home-page',
@@ -18,9 +20,16 @@ import { Router } from '@angular/router';
 })
 export class HomePage implements OnInit 
 {
+  juegoSeleccionadoCompra: Videojuego | null = null;
+  fechaSimulada: string = new Date().toISOString().split('T')[0];
+  mostrarModalCompra: boolean = false;
+  mensajeCompra: string = '';
+  errorCompra: string = '';
+  procesandoCompra: boolean = false;
   juegos: Videojuego[] = [];
   cargando: boolean = true;
   usuarioNombre: string | null = null;
+  usuarioId: number | null = null;
   esEmpresa: boolean = false;
   esAdmin: boolean = false;
   banners: any[] = [];
@@ -29,11 +38,13 @@ export class HomePage implements OnInit
   textoBusqueda: string = '';
   categoriaSeleccionada: number = 0;
   buscando: boolean = false;
+  comprando: { [key: number]: boolean } = {};
 
   constructor
   (
     private adminService: AdminService,
     private videojuegosService: VideojuegosService,
+    private comprasService: ComprasService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -43,7 +54,9 @@ export class HomePage implements OnInit
     const usuario = this.authService.obtenerUsuarioActual();
     if (usuario) 
     {
+      this.usuarioId = usuario.idUsuario || null;
       this.usuarioNombre = (usuario as any).nickname || usuario.correo;
+      
       if (usuario.rol === 'EMPRESA') 
       {
         this.usuarioNombre = `${usuario.nombreEmpleado} - ${usuario.nombreEmpresaAux}`;
@@ -59,6 +72,7 @@ export class HomePage implements OnInit
         this.usuarioNombre = usuario.nickname || usuario.correo;
       }
     }
+    
     this.cargarCatalogo();
     this.cargarBanners();
     this.cargarJuegos();
@@ -73,6 +87,7 @@ export class HomePage implements OnInit
         next: (data) => 
         {
           this.juegos = data;
+          this.verificarPropiedadJuegos();
           this.cargando = false;
         },
         error: (err) => 
@@ -84,17 +99,41 @@ export class HomePage implements OnInit
     );
   }
 
+  verificarPropiedadJuegos(): void 
+  {
+    if (!this.usuarioId || this.esEmpresa || this.esAdmin) return;
+    
+    const verificaciones = this.juegos.map(juego => 
+      this.comprasService.verificarPropiedad(this.usuarioId!, juego.idJuego)
+    );
+    
+    forkJoin(verificaciones).subscribe
+    (
+      {
+        next: (resultados) => 
+        {
+          this.juegos.forEach((juego, index) => 
+          {
+            juego.yaLoTiene = resultados[index].yaLoTiene;
+          });
+        },
+        error: (err) => console.error('Error verificando propiedad:', err)
+      }
+    );
+  }
+
   cargarBanners()
   {
     this.adminService.listarBanners().subscribe
     (
-    {
-      next: (data) => 
       {
-        this.banners = data;
-      },
-      error: (err) => console.error('Error al cargar banners', err)
-    });
+        next: (data) => 
+        {
+          this.banners = data;
+        },
+        error: (err) => console.error('Error al cargar banners', err)
+      }
+    );
   }
 
   cargarCategorias()
@@ -118,6 +157,7 @@ export class HomePage implements OnInit
       this.cargarCatalogo();
       return;
     }
+    
     this.buscando = true;
     this.videojuegosService.buscarJuegos
     (
@@ -129,6 +169,7 @@ export class HomePage implements OnInit
         next: (data) => 
         {
           this.juegos = data;
+          this.verificarPropiedadJuegos(); // AGREGADO: Verificar después de buscar
           this.buscando = false;
         },
         error: (err) => 
@@ -165,5 +206,89 @@ export class HomePage implements OnInit
   {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  abrirModalCompra(juego: Videojuego)
+  {
+    const usuario = this.authService.obtenerUsuarioActual();
+    
+    if (!usuario) 
+    {
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    if (usuario.rol !== 'GAMER') 
+    {
+      alert('Solo los usuarios Gamers pueden comprar juegos.');
+      return;
+    }
+
+    // Verificar si ya tiene el juego
+    if (juego.yaLoTiene) 
+    {
+      alert('Ya tienes este juego en tu biblioteca.');
+      return;
+    }
+
+    this.juegoSeleccionadoCompra = juego;
+    this.fechaSimulada = new Date().toISOString().split('T')[0];
+    this.mensajeCompra = '';
+    this.errorCompra = '';
+    this.mostrarModalCompra = true;
+  }
+
+  cerrarModalCompra()
+  {
+    this.mostrarModalCompra = false;
+    this.juegoSeleccionadoCompra = null;
+    this.mensajeCompra = '';
+    this.errorCompra = '';
+  }
+
+  confirmarCompra()
+  {
+    if (!this.juegoSeleccionadoCompra || !this.usuarioId) return;
+
+    this.procesandoCompra = true;
+    this.errorCompra = '';
+    this.mensajeCompra = '';
+
+    const solicitud: SolicitudCompra = 
+    {
+      idUsuario: this.usuarioId,
+      idJuego: this.juegoSeleccionadoCompra.idJuego,
+      fechaSimulada: this.fechaSimulada
+    };
+
+    this.comprasService.realizarCompra(solicitud).subscribe
+    (
+      {
+        next: (respuesta) => 
+        {
+          this.mensajeCompra = respuesta.mensaje;
+          this.procesandoCompra = false;
+          
+          if (this.juegoSeleccionadoCompra) 
+          {
+            const juego = this.juegos.find(j => j.idJuego === this.juegoSeleccionadoCompra!.idJuego);
+            if (juego) 
+            {
+              juego.yaLoTiene = true;
+            }
+          }
+          setTimeout(() => 
+          {
+            this.cerrarModalCompra();
+          }, 2000);
+        },
+        error: (err) => 
+        {
+          console.error('Error en compra:', err);
+          this.errorCompra = err.error?.error || 'Error al procesar la compra.';
+          this.procesandoCompra = false;
+        }
+      }
+    );
   }
 }

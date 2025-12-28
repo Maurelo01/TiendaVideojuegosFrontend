@@ -3,6 +3,7 @@ import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Videojuego, Multimedia } from '../../models/videojuego';
 import { Categoria } from '../../models/categoria';
+import { SolicitudCompra } from '../../models/solicitud-compra';
 
 @Injectable({
   providedIn: 'root'
@@ -81,5 +82,11 @@ export class VideojuegosService
     }
 
     return this.http.get<Videojuego[]>(`${this.API_URL}/buscar`, { params });
+  }
+
+  comprarJuego(solicitud: SolicitudCompra): Observable<any> 
+  {
+    const urlVentas = this.API_URL.replace('/videojuegos', '/ventas');
+    return this.http.post(`${urlVentas}/comprar`, solicitud, this.httpOptions);
   }
 }
