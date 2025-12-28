@@ -1,0 +1,70 @@
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary fw-bold">
+            <i class="bi bi-collection-play-fill"></i> Mi Biblioteca
+        </h2>
+        <button class="btn btn-outline-secondary" routerLink="/home">
+            <i class="bi bi-house"></i> Volver a la Tienda
+        </button>
+    </div>
+
+    <div *ngIf="cargando" class="py-5">
+        <div class="text-center mb-3">
+            <p class="text-muted">Cargando tu biblioteca...</p>
+        </div>
+        <div class="progress" style="height: 25px;">
+            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                Cargando...
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+    <div *ngIf="!cargando && misJuegos.length === 0" class="text-center py-5 bg-light rounded-3">
+        <i class="bi bi-controller fs-1 text-muted"></i>
+        <h4 class="mt-3 text-muted">Tu biblioteca está vacía</h4>
+        <p class="text-muted">¡Visita la tienda y adquiere tu primer videojuego!</p>
+        <button class="btn btn-primary mt-2" routerLink="/home">Ir a la Tienda</button>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-4 g-4" *ngIf="!cargando && misJuegos.length > 0">
+        <div class="col" *ngFor="let juego of misJuegos">
+            <div class="card h-100 shadow-sm border-0 position-relative" style="overflow: hidden;">
+
+                <span class="position-absolute top-0 end-0 badge m-2"
+                    [ngClass]="{'bg-success': juego.estadoInstalacion === 'INSTALADO', 'bg-secondary': juego.estadoInstalacion !== 'INSTALADO'}">
+                    {{ juego.estadoInstalacion === 'INSTALADO' ? 'Instalado' : 'No Instalado' }}
+                </span>
+
+                <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/400x600?text=No+Cover'"
+                    class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ juego.titulo }}">
+
+                <div class="card-body">
+                    <h6 class="card-title fw-bold text-truncate" title="{{ juego.titulo }}">
+                        {{ juego.titulo }}
+                    </h6>
+                    <small class="text-muted d-block mb-3">
+                        Adquirido: {{ juego.fechaAdquisicion | date:'shortDate' }}
+                    </small>
+
+                    <div class="d-flex gap-2">
+                        <button class="btn w-100 btn-sm fw-bold"
+                            [ngClass]="{'btn-success': juego.estadoInstalacion === 'INSTALADO', 'btn-primary': juego.estadoInstalacion !== 'INSTALADO'}"
+                            (click)="descargarJuego(juego)">
+                            <i class="bi"
+                                [ngClass]="{'bi-play-fill': juego.estadoInstalacion === 'INSTALADO', 'bi-download': juego.estadoInstalacion !== 'INSTALADO'}"></i>
+                            {{ juego.estadoInstalacion === 'INSTALADO' ? 'Jugar' : 'Descargar' }}
+                        </button>
+
+                        <button *ngIf="juego.estadoInstalacion === 'INSTALADO'" class="btn btn-outline-danger btn-sm"
+                            title="Desinstalar" (click)="eliminarJuego(juego)"> Desinstalar
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
