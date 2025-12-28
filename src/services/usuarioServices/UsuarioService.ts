@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { UsuarioGamer } from '../../models/usuario-gamer';
-// import { Empresa } from '../../models/empresa'; 
+import { Biblioteca } from '../../models/biblioteca';
 
 @Injectable({
     providedIn: 'root'
@@ -36,5 +36,20 @@ export class UsuarioService
     {
         const body = { monto: monto };
         return this.http.post(`${this.API_URL}/gamer/${idUsuario}/recargar`, body, {headers: new HttpHeaders({ 'Content-Type': 'application/json' })});
+    }
+
+    obtenerBiblioteca(idUsuario: number): Observable<Biblioteca[]>
+    {
+        return this.http.get<Biblioteca[]>(`${this.API_URL}/gamer/${idUsuario}/biblioteca`);
+    }
+
+    instalarJuego(idUsuario: number, idJuego: number): Observable<any>
+    {
+        return this.http.put(`${this.API_URL}/gamer/${idUsuario}/biblioteca/${idJuego}/instalar`, {}, this.httpOptions);
+    }
+
+    desinstalarJuego(idUsuario: number, idJuego: number): Observable<any>
+    {
+        return this.http.put(`${this.API_URL}/gamer/${idUsuario}/biblioteca/${idJuego}/desinstalar`, {}, this.httpOptions);
     }
 }
