@@ -50,4 +50,23 @@ export class AdminReportesComponent implements OnInit
     this.fechaFin = '';
     this.generarReporte();
   }
+
+  exportarPDF() 
+  {
+    this.comprasService.descargarReporteAdminPDF(this.fechaInicio, this.fechaFin).subscribe
+    (
+        (data: Blob) => 
+        {
+            const url = window.URL.createObjectURL(data);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Reporte_Global_Ventas.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        },
+        error => console.error('Error al descargar PDF', error)
+    );
+  }
 }

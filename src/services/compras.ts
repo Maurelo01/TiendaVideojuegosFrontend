@@ -90,4 +90,25 @@ export class ComprasService
     {
         return this.http.get<HistorialCompra[]>(`${this.API_URL}/historial/${idUsuario}`);
     }
+
+    descargarReporteAdminPDF(inicio: string, fin: string): Observable<Blob> 
+    {
+        let params = new HttpParams();
+        if (inicio) params = params.set('inicio', inicio);
+        if (fin) params = params.set('fin', fin);
+        return this.http.get(`${this.API_URL}/reporte/admin/pdf`, { params, responseType: 'blob' });
+    }
+
+    descargarReporteEmpresaPDF(idEmpresa: number, inicio: string, fin: string): Observable<Blob> 
+    {
+        let params = new HttpParams();
+        if (inicio) params = params.set('inicio', inicio);
+        if (fin) params = params.set('fin', fin);
+        return this.http.get(`${this.API_URL}/reporte/empresa/${idEmpresa}/pdf`, { params, responseType: 'blob' });
+    }
+
+    descargarHistorialUsuarioPDF(idUsuario: number): Observable<Blob> 
+    {
+        return this.http.get(`${this.API_URL}/historial/${idUsuario}/pdf`, { responseType: 'blob' });
+    }
 }
