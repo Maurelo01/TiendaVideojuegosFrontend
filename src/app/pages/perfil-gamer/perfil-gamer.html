@@ -41,7 +41,8 @@
                             <li class="list-group-item bg-transparent"><strong>Correo:</strong> {{ gamer.correo }}</li>
                             <li class="list-group-item bg-transparent"><strong>Teléfono:</strong> {{ gamer.telefono ||
                                 'No registrado' }}</li>
-                            <li class="list-group-item bg-transparent"><strong>País:</strong> {{ gamer.pais || 'No especificado' }}</li>
+                            <li class="list-group-item bg-transparent"><strong>País:</strong> {{ gamer.pais || 'No
+                                especificado' }}</li>
                             <li class="list-group-item bg-transparent"><strong>Fecha Nacimiento:</strong>
                                 {{gamer.fechaNacimiento | date:'longDate' }}</li>
                             <li class="list-group-item bg-transparent">
@@ -138,6 +139,11 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="col-md-3 d-flex gap-2 mt-3">
+                    <button class="btn btn-danger text-white" (click)="descargarHistorialPDF()">
+                        <i class="bi bi-file-earmark-pdf-fill"></i> Exportar PDF
+                    </button>
+                </div>
             </div>
 
         </div>
@@ -161,7 +167,8 @@
                         placeholder="0.00" min="1">
                 </div>
                 <div class="alert alert-info small">
-                    <i class="bi bi-info-circle"></i> No se puede recargar mas de $10,000. </div>
+                    <i class="bi bi-info-circle"></i> No se puede recargar mas de $10,000.
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="cerrarRecarga()">Cancelar</button>

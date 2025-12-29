@@ -47,4 +47,26 @@ export class EmpresaVentasComponent implements OnInit
             }
         );
     }
+
+    exportarPDF() 
+    {
+        if (!this.idEmpresa) return;
+        this.comprasService.descargarReporteEmpresaPDF(this.idEmpresa, this.fechaInicio, this.fechaFin).subscribe
+        (
+            {
+                next: (data: Blob) => 
+                {
+                    const url = window.URL.createObjectURL(data);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Reporte_Ventas_Empresa_${this.idEmpresa}.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                },
+                error: (err) => console.error('Error al descargar PDF de empresa', err)
+            }
+        );
+    }
 }

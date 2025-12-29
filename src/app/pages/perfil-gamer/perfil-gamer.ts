@@ -207,4 +207,26 @@ export class PerfilGamerComponent implements OnInit
             }
         );
     }
+
+    descargarHistorialPDF() 
+    {
+        if (!this.idUsuario) return;
+        this.comprasService.descargarHistorialUsuarioPDF(this.idUsuario).subscribe
+        (
+            {
+                next: (data: Blob) => 
+                {
+                    const url = window.URL.createObjectURL(data);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `Mi_Historial_Compras.pdf`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                },
+                error: (err) => console.error('Error al descargar historial', err)
+            }
+        );
+    }
 }
