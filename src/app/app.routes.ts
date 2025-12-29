@@ -9,6 +9,8 @@ import { PerfilGamerComponent } from './pages/perfil-gamer/perfil-gamer';
 import { PerfilEmpresaComponent } from './pages/perfil-empresa/perfil-empresa';
 import { BibliotecaComponent } from './pages/biblioteca/biblioteca';
 import { JuegoDetalleComponent } from './pages/juego-detalle/juego-detalle';
+import { AdminReportesComponent } from './pages/admin-reportes/admin-reportes';
+import { EmpresaVentasComponent } from './pages/empresa-ventas/empresa-ventas';
 import { AdminEmpresas } from './pages/admin-empresas/admin-empresas';
 import { AdminConfiguracion } from './pages/admin-configuracion/admin-configuracion';
 import { AdminBanner } from './pages/admin-banner/admin-banner';
@@ -24,6 +26,8 @@ export const routes: Routes = [
     { path: 'ver-empresa/:id', component: PerfilEmpresaComponent },
     { path: 'mi-biblioteca', component: BibliotecaComponent },
     { path: 'juego/:id', component: JuegoDetalleComponent },
+    { path: 'reportes-admin', component: AdminReportesComponent },
+    { path: 'mis-ventas', component: EmpresaVentasComponent },
     { path: 'admin/empresas', component: AdminEmpresas },
     { path: 'admin/config', component: AdminConfiguracion },
     { path: 'admin/banner', component: AdminBanner },
