@@ -89,4 +89,9 @@ export class VideojuegosService
     const urlVentas = this.API_URL.replace('/videojuegos', '/ventas');
     return this.http.post(`${urlVentas}/comprar`, solicitud, this.httpOptions);
   }
+
+  obtenerJuegoPorId(id: number): Observable<Videojuego>
+  {
+    return this.http.get<Videojuego>(`${this.API_URL}/${id}`);
+  }
 }

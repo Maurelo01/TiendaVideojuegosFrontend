@@ -10,6 +10,7 @@ export interface Videojuego
     estado: string;
     imagen?: string;
     idsCategorias?: number[];
+    nombreEmpresa?: string;
     yaLoTiene?: boolean;
 }
 
