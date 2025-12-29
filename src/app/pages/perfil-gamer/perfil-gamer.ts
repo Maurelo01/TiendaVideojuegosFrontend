@@ -6,6 +6,7 @@ import { RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UsuarioService } from '../../../services/usuarioServices/UsuarioService';
 import { UsuarioGamer } from '../../../models/usuario-gamer';
+import { ComprasService, HistorialCompra } from '../../../services/compras';
 
 @Component({
     selector: 'app-perfil-gamer',
@@ -25,6 +26,7 @@ export class PerfilGamerComponent implements OnInit
     gamerEdicion: any = {};
     mostrarModalRecarga: boolean = false;
     montoRecarga: number = 0;
+    historialCompras: HistorialCompra[] = [];
     mensaje: string = '';
     error: string = '';
 
@@ -32,6 +34,7 @@ export class PerfilGamerComponent implements OnInit
     (
         private authService: AuthService,
         private usuarioService: UsuarioService,
+        private comprasService: ComprasService,
         private router: Router
     ) { }
 
@@ -42,6 +45,7 @@ export class PerfilGamerComponent implements OnInit
         {
             this.idUsuario = usuario.idUsuario || 0;
             this.cargarPerfil();
+            this.cargarHistorial();
         }
         else
         {
@@ -65,6 +69,17 @@ export class PerfilGamerComponent implements OnInit
                     }
                 },
                 error: (err) => this.error = 'Error cargando perfil.'
+            }
+        );
+    }
+
+    cargarHistorial() 
+    {
+        this.comprasService.obtenerHistorialUsuario(this.idUsuario).subscribe
+        (
+            {
+                next: (data) => this.historialCompras = data,
+                error: (err) => console.error('Error cargando historial', err)
             }
         );
     }

@@ -37,6 +37,13 @@ export interface ReporteAdmin
     gananciaEmpresa: number;
 }
 
+export interface HistorialCompra 
+{
+    fechaCompra: string;
+    tituloJuego: string;
+    precioPagado: number;
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -77,5 +84,10 @@ export class ComprasService
         if (fin) params = params.set('fin', fin);
 
         return this.http.get<ReporteVentasEmpresa[]>(`${this.API_URL}/reporte/empresa/${idEmpresa}`, { params });
+    }
+
+    obtenerHistorialUsuario(idUsuario: number): Observable<HistorialCompra[]> 
+    {
+        return this.http.get<HistorialCompra[]>(`${this.API_URL}/historial/${idUsuario}`);
     }
 }

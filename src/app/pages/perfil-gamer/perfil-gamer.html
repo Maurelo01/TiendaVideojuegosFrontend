@@ -110,6 +110,36 @@
                     </div>
                 </form>
             </div>
+
+            <div class="mt-5">
+                <h4 class="mb-3 border-bottom pb-2 text-secondary">
+                    <i class="bi bi-clock-history"></i> Historial de Gastos
+                </h4>
+                <div *ngIf="historialCompras.length === 0" class="alert alert-light text-center border">
+                    <span class="text-muted">Aún no has realizado compras.</span>
+                </div>
+                <div *ngIf="historialCompras.length > 0" class="table-responsive shadow-sm rounded">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Videojuego</th>
+                                <th class="text-end">Monto Pagado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let compra of historialCompras">
+                                <td class="text-muted">{{ compra.fechaCompra | date:'mediumDate' }}</td>
+                                <td class="fw-bold text-dark">{{ compra.tituloJuego }}</td>
+                                <td class="text-end fw-bold text-success">
+                                    ${{ compra.precioPagado | number:'1.2-2' }}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
@@ -131,8 +161,7 @@
                         placeholder="0.00" min="1">
                 </div>
                 <div class="alert alert-info small">
-                    <i class="bi bi-info-circle"></i> No se puede recargar mas de $10,000.
-                </div>
+                    <i class="bi bi-info-circle"></i> No se puede recargar mas de $10,000. </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" (click)="cerrarRecarga()">Cancelar</button>
