@@ -1,0 +1,52 @@
+<div class="container mt-4">
+    <h2 class="mb-4 fw-bold text-primary">Mis Ventas y Ganancias</h2>
+    <button class="btn btn-outline-secondary mb-3" routerLink="/home">
+            <i class="bi bi-arrow-left"></i> Volver al Inicio
+        </button>
+    <div class="card p-3 mb-4 shadow-sm bg-light">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Desde</label>
+                <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Hasta</label>
+                <input type="date" class="form-control" [(ngModel)]="fechaFin">
+            </div>
+            <div class="col-md-3">
+                <button class="btn btn-primary w-100" (click)="generarReporte()">Actualizar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle border">
+            <thead class="bg-primary text-white">
+                <tr>
+                    <th>Videojuego</th>
+                    <th class="text-center">Copias</th>
+                    <th class="text-end">Ingresos Brutos</th>
+                    <th class="text-end">Comisión</th>
+                    <th class="text-end fw-bold">Tu Ganancia Neta</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let venta of ventas">
+                    <td class="fw-bold text-dark">{{ venta.tituloJuego }}</td>
+                    <td class="text-center">
+                        <span class="badge bg-secondary rounded-pill">{{ venta.copiasVendidas }}</span>
+                    </td>
+                    <td class="text-end text-muted">${{ venta.ingresosBrutos | number:'1.2-2' }}</td>
+                    <td class="text-end text-danger small">-${{ venta.comisionPlataforma | number:'1.2-2' }}</td>
+                    <td class="text-end fw-bold text-success fs-5">+${{ venta.gananciaNeta | number:'1.2-2' }}</td>
+                </tr>
+            </tbody>
+            <tfoot *ngIf="ventas.length > 0" class="table-light">
+                <tr>
+                    <td colspan="4" class="text-end fw-bold">TOTAL A RECIBIR:</td>
+                    <td class="text-end fw-bold text-success fs-4">${{ totalGananciaNeta | number:'1.2-2' }}</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
