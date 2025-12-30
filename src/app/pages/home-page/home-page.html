@@ -7,9 +7,11 @@
             </button>
             <button *ngIf="esEmpresa" class="btn btn-warning btn-sm fw-bold me-2" routerLink="/empresa/dashboard">
                 Gestionar Empresa </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/admin/categorias">
+            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
+                routerLink="/admin/categorias">
                 Configuracion de Categorías </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/reportes-admin">
+            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
+                routerLink="/reportes-admin">
                 <i class="bi bi-bar-chart-fill"></i> Reportes Globales
             </button>
             <button *ngIf="esEmpresa" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/mis-ventas">
@@ -21,10 +23,12 @@
                 Configuración Global </button>
             <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/admin/banner">
                 Seleccionar Banners Principales </button>
-            <button class="btn btn-outline-light btn-sm" routerLink="/mi-perfil"> Mi Perfil </button>
-            <button *ngIf="!esEmpresa && !esAdmin" class="btn btn-outline-info btn-sm fw-bold text-white me-2"
-                routerLink="/mi-biblioteca">
+            <button class="btn btn-outline-light fw-bold btn-sm" routerLink="/mi-perfil"> Mi Perfil </button>
+            <button *ngIf="!esEmpresa && !esAdmin" class="btn btn-outline-light btn-sm fw-bold text-white me-2" routerLink="/mi-biblioteca">
                 <i class="bi bi-collection-play"></i> Mi Biblioteca
+            </button>
+            <button class="btn btn-outline-light btn-sm fw-bold text-white me-2" routerLink="/mi-grupo">
+                <i class="bi bi-people-fill"></i> Grupo Familiar
             </button>
             <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
         </div>

@@ -11,6 +11,7 @@ import { BibliotecaComponent } from './pages/biblioteca/biblioteca';
 import { JuegoDetalleComponent } from './pages/juego-detalle/juego-detalle';
 import { AdminReportesComponent } from './pages/admin-reportes/admin-reportes';
 import { EmpresaVentasComponent } from './pages/empresa-ventas/empresa-ventas';
+import { GrupoFamiliarComponent } from './pages/grupo-familiar/grupo-familiar';
 import { AdminEmpresas } from './pages/admin-empresas/admin-empresas';
 import { AdminConfiguracion } from './pages/admin-configuracion/admin-configuracion';
 import { AdminBanner } from './pages/admin-banner/admin-banner';
@@ -28,6 +29,7 @@ export const routes: Routes = [
     { path: 'juego/:id', component: JuegoDetalleComponent },
     { path: 'reportes-admin', component: AdminReportesComponent },
     { path: 'mis-ventas', component: EmpresaVentasComponent },
+    { path: 'mi-grupo', component: GrupoFamiliarComponent },
     { path: 'admin/empresas', component: AdminEmpresas },
     { path: 'admin/config', component: AdminConfiguracion },
     { path: 'admin/banner', component: AdminBanner },
