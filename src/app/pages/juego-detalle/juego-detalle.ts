@@ -21,6 +21,8 @@ export class JuegoDetalleComponent implements OnInit
     juego: Videojuego | null = null;
     multimedia: Multimedia[] = [];
     comentarios: Comentario[] = [];
+    idComentarioAresponder: number | null = null;
+    nombreUsuarioAresponder: string = '';
 
     idJuego: number = 0;
     usuarioActual: any = null;
@@ -103,50 +105,75 @@ export class JuegoDetalleComponent implements OnInit
         this.comentariosService.listarComentarios(this.idJuego).subscribe
         (
             data => 
+            {
+                this.comentarios = this.procesarComentariosRecursivo(data);
+                this.cargando = false;
+            }
+        );
+    }
+
+    procesarComentariosRecursivo(lista: Comentario[]): Comentario[]
+    {
+        return lista.map
+        (
+            c => 
+            {
+                const esPropio = this.usuarioActual && c.idGamer === this.usuarioActual.idUsuario;
+                if (c.respuestas && c.respuestas.length > 0)
                 {
-                    this.comentarios = data.map
-                    (
-                        c => 
-                        (
-                            {
-                                ...c,
-                                esMio: this.usuarioActual && c.idGamer === this.usuarioActual.idUsuario
-                            }
-                        )
-                    );
+                    c.respuestas = this.procesarComentariosRecursivo(c.respuestas);
                 }
+                return { 
+                    ...c,
+                    esMio: esPropio
+                };
+            }
         );
     }
 
     enviarComentario()
     {
         if (!this.nuevoComentario.texto.trim()) return;
-        const comentario: Comentario = 
+        
+        const comentario: any = 
         {
-            ...this.nuevoComentario,
+            idComentario: this.editandoComentarioId || undefined,
             idGamer: this.usuarioActual.idUsuario,
-            idJuego: this.idJuego
+            idJuego: this.idJuego,
+            texto: this.nuevoComentario.texto,
+            calificacion: this.nuevoComentario.calificacion,
+            idComentarioPrincipal: this.editandoComentarioId ? this.nuevoComentario.idComentarioPrincipal : (this.idComentarioAresponder || undefined)
         };
-
+        if (comentario.idComentarioPrincipal) 
+        {
+             comentario.calificacion = 0; 
+        }
         if (this.editandoComentarioId)
         {
-            this.comentariosService.editarComentario(this.editandoComentarioId, comentario).subscribe
-            (
-                () =>
+             this.comentariosService.editarComentario(this.editandoComentarioId, comentario).subscribe
+             (
                 {
-                    this.cancelarEdicion();
-                    this.cargarComentarios();
+                    next: () => 
+                    {
+                        this.cancelarEdicion();
+                        this.cargarComentarios();
+                    },
+                    error: (err) => alert('Error al editar: ' + (err.error?.error || err.message))
                 }
-            );
+             );
         }
         else
         {
             this.comentariosService.publicarComentario(comentario).subscribe
             (
-                () => 
                 {
-                    this.nuevoComentario = { idGamer: 0, idJuego: 0, texto: '', calificacion: 5 };
-                    this.cargarComentarios();
+                    next: () => 
+                    {
+                        this.nuevoComentario = { idGamer: 0, idJuego: 0, texto: '', calificacion: 5 };
+                        this.cancelarRespuesta();
+                        this.cargarComentarios();
+                    },
+                    error: (err) => alert('Error al publicar: ' + (err.error?.error || err.message))
                 }
             );
         }
@@ -157,6 +184,11 @@ export class JuegoDetalleComponent implements OnInit
         this.editandoComentarioId = comentario.idComentario!;
         this.nuevoComentario = { ...comentario };
         document.getElementById('form-comentario')?.scrollIntoView({ behavior: 'smooth' });
+        if (comentario.idComentarioPrincipal) 
+        {
+            this.idComentarioAresponder = null;
+        }
+        setTimeout(() => { document.getElementById('form-comentario')?.scrollIntoView({ behavior: 'smooth' }); }, 100);
     }
 
     cancelarEdicion()
@@ -186,4 +218,19 @@ export class JuegoDetalleComponent implements OnInit
     {
         return Array(5 - Math.floor(calificacion)).fill(0);
     }
+
+    responderComentario(comentarioPadre: Comentario)
+    {
+        this.idComentarioAresponder = comentarioPadre.idComentario || null;
+        this.nombreUsuarioAresponder = comentarioPadre.nicknameGamer || 'Usuario';
+        this.nuevoComentario = { idGamer: 0, idJuego: 0, texto: '', calificacion: 0 };        
+        setTimeout(() => {document.getElementById('form-comentario')?.scrollIntoView({ behavior: 'smooth' });}, 100);
+    }
+
+    cancelarRespuesta()
+    {
+        this.idComentarioAresponder = null;
+        this.nombreUsuarioAresponder = '';
+        this.nuevoComentario = { idGamer: 0, idJuego: 0, texto: '', calificacion: 5 };
+    }   
 }
