@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { UsuarioService } from '../../../services/usuarioServices/UsuarioService';
+import { PrestamosService, SolicitudPrestamo } from '../../../services/prestamos';
 import { Biblioteca } from '../../../models/biblioteca';
 
 @Component({
@@ -15,12 +16,15 @@ import { Biblioteca } from '../../../models/biblioteca';
 export class BibliotecaComponent implements OnInit 
 {
     misJuegos: Biblioteca[] = [];
+    usuarioActual: any = null;
     cargando: boolean = true;
     error: string = '';
 
-    constructor(
+    constructor
+    (
         private authService: AuthService,
         private usuarioService: UsuarioService,
+        private prestamosService: PrestamosService,
         private router: Router
     ) { }
 
@@ -30,6 +34,7 @@ export class BibliotecaComponent implements OnInit
 
         if (usuario && usuario.rol === 'GAMER' && usuario.idUsuario)
         {
+            this.usuarioActual = usuario;
             this.cargarBiblioteca(usuario.idUsuario);
         }
         else
@@ -57,6 +62,11 @@ export class BibliotecaComponent implements OnInit
                 }
             }
         );
+    }
+
+    jugar(juego: Biblioteca)
+    {
+        alert(`Ejecutando ${juego.titulo}...`);
     }
 
     descargarJuego(juego: Biblioteca)
@@ -91,7 +101,7 @@ export class BibliotecaComponent implements OnInit
     }
     
     eliminarJuego(juego: Biblioteca)
-    {
+    {   
         const usuario = this.authService.obtenerUsuarioActual();
         if (!usuario || !usuario.idUsuario) return;
         if (confirm(`¿Estás seguro de desinstalar "${juego.titulo}"?`)) 
@@ -112,5 +122,57 @@ export class BibliotecaComponent implements OnInit
                 }
             );
         }
+    }
+
+    solicitarPrestamo(juego: Biblioteca)
+    {
+        if (!juego.idPropietario) return;
+        const solicitud: SolicitudPrestamo = 
+        {
+            idUsuarioSolicitante: this.usuarioActual.idUsuario,
+            idJuego: juego.idJuego,
+            idPropietario: juego.idPropietario
+        };
+
+        this.prestamosService.solicitarPrestamo(solicitud).subscribe
+        (
+            {
+                next: () => 
+                {
+                    alert(`¡Has tomado prestado "${juego.titulo}" de ${juego.nombrePropietario}!`);
+                    this.cargarBiblioteca(this.usuarioActual.idUsuario); // Recargar para actualizar estados
+                },
+                error: (err) => alert('No se pudo realizar el préstamo: ' + (err.error?.mensaje || err.message))
+            }
+        );
+    }
+
+    devolverPrestamo(juego: Biblioteca)
+    {
+        if (!confirm(`¿Devolver "${juego.titulo}" a ${juego.nombrePropietario}? Dejarás de tener acceso.`)) return;
+        if (!juego.idPropietario) return;
+        const solicitud: SolicitudPrestamo = 
+        {
+            idUsuarioSolicitante: this.usuarioActual.idUsuario,
+            idJuego: juego.idJuego,
+            idPropietario: juego.idPropietario
+        };
+
+        this.prestamosService.devolverPrestamo(solicitud).subscribe
+        (
+            {
+                next: () => 
+                {
+                    alert('Juego devuelto exitosamente.');
+                    this.cargarBiblioteca(this.usuarioActual.idUsuario);
+                },
+                error: (err) => alert('Error al devolver: ' + (err.error?.mensaje || err.message))
+            }
+        );
+    }
+
+    esMio(juego: Biblioteca): boolean 
+    {
+        return juego.nombrePropietario === 'Tú' || juego.idPropietario === this.usuarioActual.idUsuario;
     }
 }

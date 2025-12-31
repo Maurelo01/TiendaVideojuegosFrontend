@@ -5,4 +5,6 @@ export interface Biblioteca
     imagen: string;
     estadoInstalacion: string
     fechaAdquisicion: string;
+    idPropietario?: number;
+    nombrePropietario?: string;
 }
