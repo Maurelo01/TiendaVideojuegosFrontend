@@ -93,7 +93,8 @@ export class BibliotecaComponent implements OnInit
                     error: (err) => 
                     {
                         console.error(err);
-                        alert('Error en la instalación: ' + (err.error?.mensaje || 'Intente más tarde'));
+                        const mensajeError = err.error?.error || err.error?.mensaje || 'Intente más tarde';
+                        alert('Error en la instalación: ' + mensajeError);
                     }
                 }
             );
@@ -142,7 +143,11 @@ export class BibliotecaComponent implements OnInit
                     alert(`¡Has tomado prestado "${juego.titulo}" de ${juego.nombrePropietario}!`);
                     this.cargarBiblioteca(this.usuarioActual.idUsuario); // Recargar para actualizar estados
                 },
-                error: (err) => alert('No se pudo realizar el préstamo: ' + (err.error?.mensaje || err.message))
+                error: (err) => 
+                {
+                    const mensajeBackend = err.error?.error || err.error?.mensaje || err.message;
+                    alert('No se pudo realizar el préstamo: ' + mensajeBackend);
+                }
             }
         );
     }
