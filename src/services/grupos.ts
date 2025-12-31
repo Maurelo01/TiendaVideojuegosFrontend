@@ -67,4 +67,10 @@ export class GruposService
         let params = new HttpParams().set('idLider', idLider.toString());
         return this.http.delete(`${this.API_URL}/${idGrupo}`, { params: params });
     }
+
+    salirDelGrupo(idGrupo: number, idUsuario: number): Observable<any>
+    {
+        let params = new HttpParams().set('idUsuario', idUsuario.toString());
+        return this.http.delete(`${this.API_URL}/${idGrupo}/salir`, { params: params });
+    }
 }

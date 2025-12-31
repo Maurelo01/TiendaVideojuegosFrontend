@@ -17,7 +17,8 @@
         <div class="card-body">
             <i class="bi display-1 text-muted mb-3"></i>
             <h3 class="fw-bold">No tienes ningún grupo familiar</h3>
-            <p class="text-muted">Crea o unete a un grupo para compartir tu biblioteca de juegos con amigos y familiares.</p>
+            <p class="text-muted">Crea o unete a un grupo para compartir tu biblioteca de juegos con amigos y
+                familiares.</p>
 
             <div class="row justify-content-center mt-4">
                 <div class="col-md-6">
@@ -84,10 +85,18 @@
                     </div>
                 </div>
 
-                <div *ngIf="esLider" class="mt-5 pt-3 border-top">
-                    <button class="btn btn-danger float-end" (click)="disolverGrupo()">
-                        <i class="bi bi-trash"></i> Disolver Grupo
+                <div class="mt-5 pt-3 border-top d-flex justify-content-between align-items-center">
+                    <button *ngIf="!esLider" class="btn btn-outline-danger" (click)="salirDelGrupo()">
+                        <i class="bi bi-box-arrow-right"></i> Salir del Grupo
                     </button>
+                    <div *ngIf="esLider" class="text-end w-100">
+                        <small class="text-muted d-block mb-2">
+                            <i class="bi bi-exclamation-triangle"></i> Como líder, si sales, el grupo se elimina.
+                        </small>
+                        <button class="btn btn-danger" (click)="salirDelGrupo()">
+                            <i class="bi bi-trash"></i> Disolver y Salir del Grupo
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
