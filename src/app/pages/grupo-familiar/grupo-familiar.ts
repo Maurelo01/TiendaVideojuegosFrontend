@@ -152,4 +152,29 @@ export class GrupoFamiliarComponent implements OnInit
         this.error = mensaje;
         setTimeout(() => this.error = '', 10000);
     }
+
+    salirDelGrupo()
+    {
+        if (!this.grupo) return;
+        
+        let mensajeConfirmacion = '¿Estás seguro de salir del grupo? Perderás acceso a los juegos compartidos.';
+        if (this.esLider)
+        {
+            mensajeConfirmacion = 'Advertencia: Eres el líder. Si sales, el grupo se disolverá permanentemente y todos los miembros serán expulsados. ¿Confirmar?';
+        }
+        if (!confirm(mensajeConfirmacion)) return;
+        this.gruposService.salirDelGrupo(this.grupo.idGrupo, this.usuarioActual.idUsuario).subscribe
+        (
+            {
+                next: () => 
+                {
+                    alert('Has salido del grupo exitosamente.');
+                    this.grupo = null;
+                    this.esLider = false;
+                    this.cargarDatosGrupo();
+                },
+                error: (err) => this.mostrarError(err.error?.mensaje || err.error?.error || 'Error al salir del grupo.')
+            }
+        );
+    }
 }
