@@ -36,4 +36,9 @@ export class PrestamosService
     {
         return this.http.get<any[]>(`${this.API_URL}/reporte/usuario/${idUsuario}`);
     }
+
+    descargarUsoFamiliarPDF(idUsuario: number): Observable<Blob> 
+    {
+        return this.http.get(`${this.API_URL}/reporte/usuario/${idUsuario}/pdf`, { responseType: 'blob' });
+    }
 }

@@ -74,4 +74,9 @@ export class UsuarioService
     {
         return this.http.get<any>(`${this.API_URL}/gamer/${idUsuario}/analisis`);
     }
+
+    descargarAnalisisPDF(idUsuario: number): Observable<Blob> 
+    {
+        return this.http.get(`${this.API_URL}/gamer/${idUsuario}/analisis/pdf`, { responseType: 'blob' });
+    }
 }
