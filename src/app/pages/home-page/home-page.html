@@ -28,7 +28,8 @@
                 routerLink="/mi-biblioteca">
                 <i class="bi bi-collection-play"></i> Mi Biblioteca
             </button>
-            <button class="btn btn-outline-light btn-sm fw-bold text-white me-2" routerLink="/mi-grupo">
+            <button *ngIf="!esEmpresa && !esAdmin" class="btn btn-outline-light btn-sm fw-bold text-white me-2"
+                routerLink="/mi-grupo">
                 <i class="bi bi-people-fill"></i> Grupo Familiar
             </button>
             <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
