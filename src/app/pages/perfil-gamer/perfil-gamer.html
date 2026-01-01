@@ -1,179 +1,209 @@
-<div class="container mt-5">
-    <div class="card shadow border-0 tarjeta-nordica mx-auto" style="max-width: 800px;">
-        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center p-4">
-            <h3 class="m-0 fw-bold">Mi Perfil</h3>
-            <button class="btn btn-outline-light btn-sm" routerLink="/home"> Volver al Inicio </button>
-        </div>
+<div class="container mt-5 mb-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="texto-nordico fw-bold m-0 mt-4">
+            <i class="bi bi-person-circle me-2"></i>Mi Perfil
+        </h2>
+        <button class="btn btn-outline-secondary rounded-3" routerLink="/home">
+            <i class="bi bi-house me-1"></i> Volver al Inicio
+        </button>
+    </div>
 
-        <div class="card-body p-5">
-            <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
-            <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div *ngIf="mensaje" class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ mensaje }}
+    </div>
+    <div *ngIf="error" class="alert alert-danger border-0 shadow-sm rounded-3 mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+    </div>
 
-            <div class="card shadow-sm mb-4 border-primary" *ngIf="gamer">
-                <div class="card-body d-flex justify-content-between align-items-center bg-light">
-                    <div>
-                        <h5 class="card-title text-primary mb-0">
-                            <i class="bi bi-wallet2"></i> Mi Cartera
-                        </h5>
-                        <small class="text-muted">Saldo disponible para compras</small>
-                    </div>
-                    <div class="text-end">
-                        <h2 class="fw-bold text-success m-0">${{ gamer.saldoCartera | number:'1.2-2' }}</h2>
-                        <button class="btn btn-sm btn-outline-success mt-1" (click)="abrirRecarga()">
-                            <i class="bi bi-plus-circle"></i> Recargar Saldo
-                        </button>
-                    </div>
+    <div class="card tarjeta-nordica p-4 p-md-5 mx-auto" style="max-width: 900px;">
+        
+        <div class="card border-0 bg-light rounded-3 mb-5 overflow-hidden position-relative" *ngIf="gamer">
+            <div class="position-absolute top-0 start-0 h-100 bg-nordico" style="width: 5px;"></div>
+            <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <h5 class="texto-nordico fw-bold mb-1">
+                        <i class="bi bi-wallet2 me-2"></i>Mi Billetera
+                    </h5>
+                    <small class="text-muted">Saldo disponible para compras en la tienda</small>
+                </div>
+                <div class="text-end">
+                    <h2 class="fw-bold text-success m-0 mb-2">${{ gamer.saldoCartera | number:'1.2-2' }}</h2>
+                    <button class="btn boton-acento btn-sm px-3 rounded-pill fw-bold" (click)="abrirRecarga()">
+                        <i class="bi bi-plus-lg"></i> Recargar Saldo
+                    </button>
                 </div>
             </div>
+        </div>
 
-            <div *ngIf="!modoEdicion && gamer">
-                <div class="row mb-4 align-items-center">
-                    <div class="col-md-4 text-center">
+        <div *ngIf="!modoEdicion && gamer">
+            <div class="row align-items-center mb-5">
+                <div class="col-md-4 text-center mb-4 mb-md-0">
+                    <div class="position-relative d-inline-block">
                         <img [src]="gamer.avatar ? 'data:image/jpeg;base64,' + gamer.avatar : 'https://ui-avatars.com/api/?name=' + gamer.nickname + '&background=random&size=150'"
-                            class="rounded-circle shadow mb-3 border border-3 border-light"
-                            style="width: 150px; height: 150px; object-fit: cover;" alt="Avatar">
-
-                        <h4 class="fw-bold">{{ gamer.nickname }}</h4>
-                        <span class="badge bg-info text-dark"> Gamer </span>
+                            class="rounded-circle shadow-sm border p-1 bg-white"
+                            style="width: 160px; height: 160px; object-fit: cover;" alt="Avatar">
+                        <span class="position-absolute bottom-0 end-0 badge bg-nordico rounded-pill border border-white px-3 py-2">
+                            Gamer
+                        </span>
                     </div>
-                    <div class="col-md-8">
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item bg-transparent"><strong>Correo:</strong> {{ gamer.correo }}</li>
-                            <li class="list-group-item bg-transparent"><strong>Teléfono:</strong> {{ gamer.telefono ||
-                                'No registrado' }}</li>
-                            <li class="list-group-item bg-transparent"><strong>País:</strong> {{ gamer.pais || 'No especificado' }}</li>
-                            <li class="list-group-item bg-transparent"><strong>Fecha Nacimiento:</strong>
-                                {{gamer.fechaNacimiento | date:'longDate' }}</li>
-                            <li class="list-group-item bg-transparent">
-                                <strong>Saldo en Cartera:</strong>
-                                <span class="text-success fw-bold ms-2">${{ gamer.saldoCartera | number:'1.2-2'}}</span>
+                    <h3 class="fw-bold texto-nordico mt-3 mb-0">{{ gamer.nickname }}</h3>
+                    <small class="text-muted">{{ gamer.correo }}</small>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card bg-white border shadow-sm rounded-3">
+                        <ul class="list-group list-group-flush rounded-3">
+                            <li class="list-group-item p-3 border-bottom-0">
+                                <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Información Personal</small>
+                            </li>
+                            <li class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center bg-light bg-opacity-25">
+                                <span class="text-muted"><i class="bi bi-telephone me-2"></i>Teléfono</span>
+                                <span class="fw-bold text-dark">{{ gamer.telefono || 'No registrado' }}</span>
+                            </li>
+                            <li class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center">
+                                <span class="text-muted"><i class="bi bi-geo-alt me-2"></i>País</span>
+                                <span class="fw-bold text-dark">{{ gamer.pais || 'No especificado' }}</span>
+                            </li>
+                            <li class="list-group-item px-3 py-2 d-flex justify-content-between align-items-center bg-light bg-opacity-25">
+                                <span class="text-muted"><i class="bi bi-calendar-event me-2"></i>Nacimiento</span>
+                                <span class="fw-bold text-dark">{{ gamer.fechaNacimiento | date:'mediumDate' }}</span>
                             </li>
                         </ul>
                     </div>
                 </div>
-                <div class="text-end">
-                    <button class="btn btn-info text-white me-2" routerLink="/mi-analisis"> <i class="bi bi-pie-chart-fill"></i> Ver Análisis de Biblioteca </button>
-                    <button class="btn btn-primary px-4" (click)="activarEdicion()">Editar Perfil</button>
-                </div>
             </div>
 
-            <div *ngIf="modoEdicion">
-                <form (ngSubmit)="guardarCambios()">
-                    <div class="text-center mb-4">
-                        <div class="position-relative d-inline-block">
-                            <img [src]="imagenPrevisualizacion || (gamerEdit.avatar ? 'data:image/jpeg;base64,' + gamerEdit.avatar : 'https://ui-avatars.com/api/?name=' + gamerEdit.nickname + '&background=random&size=150')"
-                                class="rounded-circle shadow border"
-                                style="width: 150px; height: 150px; object-fit: cover;" alt="Previsualización">
-
-                            <label class="btn btn-sm btn-dark position-absolute bottom-0 end-0 rounded-circle shadow"
-                                style="width: 40px; height: 40px; padding-top: 8px; cursor: pointer;"
-                                title="Cambiar foto">
-                                <i class="bi bi-camera-fill"></i> <input type="file" (change)="onFileSelected($event)"
-                                    accept="image/*" hidden>
-                            </label>
-                        </div>
-                        <div class="form-text mt-2">Haz clic en el icono para cambiar tu foto</div>
-                    </div>
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Nickname</label>
-                            <input type="text" class="form-control" [(ngModel)]="gamerEdit.nickname" name="nick"
-                                required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Teléfono</label>
-                            <input type="text" class="form-control" [(ngModel)]="gamerEdit.telefono" name="tel">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">País</label>
-                            <input type="text" class="form-control" [(ngModel)]="gamerEdit.pais" name="pais">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Correo (No se puede modificar)</label>
-                            <input type="text" class="form-control" [value]="gamerEdit.correo" disabled>
-                        </div>
-
-                        <div class="col-12 mt-4">
-                            <h5 class="border-bottom pb-2">Seguridad</h5>
-                            <div class="alert alert-warning py-2 small">
-                                <i class="bi bi-exclamation-circle"></i> Deja el campo vacío si no quieres cambiar tu
-                                contraseña.
-                            </div>
-                            <label class="form-label">Nueva Contraseña</label>
-                            <input type="password" class="form-control" [(ngModel)]="contrasena" name="passNew"
-                                placeholder="********">
-                        </div>
-                    </div>
-
-                    <div class="d-flex justify-content-end gap-2 mt-4">
-                        <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">Cancelar</button>
-                        <button type="submit" class="btn btn-success">Guardar Cambios</button>
-                    </div>
-                </form>
+            <div class="d-flex justify-content-end gap-2 border-top pt-4">
+                <button class="btn btn-outline-secondary rounded-3" routerLink="/mi-analisis"> 
+                    <i class="bi bi-pie-chart-fill me-1"></i> Análisis de Biblioteca 
+                </button>
+                <button class="btn boton-nordico px-4 rounded-3" (click)="activarEdicion()">
+                    <i class="bi bi-pencil-square me-1"></i> Editar Perfil
+                </button>
             </div>
-
-            <div class="mt-5">
-                <h4 class="mb-3 border-bottom pb-2 text-secondary">
-                    <i class="bi bi-clock-history"></i> Historial de Gastos
-                </h4>
-                <div *ngIf="historialCompras.length === 0" class="alert alert-light text-center border">
-                    <span class="text-muted">Aún no has realizado compras.</span>
-                </div>
-                <div *ngIf="historialCompras.length > 0" class="table-responsive shadow-sm rounded">
-                    <table class="table table-hover mb-0 align-middle">
-                        <thead class="bg-light">
-                            <tr>
-                                <th>Fecha</th>
-                                <th>Videojuego</th>
-                                <th class="text-end">Monto Pagado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let compra of historialCompras">
-                                <td class="text-muted">{{ compra.fechaCompra | date:'mediumDate' }}</td>
-                                <td class="fw-bold text-dark">{{ compra.tituloJuego }}</td>
-                                <td class="text-end fw-bold text-success">
-                                    ${{ compra.precioPagado | number:'1.2-2' }}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-3 d-flex gap-2 mt-3">
-                    <button class="btn btn-danger text-white" (click)="descargarHistorialPDF()">
-                        <i class="bi bi-file-earmark-pdf-fill"></i> Exportar PDF
-                    </button>
-                </div>
-            </div>
-
         </div>
+
+        <div *ngIf="modoEdicion">
+            <form (ngSubmit)="guardarCambios()">
+                <div class="text-center mb-5 bg-light rounded-3 p-4 border border-dashed">
+                    <div class="position-relative d-inline-block">
+                        <img [src]="imagenPrevisualizacion || (gamerEdit.avatar ? 'data:image/jpeg;base64,' + gamerEdit.avatar : 'https://ui-avatars.com/api/?name=' + gamerEdit.nickname + '&background=random&size=150')"
+                            class="rounded-circle shadow-sm bg-white"
+                            style="width: 150px; height: 150px; object-fit: cover;" alt="Previsualización">
+
+                        <label class="btn btn-dark position-absolute bottom-0 end-0 rounded-circle shadow border border-white"
+                            style="width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; cursor: pointer;"
+                            title="Cambiar foto">
+                            <i class="bi bi-camera-fill"></i> 
+                            <input type="file" (change)="onFileSelected($event)" accept="image/*" hidden>
+                        </label>
+                    </div>
+                    <p class="text-muted small mt-2 mb-0">Toca el icono de cámara para actualizar tu avatar</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Nickname</label>
+                        <input type="text" class="form-control" [(ngModel)]="gamerEdit.nickname" name="nick" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Teléfono</label>
+                        <input type="text" class="form-control" [(ngModel)]="gamerEdit.telefono" name="tel">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">País</label>
+                        <input type="text" class="form-control" [(ngModel)]="gamerEdit.pais" name="pais">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary">Correo Electrónico</label>
+                        <input type="text" class="form-control bg-light" [value]="gamerEdit.correo" disabled title="No se puede modificar">
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <div class="p-3 border rounded-3 bg-light">
+                            <h6 class="texto-nordico fw-bold mb-3"><i class="bi bi-shield-lock"></i> Seguridad</h6>
+                            <div class="alert alert-warning py-2 small border-0">
+                                <i class="bi bi-info-circle me-1"></i> Solo llena este campo si deseas cambiar tu contraseña.
+                            </div>
+                            <label class="form-label small fw-bold text-secondary">Nueva Contraseña</label>
+                            <input type="password" class="form-control" [(ngModel)]="contrasena" name="passNew" placeholder="••••••••">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-5 border-top pt-4">
+                    <button type="button" class="btn btn-link text-muted text-decoration-none" (click)="cancelarEdicion()">Cancelar</button>
+                    <button type="submit" class="btn boton-nordico px-4 rounded-3">Guardar Cambios</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="mt-5 pt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="texto-nordico fw-bold m-0">
+                    <i class="bi bi-clock-history me-2"></i>Historial de Compras
+                </h4>
+                <button *ngIf="historialCompras.length > 0" class="btn btn-sm btn-outline-danger rounded-3" (click)="descargarHistorialPDF()">
+                    <i class="bi bi-file-earmark-pdf-fill"></i> Descargar PDF
+                </button>
+            </div>
+
+            <div *ngIf="historialCompras.length === 0" class="text-center py-4 bg-light rounded-3 border border-dashed">
+                <p class="text-muted m-0">Aún no has realizado compras en la tienda.</p>
+            </div>
+
+            <div *ngIf="historialCompras.length > 0" class="table-responsive rounded-3 border shadow-sm">
+                <table class="table table-hover mb-0 align-middle">
+                    <thead class="bg-nordico text-white">
+                        <tr>
+                            <th class="py-3 ps-4">Fecha</th>
+                            <th class="py-3">Videojuego</th>
+                            <th class="py-3 text-end pe-4">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let compra of historialCompras">
+                            <td class="ps-4 text-muted small">{{ compra.fechaCompra | date:'mediumDate' }}</td>
+                            <td class="fw-bold text-dark">{{ compra.tituloJuego }}</td>
+                            <td class="text-end pe-4 fw-bold text-success">
+                                ${{ compra.precioPagado | number:'1.2-2' }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 </div>
 
-<div class="modal" tabindex="-1" [style.display]="mostrarModalRecarga ? 'block' : 'none'"
-    style="background: rgba(0,0,0,0.5)">
+<div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': mostrarModalRecarga}" style="background: rgba(44, 62, 80, 0.7)">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header bg-success text-white">
-                <h5 class="modal-title">Recargar Billetera</h5>
+        <div class="modal-content tarjeta-nordica overflow-hidden">
+            <div class="modal-header bg-nordico text-white border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-wallet-fill"></i> Recargar Billetera</h5>
                 <button type="button" class="btn-close btn-close-white" (click)="cerrarRecarga()"></button>
             </div>
-            <div class="modal-body">
-                <p>Ingresa el monto que deseas añadir a tu cuenta:</p>
+            
+            <div class="modal-body p-4 text-center">
+                <p class="text-muted mb-4">Ingresa el monto que deseas añadir a tu saldo disponible.</p>
 
-                <div class="input-group mb-3">
-                    <span class="input-group-text">$</span>
-                    <input type="number" class="form-control form-control-lg" [(ngModel)]="montoRecarga"
-                        placeholder="0.00" min="1">
+                <div class="input-group input-group-lg mb-3 shadow-sm rounded-3 overflow-hidden">
+                    <span class="input-group-text bg-light border-0 fw-bold text-muted">$</span>
+                    <input type="number" class="form-control border-0 bg-light fw-bold text-center text-nordico-claro" 
+                        [(ngModel)]="montoRecarga" placeholder="0.00" min="1">
                 </div>
-                <div class="alert alert-info small">
-                    <i class="bi bi-info-circle"></i> No se puede recargar mas de $10,000.
+                
+                <div class="alert alert-light border small text-muted">
+                    <i class="bi bi-info-circle me-1"></i> El límite máximo por transacción es de $10,000.
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" (click)="cerrarRecarga()">Cancelar</button>
-                <button type="button" class="btn btn-success" (click)="confirmarRecarga()">
-                    <i class="bi bi-cash-coin"></i> Confirmar Recarga
+            
+            <div class="modal-footer border-0 bg-light">
+                <button type="button" class="btn btn-link text-muted text-decoration-none" (click)="cerrarRecarga()">Cancelar</button>
+                <button type="button" class="btn boton-nordico px-4 rounded-3" (click)="confirmarRecarga()">
+                    <i class="bi bi-check-lg me-1"></i> Confirmar Recarga
                 </button>
             </div>
         </div>

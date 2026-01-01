@@ -1,104 +1,121 @@
 <div class="container mt-5 mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-primary fw-bold">
-            <i class="bi bi-collection-play-fill"></i> Mi Biblioteca y Grupo
-        </h2>
+    
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-5 gap-3">
         <div>
-            <button class="btn btn-outline-warning me-2" routerLink="/mi-grupo">
-                <i class="bi bi-people-fill"></i> Gestionar Grupo
+            <h2 class="texto-nordico fw-bold mb-0 mt-4">
+                <i class="bi bi-collection-play me-2"></i>Mi Biblioteca
+            </h2>
+            <p class="text-muted small mb-0">Gestiona tus juegos y préstamos familiares</p>
+        </div>
+        
+        <div class="d-flex gap-2">
+            <button class="btn btn-outline-secondary rounded-3" routerLink="/home">
+                <i class="bi bi-shop me-1"></i> Tienda
             </button>
-            <button class="btn btn-outline-secondary" routerLink="/home">
-                <i class="bi bi-house"></i> Volver a la Tienda
+            <button class="btn boton-nordico rounded-3 shadow-sm" routerLink="/mi-grupo">
+                <i class="bi bi-people-fill me-1"></i> Gestionar Grupo
             </button>
         </div>
     </div>
 
-    <div *ngIf="cargando" class="py-5">
-        <div class="text-center mb-3">
-            <p class="text-muted">Cargando tu biblioteca...</p>
-        </div>
-        <div class="progress" style="height: 25px;">
-            <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
-                style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                Cargando...
-            </div>
+    <div *ngIf="cargando" class="py-5 text-center">
+        <div class="spinner-border text-nordico-claro mb-3" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="text-muted">Sincronizando biblioteca...</p>
+    </div>
+
+    <div *ngIf="error" class="alert alert-danger shadow-sm border-0 rounded-3 text-center">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+    </div>
+
+    <div *ngIf="!cargando && misJuegos.length === 0" class="text-center py-5">
+        <div class="card tarjeta-nordica d-inline-block p-5 mx-auto">
+            <i class="bi bi-controller fs-1 text-muted mb-3 d-block"></i>
+            <h4 class="texto-nordico fw-bold">Tu biblioteca está vacía</h4>
+            <p class="text-muted mb-4">¡Compra juegos o únete a un grupo familiar para empezar!</p>
+            <button class="btn boton-acento px-4 rounded-3" routerLink="/home">
+                Ir a la Tienda
+            </button>
         </div>
     </div>
 
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-
-    <div *ngIf="!cargando && misJuegos.length === 0" class="text-center py-5 bg-light rounded-3">
-        <i class="bi bi-controller fs-1 text-muted"></i>
-        <h4 class="mt-3 text-muted">Tu biblioteca está vacía</h4>
-        <p class="text-muted">¡Compra juegos o únete a un grupo familiar para ver más títulos!</p>
-        <button class="btn btn-primary mt-2" routerLink="/home">Ir a la Tienda</button>
-    </div>
-
-    <div class="row row-cols-1 row-cols-md-4 g-4" *ngIf="!cargando && misJuegos.length > 0">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4" *ngIf="!cargando && misJuegos.length > 0">
         <div class="col" *ngFor="let juego of misJuegos">
-            <div class="card h-100 shadow-sm border-0 position-relative" style="overflow: hidden;"
-                [ngClass]="{'border-warning border-2': !esMio(juego)}">
+            
+            <div class="card h-100 tarjeta-nordica overflow-hidden position-relative">
+                
+                <div class="position-absolute top-0 w-100 d-flex justify-content-between p-2" style="z-index: 2;">
+                    <span *ngIf="!esMio(juego)" class="badge bg-warning text-dark shadow-sm border border-light">
+                        <i class="bi bi-share-fill me-1"></i> De {{ juego.nombrePropietario }}
+                    </span>
+                    <span *ngIf="esMio(juego)"></span> <span *ngIf="juego.estadoInstalacion !== 'INSTALADO' && juego.estadoInstalacion !== 'NO_INSTALADO'"
+                        class="badge shadow-sm border border-light" 
+                        [ngClass]="{
+                            'bg-info text-dark': juego.estadoInstalacion === 'DISPONIBLE',
+                            'bg-danger': juego.estadoInstalacion === 'OCUPADO'
+                        }">
+                        {{ juego.estadoInstalacion }}
+                    </span>
+                    
+                    <span *ngIf="juego.estadoInstalacion === 'INSTALADO'" class="badge bg-success shadow-sm border border-light">
+                        <i class="bi bi-check-lg"></i> Listo
+                    </span>
+                </div>
 
-                <span *ngIf="juego.estadoInstalacion !== 'INSTALADO' && juego.estadoInstalacion !== 'NO_INSTALADO'"
-                    class="position-absolute top-0 end-0 badge m-2" 
-                    [ngClass]="{
-                        'bg-info text-dark': juego.estadoInstalacion === 'DISPONIBLE',
-                        'bg-danger': juego.estadoInstalacion === 'OCUPADO'
-                    }">
-                    {{ juego.estadoInstalacion }}
-                </span>
+                <div class="ratio ratio-3x4 bg-light">
+                    <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/400x600?text=Juego'"
+                        class="card-img-top object-fit-cover" alt="{{ juego.titulo }}">
+                </div>
 
-                <span *ngIf="!esMio(juego)"
-                    class="position-absolute top-0 start-0 badge bg-warning text-dark m-2 shadow-sm">
-                    <i class="bi bi-person-fill"></i> De {{ juego.nombrePropietario }}
-                </span>
-
-                <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/400x600?text=No+Cover'"
-                    class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ juego.titulo }}">
-
-                <div class="card-body d-flex flex-column">
-                    <h6 class="card-title fw-bold text-truncate" title="{{ juego.titulo }}">
+                <div class="card-body d-flex flex-column pt-3">
+                    <h6 class="card-title fw-bold text-dark text-truncate mb-1" title="{{ juego.titulo }}">
                         {{ juego.titulo }}
                     </h6>
-                    <small class="text-muted mb-3">
-                        {{ esMio(juego) ? 'Adquirido el: ' + (juego.fechaAdquisicion | date:'shortDate') : 'Compartido por grupo' }}
+                    
+                    <small class="text-muted mb-3 d-block" style="font-size: 0.8rem;">
+                        <i class="bi bi-calendar3 me-1"></i>
+                        {{ esMio(juego) ? (juego.fechaAdquisicion | date:'mediumDate') : 'Préstamo Familiar' }}
                     </small>
 
-                    <div class="mt-auto">
-                        <div *ngIf="esMio(juego)">
-                            <button class="btn w-100 btn-sm fw-bold mb-2"
-                                [ngClass]="{'btn-success': juego.estadoInstalacion === 'INSTALADO', 'btn-primary': juego.estadoInstalacion !== 'INSTALADO'}"
+                    <div class="mt-auto d-grid gap-2">
+                        
+                        <ng-container *ngIf="esMio(juego)">
+                            <button class="btn btn-sm fw-bold rounded-3 py-2"
+                                [ngClass]="juego.estadoInstalacion === 'INSTALADO' ? 'btn-success' : 'boton-acento'"
                                 (click)="descargarJuego(juego)">
-                                <i class="bi"
-                                    [ngClass]="juego.estadoInstalacion === 'INSTALADO' ? 'bi-play-fill' : 'bi-download'"></i>
-                                {{ juego.estadoInstalacion === 'INSTALADO' ? 'Jugar' : 'Instalar' }}
+                                <i class="bi" [ngClass]="juego.estadoInstalacion === 'INSTALADO' ? 'bi-play-fill' : 'bi-download'"></i>
+                                {{ juego.estadoInstalacion === 'INSTALADO' ? 'Jugar Ahora' : 'Instalar' }}
                             </button>
+                            
                             <button *ngIf="juego.estadoInstalacion === 'INSTALADO'"
-                                class="btn btn-outline-danger btn-sm w-100" (click)="eliminarJuego(juego)">
-                                <i class="bi bi-trash"></i> Desinstalar
+                                class="btn btn-outline-danger btn-sm rounded-3 border-0" (click)="eliminarJuego(juego)">
+                                <small><i class="bi bi-trash"></i> Desinstalar</small>
                             </button>
-                        </div>
+                        </ng-container>
 
-                        <div *ngIf="!esMio(juego) && juego.estadoInstalacion === 'INSTALADO'">
-                            <button class="btn btn-success w-100 btn-sm fw-bold mb-2" (click)="jugar(juego)">
-                                <i class="bi bi-play-fill"></i> Jugar
-                            </button>
-                            <button class="btn btn-outline-danger btn-sm w-100" (click)="devolverPrestamo(juego)">
-                                Devolver y Desinstalar
-                            </button>
-                        </div>
+                        <ng-container *ngIf="!esMio(juego)">
+                            
+                            <div *ngIf="juego.estadoInstalacion === 'INSTALADO'">
+                                <button class="btn btn-success w-100 btn-sm fw-bold rounded-3 mb-2" (click)="jugar(juego)">
+                                    <i class="bi bi-play-fill"></i> Jugar
+                                </button>
+                                <button class="btn btn-outline-danger w-100 btn-sm rounded-3" (click)="devolverPrestamo(juego)">
+                                    Devolver licencia
+                                </button>
+                            </div>
 
-                        <div *ngIf="!esMio(juego) && juego.estadoInstalacion === 'DISPONIBLE'">
-                            <button class="btn btn-info w-100 btn-sm fw-bold" (click)="solicitarPrestamo(juego)">
-                                <i class="bi bi-arrow-down-circle"></i> Pedir Prestado
-                            </button>
-                        </div>
+                            <div *ngIf="juego.estadoInstalacion === 'DISPONIBLE'">
+                                <button class="btn boton-nordico w-100 btn-sm fw-bold rounded-3 py-2" (click)="solicitarPrestamo(juego)">
+                                    <i class="bi bi-arrow-down-circle me-1"></i> Pedir Prestado
+                                </button>
+                            </div>
 
-                        <div *ngIf="!esMio(juego) && juego.estadoInstalacion === 'OCUPADO'">
-                            <button class="btn btn-secondary w-100 btn-sm" disabled>
-                                <i class="bi bi-lock-fill"></i> En uso por otro
-                            </button>
-                        </div>
+                            <div *ngIf="juego.estadoInstalacion === 'OCUPADO'">
+                                <button class="btn btn-secondary w-100 btn-sm rounded-3" disabled>
+                                    <i class="bi bi-lock-fill me-1"></i> En uso
+                                </button>
+                            </div>
+                        </ng-container>
+
                     </div>
                 </div>
             </div>

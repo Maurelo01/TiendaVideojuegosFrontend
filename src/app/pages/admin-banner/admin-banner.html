@@ -1,87 +1,115 @@
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Gestión de Banner Principal</h2>
-        <button class="btn btn-outline-secondary" routerLink="/home">
-            <i class="bi bi-arrow-left"></i> Volver
+<div class="container mt-5 mb-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="texto-nordico fw-bold m-0">
+            <i class="bi bi-images me-2"></i>Gestión de Banners
+        </h2>
+        <button class="btn btn-outline-secondary rounded-3" routerLink="/home">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Inicio
         </button>
     </div>
 
-    <div *ngIf="mensaje" class="alert alert-success">{{ mensaje }}</div>
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    <div *ngIf="mensaje" class="alert alert-success border-0 shadow-sm rounded-3 mb-4">
+        <i class="bi bi-check-circle-fill me-2"></i> {{ mensaje }}
+    </div>
+    <div *ngIf="error" class="alert alert-danger border-0 shadow-sm rounded-3 mb-4">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ error }}
+    </div>
 
-    <div class="card shadow-sm mb-5" [ngClass]="{'border-warning': modoEdicion, 'border-primary': !modoEdicion}">
-        <div class="card-header text-white"
-            [ngClass]="{'bg-warning text-dark': modoEdicion, 'bg-primary': !modoEdicion}">
-            {{ modoEdicion ? 'Editar Banner Existente' : 'Agregar Nuevo Banner' }}
-        </div>
+    <div class="card tarjeta-nordica p-4 mb-5" [ngClass]="{'border-start border-4 border-warning': modoEdicion}">
         <div class="card-body">
+            <h5 class="fw-bold mb-4 pb-2 border-bottom" [ngClass]="modoEdicion ? 'text-warning' : 'texto-nordico'">
+                <i class="bi" [ngClass]="modoEdicion ? 'bi-pencil-square' : 'bi-plus-circle-fill'"></i>
+                {{ modoEdicion ? 'Editar Banner' : 'Nuevo Banner Principal' }}
+            </h5>
+
             <form (ngSubmit)="guardarBanner()">
-                <div class="row g-3">
-                    <div class="col-md-4">
-                        <label class="form-label fw-bold">Juego a destacar</label>
-                        <select class="form-select" [(ngModel)]="nuevoBanner.idJuego" name="juegoSelect" required>
-                            <option value="0"> Selecciona un juego </option>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary text-uppercase">Juego Destacado</label>
+                        <select class="form-select bg-light border-0" [(ngModel)]="nuevoBanner.idJuego" name="juegoSelect" required>
+                            <option value="0" disabled selected>Selecciona un juego del catálogo...</option>
                             <option *ngFor="let j of listaJuegos" [value]="j.idJuego">
                                 {{ j.titulo }}
                             </option>
                         </select>
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label">Título</label>
-                        <input type="text" class="form-control" [(ngModel)]="nuevoBanner.titulo" name="titulo">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-secondary text-uppercase">Título del Banner</label>
+                        <input type="text" class="form-control" [(ngModel)]="nuevoBanner.titulo" 
+                            name="titulo" placeholder="Ej. ¡Gran Estreno!">
                     </div>
 
-                    <div class="col-md-4">
-                        <label class="form-label">
-                            {{ modoEdicion ? 'Cambiar Imagen (Opcional)' : 'Imagen (1920x600)' }}
+                    <div class="col-md-8">
+                        <label class="form-label small fw-bold text-secondary text-uppercase">
+                            Imagen de Fondo <span class="text-muted fw-normal">(Recomendado 1920x600)</span>
                         </label>
                         <input type="file" class="form-control" (change)="onFileSelected($event)" accept="image/*">
+                        <div class="form-text" *ngIf="modoEdicion">Deja vacío si no quieres cambiar la imagen actual.</div>
                     </div>
 
-                    <div class="col-md-2 mt-4">
-                        <label class="form-label"> Lugar </label>
-                        <input type="number" class="form-control" [(ngModel)]="nuevoBanner.lugar" name="lugar" min="1"
-                            required>
+                    <div class="col-md-4">
+                        <label class="form-label small fw-bold text-secondary text-uppercase">Orden de Aparición</label>
+                        <input type="number" class="form-control" [(ngModel)]="nuevoBanner.lugar" name="lugar" min="1" required>
                     </div>
+                </div>
 
-                    <div class="col-12 text-end d-flex justify-content-end gap-2">
-                        <button *ngIf="modoEdicion" type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
-                            Cancelar Edición
-                        </button>
-                        <button type="submit" class="btn px-5"
-                            [ngClass]="{'btn-warning': modoEdicion, 'btn-success': !modoEdicion}">
-                            {{ modoEdicion ? 'Guardar Cambios' : 'Publicar Banner' }}
-                        </button>
-                    </div>
+                <div class="d-flex justify-content-end gap-2 mt-4 pt-3 border-top border-light">
+                    <button *ngIf="modoEdicion" type="button" class="btn btn-outline-secondary rounded-3" (click)="cancelarEdicion()">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn px-5 rounded-3 fw-bold shadow-sm"
+                        [ngClass]="modoEdicion ? 'btn-warning' : 'boton-nordico'">
+                        <i class="bi" [ngClass]="modoEdicion ? 'bi-save' : 'bi-plus-lg'"></i>
+                        {{ modoEdicion ? 'Guardar Cambios' : 'Publicar Banner' }}
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 
-    <h4>Banners Activos</h4>
-    <div class="row">
-        <div class="col-md-4 mb-3" *ngFor="let b of banners">
-            <div class="card h-100 shadow-sm">
-                <img [src]="'data:image/jpeg;base64,' + b.imagenUrl" class="card-img-top"
-                    style="height: 150px; object-fit: cover;">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h4 class="texto-nordico fw-bold m-0">Banners Activos</h4>
+        <span class="badge bg-light text-muted border rounded-pill">{{ banners.length }} items</span>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        <div class="col" *ngFor="let b of banners">
+            <div class="card h-100 tarjeta-nordica overflow-hidden group-hover-effect position-relative">
+                
+                <div class="position-absolute top-0 start-0 m-2 z-2">
+                    <span class="badge bg-dark bg-opacity-75 shadow-sm border border-light">
+                        #{{ b.lugar }}
+                    </span>
+                </div>
+
+                <div class="ratio ratio-21x9 bg-light">
+                    <img [src]="'data:image/jpeg;base64,' + b.imagenUrl" class="card-img-top object-fit-cover" alt="Banner">
+                </div>
 
                 <div class="card-body">
-                    <h6 class="card-title fw-bold">{{ b.titulo }}</h6>
-                    <p class="small text-muted mb-1">Juego: {{ b.nombreJuego }}</p>
+                    <h6 class="card-title fw-bold text-dark mb-1 text-truncate">{{ b.titulo }}</h6>
+                    <small class="text-muted d-block mb-3">
+                        <i class="bi bi-controller me-1"></i> {{ b.nombreJuego }}
+                    </small>
 
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="badge bg-primary fs-6">Lugar: {{ b.lugar }}</span>
-
-                        <button class="btn btn-sm btn-outline-warning" (click)="iniciarEdicion(b)">
-                            <i class="bi bi-pencil"></i> Editar
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-sm btn-outline-primary flex-grow-1 rounded-3 fw-bold" (click)="iniciarEdicion(b)">
+                            <i class="bi bi-pencil-square"></i> Editar
                         </button>
-                        
-                        <button class="btn btn-sm btn-outline-danger" (click)="eliminarBanner(b.idBanner)">
-                                <i class="bi bi-trash"></i> Eliminar
+                        <button class="btn btn-sm btn-outline-danger rounded-3" (click)="eliminarBanner(b.idBanner)" title="Eliminar">
+                            <i class="bi bi-trash-fill"></i>
                         </button>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <div class="col-12" *ngIf="banners.length === 0">
+            <div class="text-center py-5 text-muted opacity-50">
+                <i class="bi bi-images fs-1 mb-2 d-block"></i>
+                <p>No hay banners configurados para mostrar en la tienda.</p>
             </div>
         </div>
     </div>

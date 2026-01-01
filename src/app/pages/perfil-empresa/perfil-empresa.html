@@ -1,46 +1,88 @@
-<div class="container mt-4 mb-5">
-    <button class="btn btn-outline-secondary mb-3 mt-3" routerLink="/home"> Volver al inicio </button>
-    <div *ngIf="empresa" class="card border-0 shadow-sm overflow-hidden mb-5">
-        <div class="position-relative" style="height: 250px; background-color: #2c3e50;">
-            <img *ngIf="empresa.imagenBanner" [src]="'data:image/jpeg;base64,' + empresa.imagenBanner"
-                class="w-100 h-100" style="object-fit: cover;" alt="Banner Empresa">
+<div class="container mt-5 mb-5">
 
-            <div class="position-absolute bottom-0 start-0 w-100 p-4"
-                style="background: linear-gradient(transparent, rgba(0,0,0,0.8));">
-                <h1 class="text-white fw-bold display-5">{{ empresa.nombreEmpresa }}</h1>
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="texto-nordico fw-bold m-0">
+            <i class="bi bi-building me-2"></i>Perfil de Desarrollador
+        </h2>
+        <button class="btn btn-outline-secondary rounded-3" routerLink="/home">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Inicio
+        </button>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-nordico-claro" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="text-muted mt-2">Cargando información...</p>
+    </div>
+
+    <div *ngIf="!cargando && empresa">
+        
+        <div class="card tarjeta-nordica overflow-hidden mb-5 border-0">
+            <div class="position-relative" style="height: 300px;">
+                <div *ngIf="!empresa.imagenBanner" class="w-100 h-100 bg-nordico d-flex align-items-center justify-content-center">
+                    <i class="bi bi-building text-white opacity-25" style="font-size: 5rem;"></i>
+                </div>
+                <img *ngIf="empresa.imagenBanner" [src]="'data:image/jpeg;base64,' + empresa.imagenBanner"
+                    class="w-100 h-100 object-fit-cover" alt="{{ empresa.nombreEmpresa }}">
+
+                <div class="position-absolute bottom-0 start-0 w-100 p-4 p-md-5"
+                    style="background: linear-gradient(to top, rgba(44, 62, 80, 0.95), transparent);">
+                    <h1 class="text-white fw-bold display-5 mb-0 text-shadow">{{ empresa.nombreEmpresa }}</h1>
+                </div>
+            </div>
+
+            <div class="card-body p-4 p-md-5">
+                <h5 class="texto-nordico fw-bold mb-3 text-uppercase small ls-1">Sobre Nosotros</h5>
+                <p class="lead text-secondary mb-0" style="white-space: pre-wrap;">{{ empresa.descripcion }}</p>
             </div>
         </div>
 
-        <div class="card-body p-4">
-            <h5 class="text-muted mb-3">Sobre nosotros</h5>
-            <p class="lead">{{ empresa.descripcion }}</p>
+        <div class="d-flex align-items-center justify-content-between mb-4 border-bottom pb-2">
+            <h4 class="texto-nordico fw-bold m-0">
+                <i class="bi bi-joystick me-2"></i>Juegos Publicados
+            </h4>
+            <span class="badge bg-light text-muted border rounded-pill">{{ juegos.length }} Títulos</span>
         </div>
-    </div>
 
-    <h3 class="mb-4 pb-2 border-bottom">Juegos Publicados</h3>
+        <div *ngIf="juegos.length === 0" class="text-center py-5 opacity-50">
+            <i class="bi bi-controller fs-1 mb-3 d-block"></i>
+            <h5>Catálogo vacío</h5>
+            <p>Esta empresa aún no ha publicado juegos en nuestra tienda.</p>
+        </div>
 
-    <div *ngIf="cargando" class="text-center py-5">
-        <div class="spinner-border text-primary" role="status"></div>
-    </div>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" *ngFor="let juego of juegos">
+                <div class="card h-100 tarjeta-nordica overflow-hidden position-relative group-hover-effect">
+                    
+                    <div class="ratio ratio-16x9">
+                        <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/600x400?text=No+Image'"
+                            class="card-img-top object-fit-cover" alt="{{ juego.titulo }}">
+                    </div>
 
-    <div *ngIf="!cargando && juegos.length === 0" class="alert alert-info">
-        Esta empresa aún no tiene juegos activos en el catálogo.
-    </div>
+                    <div class="card-body d-flex flex-column p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold text-dark mb-0 text-truncate">{{ juego.titulo }}</h5>
+                            <span class="badge bg-light text-secondary border">{{ juego.clasificacionEdad }}</span>
+                        </div>
+                        
+                        <p class="card-text text-muted small flex-grow-1 line-clamp-2">
+                            {{ juego.descripcion }}
+                        </p>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col" *ngFor="let juego of juegos">
-            <div class="card h-100 tarjeta-nordica shadow-sm border-0">
-                <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/600x400'"
-                    class="card-img-top" style="height: 200px; object-fit: cover;">
-                <div class="card-body">
-                    <h5 class="card-title fw-bold">{{ juego.titulo }}</h5>
-                    <p class="card-text text-muted small">{{ juego.descripcion }}</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="badge bg-secondary">{{ juego.clasificacionEdad }}</span>
-                        <span class="fs-5 fw-bold text-primary">${{ juego.precio }}</span>
+                        <div class="d-flex justify-content-between align-items-end mt-3 pt-3 border-top border-light">
+                            <div>
+                                <small class="d-block text-muted" style="font-size: 0.7rem;">Precio</small>
+                                <span class="fs-5 fw-bold text-nordico-claro">${{ juego.precio }}</span>
+                            </div>
+                            
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" 
+                                    [routerLink]="['/juego', juego.idJuego]">
+                                Ver Detalles
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </div>

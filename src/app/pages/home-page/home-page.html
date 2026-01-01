@@ -1,274 +1,266 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4 shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-dark bg-nordico mb-4 shadow-sm py-3">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="#">Tienda de Videojuegos</a>
-        <div class="d-flex align-items-center gap-3">
-            <span *ngIf="usuarioNombre" class="text-light me-3">Bienvenido a la tienda, {{ usuarioNombre }}</span>
-            <button *ngIf="esEmpresa" class="btn btn-success btn-sm fw-bold" routerLink="/publicar"> + Publicar Juego
-            </button>
-            <button *ngIf="esEmpresa" class="btn btn-warning btn-sm fw-bold me-2" routerLink="/empresa/dashboard">
-                Gestionar Empresa </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
-                routerLink="/admin/categorias">
-                Configuracion de Categorías </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
-                routerLink="/reportes-admin">
-                <i class="bi bi-bar-chart-fill"></i> Reportes Globales
-            </button>
-            <button *ngIf="esEmpresa" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/mis-ventas">
-                <i class="bi bi-cash-coin"></i> Mis Ventas
-            </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2"
-                routerLink="/admin/empresas"> Gestionar Empresas </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/admin/config">
-                Configuración Global </button>
-            <button *ngIf="esAdmin" class="btn btn-secondary btn-sm fw-bold text-white me-2" routerLink="/admin/banner">
-                Seleccionar Banners Principales </button>
-            <button class="btn btn-outline-light fw-bold btn-sm" routerLink="/mi-perfil"> Mi Perfil </button>
-            <button *ngIf="!esEmpresa && !esAdmin" class="btn btn-outline-light btn-sm fw-bold text-white me-2"
-                routerLink="/mi-biblioteca">
-                <i class="bi bi-collection-play"></i> Mi Biblioteca
-            </button>
-            <button *ngIf="!esEmpresa && !esAdmin" class="btn btn-outline-light btn-sm fw-bold text-white me-2"
-                routerLink="/mi-grupo">
-                <i class="bi bi-people-fill"></i> Grupo Familiar
-            </button>
-            <button class="btn btn-outline-light btn-sm" (click)="cerrarSesion()"> Salir </button>
+        <a class="navbar-brand fw-bold fs-4" href="#">
+            <i class="bi bi-controller me-2"></i>Tienda Videojuegos
+        </a>
+        
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuNavegacion">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-end" id="menuNavegacion">
+            <div class="d-flex align-items-center flex-wrap gap-2">
+                <span *ngIf="usuarioNombre" class="text-light me-3 small">Hola, <strong>{{ usuarioNombre }}</strong></span>
+                
+                <ng-container *ngIf="esEmpresa">
+                    <button class="btn btn-success btn-sm fw-bold rounded-pill px-3" routerLink="/publicar"> + Publicar </button>
+                    <button class="btn btn-warning btn-sm fw-bold rounded-pill px-3" routerLink="/empresa/dashboard"> Gestionar Empresa </button>
+                    <button class="btn btn-outline-light btn-sm rounded-pill" routerLink="/mis-ventas"> Mis Ventas </button>
+                </ng-container>
+
+                <ng-container *ngIf="esAdmin">
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle rounded-pill" type="button" data-bs-toggle="dropdown">
+                            Administración
+                        </button>
+                        <ul class="dropdown-menu shadow border-0">
+                            <li><a class="dropdown-item" routerLink="/admin/categorias">Categorías</a></li>
+                            <li><a class="dropdown-item" routerLink="/reportes-admin">Reportes Globales</a></li>
+                            <li><a class="dropdown-item" routerLink="/admin/empresas">Empresas</a></li>
+                            <li><a class="dropdown-item" routerLink="/admin/config">Configuración</a></li>
+                            <li><a class="dropdown-item" routerLink="/admin/banner">Banners</a></li>
+                        </ul>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="!esEmpresa && !esAdmin">
+                    <button class="btn btn-outline-light btn-sm fw-bold rounded-pill" routerLink="/mi-biblioteca">
+                        <i class="bi bi-collection-play"></i> Mi Biblioteca
+                    </button>
+                    <button class="btn btn-outline-light btn-sm fw-bold rounded-pill" routerLink="/mi-grupo">
+                        <i class="bi bi-people-fill"></i> Grupo Familiar
+                    </button>
+                    <button class="btn btn-light btn-sm text-dark fw-bold rounded-pill" routerLink="/mi-perfil"> Mi Perfil </button>
+                </ng-container>
+
+                <div class="vr bg-light mx-2 d-none d-lg-block"></div>
+                <button class="btn btn-outline-light btn-sm rounded-pill" (click)="cerrarSesion()"> Salir </button>
+            </div>
         </div>
     </div>
 </nav>
 
-<div *ngIf="banners.length > 0" id="carruselPrincipal" class="carousel slide shadow-sm mb-5" data-bs-ride="carousel">
-    <div class="carousel-indicators">
-        <button *ngFor="let b of banners; let i = index" type="button" data-bs-target="#carruselPrincipal"
-            [attr.data-bs-slide-to]="i" [class.active]="i === 0" [attr.aria-current]="i === 0 ? 'true' : null">
+<div *ngIf="banners.length > 0" class="container mb-5">
+    <div id="carruselPrincipal" class="carousel slide shadow rounded-4 overflow-hidden" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button *ngFor="let b of banners; let i = index" type="button" data-bs-target="#carruselPrincipal"
+                [attr.data-bs-slide-to]="i" [class.active]="i === 0"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item" *ngFor="let b of banners; let i = index" [class.active]="i === 0">
+                <div class="position-relative">
+                    <img [src]="'data:image/jpeg;base64,' + b.imagenUrl" class="d-block w-100"
+                        style="height: 400px; object-fit: cover;" alt="{{ b.titulo }}">
+                    <div class="position-absolute bottom-0 start-0 w-100 bg-dark bg-opacity-50 p-4 text-white">
+                        <h2 class="fw-bold">{{ b.titulo }}</h2>
+                        <p class="mb-0 fs-5" *ngIf="b.nombreJuego">Disponible: {{ b.nombreJuego }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
         </button>
     </div>
-    <div class="carousel-inner">
-        <div class="carousel-item" *ngFor="let b of banners; let i = index" [class.active]="i === 0">
-            <img [src]="'data:image/jpeg;base64,' + b.imagenUrl" class="d-block w-100"
-                style="height: 450px; object-fit: cover;" alt="{{ b.titulo }}">
-            <div class="carousel-caption d-none d-md-block" *ngIf="b.titulo">
-                <div class="bg-dark bg-opacity-75 d-inline-block px-4 py-2 rounded">
-                    <h3>{{ b.titulo }}</h3>
-                    <p class="mb-0" *ngIf="b.nombreJuego"> Disponible ahora: {{ b.nombreJuego }}!</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carruselPrincipal" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Siguiente</span>
-    </button>
 </div>
 
-<div *ngIf="banners.length === 0" class="bg-dark text-white text-center py-5 mb-5">
+<div *ngIf="banners.length === 0" class="bg-nordico text-white text-center py-5 mb-5 shadow-sm">
     <div class="container">
-        <h1 class="display-4 fw-bold">Bienvenido a la Tienda</h1>
-        <p class="lead">Explora nuestro catálogo completo de videojuegos digitales.</p>
+        <h1 class="display-5 fw-bold">Bienvenido a la Tienda</h1>
+        <p class="lead opacity-75">Explora nuestro catálogo completo de videojuegos digitales.</p>
     </div>
 </div>
 
-<div class="container mt-4 mb-4">
-    <div class="card border-0 shadow-sm bg-light">
-        <div class="card-body d-flex align-items-center gap-3">
-            <i class="bi bi-people-fill fs-3 text-primary"></i>
-            <div class="flex-grow-1 position-relative">
-                <input type="text" class="form-control form-control-lg border-0"
-                    placeholder="Buscar jugadores por nickname..." [(ngModel)]="busquedaUsuario"
-                    (keyup)="buscarUsuarios()">
-
-                <div *ngIf="usuariosEncontrados.length > 0"
-                    class="position-absolute w-100 mt-1 shadow-lg rounded bg-white" 
-                    style="z-index: 1000; max-height: 300px; overflow-y: auto;">
-                    <ul class="list-group list-group-flush">
-                        <li *ngFor="let item of usuariosEncontrados"
-                            class="list-group-item list-group-item-action cursor-pointer"
-                            (click)="irAPerfil(item)">
-                            
-                            <div class="d-flex align-items-center gap-2">
-                                <img [src]="item.imagen ? 'data:image/jpeg;base64,' + item.imagen : 'https://placehold.co/40'"
-                                    class="rounded-circle object-fit-cover" 
-                                    style="width: 40px; height: 40px; border: 1px solid #dee2e6;">
+<div class="container mb-5">
+    <div class="row g-4">
+        <ng-container *ngIf="!esEmpresa && !esAdmin">
+            <div class="col-lg-4">
+                <div class="card tarjeta-nordica h-100 p-3">
+                    <div class="card-body">
+                        <h5 class="card-title text-muted mb-3 small fw-bold text-uppercase">
+                            <i class="bi bi-person-badge me-1"></i> Comunidad
+                        </h5>
+                        
+                            <div class="d-flex gap-2 position-relative">
+                                <input type="text" class="form-control" placeholder="Buscar jugador..." 
+                                    [(ngModel)]="busquedaUsuario" (keyup)="buscarUsuarios()">
+                                <button class="btn boton-nordico rounded-3" (click)="buscarUsuarios()">
+                                    <i class="bi bi-search"></i>
+                                </button>
                                 
-                                <div class="d-flex flex-column" style="line-height: 1.2;">
-                                    <span class="fw-bold text-dark">{{ item.nombre }}</span>
-                                    
-                                    <span class="badge rounded-pill mt-1" 
-                                          [ngClass]="{'bg-info text-dark': item.tipo === 'GAMER', 'bg-warning text-dark': item.tipo === 'EMPRESA'}"
-                                          style="font-size: 0.65rem; width: fit-content;">
-                                        {{ item.tipo }}
-                                    </span>
+                                <div *ngIf="usuariosEncontrados.length > 0"
+                                    class="position-absolute w-100 shadow-lg rounded-3 bg-white border mt-5" 
+                                    style="z-index: 1000; max-height: 300px; overflow-y: auto; left: 0;">
+                                    <ul class="list-group list-group-flush">
+                                        <li *ngFor="let item of usuariosEncontrados"
+                                            class="list-group-item list-group-item-action cursor-pointer d-flex align-items-center gap-2 p-2"
+                                            (click)="irAPerfil(item)">
+                                            <img [src]="item.imagen ? 'data:image/jpeg;base64,' + item.imagen : 'https://placehold.co/40'"
+                                                class="rounded-circle" style="width: 35px; height: 35px; object-fit: cover;">
+                                            <div class="lh-1">
+                                                <div class="fw-bold small">{{ item.nombre }}</div>
+                                                <span class="badge bg-light text-dark border mt-1" style="font-size: 0.6rem;">{{ item.tipo }}</span>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
-                        </li>
-                    </ul>
+                    
+                    </div>
                 </div>
             </div>
-            <button class="btn btn-primary" (click)="buscarUsuarios()">
-                <i class="bi bi-search"></i>
-            </button>
-        </div>
-    </div>
-</div>
+        </ng-container>
 
-<div class="container my-4">
-    <div class="card shadow-sm border-0">
-        <div class="card-body">
-            <h5 class="card-title mb-3">
-                <i class="bi bi-search"></i> Buscar Juegos
-            </h5>
-            <div class="row g-3">
-                <div class="col-md-5">
-                    <input type="text" class="form-control" [(ngModel)]="textoBusqueda"
-                        placeholder="Buscar por título..." (keyup.enter)="buscar()">
+        <div class="col-lg-8">
+            <div class="card tarjeta-nordica h-100 p-3">
+                <div class="card-body">
+                    <h5 class="card-title text-muted mb-3 small fw-bold text-uppercase">
+                        <i class="bi bi-joystick me-1"></i> Catálogo
+                    </h5>
+                    <div class="row g-2">
+                        <div class="col-md-5">
+                            <input type="text" class="form-control" [(ngModel)]="textoBusqueda"
+                                placeholder="Título del juego..." (keyup.enter)="buscar()">
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select" [(ngModel)]="categoriaSeleccionada">
+                                <option [value]="0">Todas las categorías</option>
+                                <option *ngFor="let cat of categorias" [value]="cat.idCategoria">
+                                    {{ cat.nombreCategoria }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button class="btn boton-acento w-100 rounded-3 fw-bold" (click)="buscar()" [disabled]="buscando">
+                                <span *ngIf="!buscando"><i class="bi bi-filter"></i> Buscar</span>
+                                <span *ngIf="buscando" class="spinner-border spinner-border-sm"></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-2 text-end" *ngIf="textoBusqueda || categoriaSeleccionada > 0">
+                        <button class="btn btn-sm text-muted text-decoration-underline p-0" (click)="limpiarFiltros()">
+                            Limpiar filtros activos
+                        </button>
+                    </div>
                 </div>
-
-                <div class="col-md-4">
-                    <select class="form-select" [(ngModel)]="categoriaSeleccionada">
-                        <option [value]="0">Todas las categorías</option>
-                        <option *ngFor="let cat of categorias" [value]="cat.idCategoria">
-                            {{ cat.nombreCategoria }}
-                        </option>
-                    </select>
-                </div>
-
-                <div class="col-md-3">
-                    <button class="btn btn-primary w-100" (click)="buscar()" [disabled]="buscando">
-                        <span *ngIf="!buscando">
-                            <i class="bi bi-search"></i> Buscar
-                        </span>
-                        <span *ngIf="buscando">
-                            <span class="spinner-border spinner-border-sm me-1"></span>
-                            Buscando...
-                        </span>
-                    </button>
-                </div>
-            </div>
-
-            <div class="mt-2" *ngIf="textoBusqueda || categoriaSeleccionada > 0">
-                <button class="btn btn-sm btn-outline-secondary" (click)="limpiarFiltros()">
-                    <i class="bi bi-x-circle"></i> Limpiar filtros
-                </button>
             </div>
         </div>
     </div>
 </div>
 
 <div class="container mb-5">
-    <div class="text-center mb-5">
-        <h2 class="texto-nordico fw-bold">Catálogo Destacado</h2>
-        <p class="text-muted">Explora los mejores juegos</p>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <h3 class="texto-nordico fw-bold m-0">Juegos Destacados</h3>
+        <span class="badge bg-light text-dark border">{{ juegos.length }} Juegos</span>
     </div>
 
     <div *ngIf="cargando" class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Cargando...</span>
-        </div>
+        <div class="spinner-border text-primary" role="status"></div>
     </div>
 
-    <div *ngIf="!cargando && juegos.length === 0" class="text-center py-5">
-        <h4 class="text-muted">Aún no hay juegos disponibles :c.</h4>
-        <p>Intentalo mas tarde.</p>
+    <div *ngIf="!cargando && juegos.length === 0" class="text-center py-5 opacity-50">
+        <i class="bi bi-controller fs-1 mb-3 d-block"></i>
+        <h4>No se encontraron juegos</h4>
+        <p>Intenta ajustar los filtros de búsqueda.</p>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4" *ngIf="!cargando && juegos.length > 0">
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4" *ngIf="!cargando && juegos.length > 0">
         <div class="col" *ngFor="let juego of juegos">
-            <div class="card h-100 tarjeta-nordica shadow-sm border-0">
-                <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/600x400?text=No+Image'"
-                    class="card-img-top" alt="{{ juego.titulo }}"
-                    style="height: 200px; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title fw-bold text-dark">{{ juego.titulo }}</h5>
-                    <p class="card-text text-muted small flex-grow-1">{{ juego.descripcion }}</p>
-                    <div class="d-flex justify-content-between align-items-center mt-3">
-                        <span class="badge bg-secondary">{{ juego.clasificacionEdad }}</span>
-                        <span class="fs-5 fw-bold text-primary">${{ juego.precio }}</span>
+            <div class="card h-100 tarjeta-nordica overflow-hidden">
+                <div class="position-relative">
+                    <img [src]="juego.imagen ? 'data:image/jpeg;base64,' + juego.imagen : 'https://placehold.co/600x400?text=Juego'"
+                        class="card-img-top" alt="{{ juego.titulo }}"
+                        style="height: 180px; object-fit: cover;">
+                    <span class="position-absolute top-0 end-0 m-2 badge bg-dark bg-opacity-75">
+                        {{ juego.clasificacionEdad }}
+                    </span>
+                </div>
+
+                <div class="card-body d-flex flex-column p-3">
+                    <h6 class="card-title fw-bold text-dark mb-1 text-truncate">{{ juego.titulo }}</h6>
+                    <small class="text-muted mb-3 d-block">
+                        Por <a [routerLink]="['/ver-empresa', juego.idEmpresa]" class="text-decoration-none text-nordico-claro">{{ juego.nombreEmpresa || 'Desarrollador' }}</a>
+                    </small>
+                    
+                    <p class="card-text text-muted small flex-grow-1" style="display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                        {{ juego.descripcion }}
+                    </p>
+                    
+                    <div class="d-flex align-items-end justify-content-between mt-3">
+                        <span class="fs-4 fw-bold texto-nordico">${{ juego.precio }}</span>
+                        
+                        <button class="btn btn-sm btn-outline-secondary rounded-pill" [routerLink]="['/juego', juego.idJuego]">
+                            Ver Detalles <i class="bi bi-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="card-footer bg-white border-0 pb-3 text-center">
-                    <button *ngIf="!esEmpresa && !esAdmin" class="btn w-100 rounded-3 mb-2 fw-bold" [ngClass]="{
-                            'btn-success': !juego.yaLoTiene,
-                            'btn-secondary': juego.yaLoTiene
-                        }" [disabled]="juego.yaLoTiene" (click)="abrirModalCompra(juego)">
-                        <span *ngIf="!juego.yaLoTiene">
-                            <i class="bi bi-cart-plus"></i> Comprar ${{ juego.precio }}
-                        </span>
-                        <span *ngIf="juego.yaLoTiene">
-                            <i class="bi bi-check-circle-fill"></i> En tu Biblioteca
-                        </span>
-                    </button>
-                    <button class="btn btn-outline-secondary w-100 rounded-3 btn-sm"
-                        [routerLink]="['/juego', juego.idJuego]">
-                        Ver Detalles
-                    </button>
-                    <button class="btn btn-sm btn-link text-decoration-none w-100"
-                        [routerLink]="['/ver-empresa', juego.idEmpresa]">
-                        Ver Empresa Creadora
+                
+                <div class="card-footer bg-white border-0 p-3 pt-0">
+                    <button *ngIf="!esEmpresa && !esAdmin" class="btn w-100 rounded-3 fw-bold py-2" 
+                        [ngClass]="{'boton-acento': !juego.yaLoTiene, 'btn-secondary': juego.yaLoTiene}"
+                        [disabled]="juego.yaLoTiene" (click)="abrirModalCompra(juego)">
+                        <span *ngIf="!juego.yaLoTiene">Comprar Ahora</span>
+                        <span *ngIf="juego.yaLoTiene">En Biblioteca</span>
                     </button>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <div class="modal" tabindex="-1" [style.display]="mostrarModalCompra ? 'block' : 'none'"
-        style="background: rgba(0,0,0,0.6)">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg">
+<div class="modal fade" tabindex="-1" [ngClass]="{'show d-block': mostrarModalCompra}" style="background: rgba(44, 62, 80, 0.7)">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content tarjeta-nordica overflow-hidden">
+            <div class="modal-header bg-nordico text-white border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-cart-check"></i> Confirmar Compra</h5>
+                <button type="button" class="btn-close btn-close-white" (click)="cerrarModalCompra()"></button>
+            </div>
 
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold">
-                        <i class="bi bi-cart-check"></i> Confirmar Compra
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" (click)="cerrarModalCompra()"></button>
+            <div class="modal-body p-4" *ngIf="juegoSeleccionadoCompra">
+                <div *ngIf="errorCompra" class="alert alert-danger border-0 shadow-sm rounded-3">
+                    <small>{{ errorCompra }}</small>
+                </div>
+                <div *ngIf="mensajeCompra" class="alert alert-success border-0 shadow-sm rounded-3">
+                    <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeCompra }}
                 </div>
 
-                <div class="modal-body p-4" *ngIf="juegoSeleccionadoCompra">
-
-                    <div *ngIf="errorCompra" class="alert alert-danger shadow-sm">
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i> {{ errorCompra }}
+                <div class="d-flex gap-3 mb-4">
+                    <img [src]="juegoSeleccionadoCompra.imagen ? 'data:image/jpeg;base64,' + juegoSeleccionadoCompra.imagen : 'https://placehold.co/100'"
+                        class="rounded-3 shadow-sm" width="80" height="80" style="object-fit: cover;">
+                    <div>
+                        <h5 class="fw-bold mb-1">{{ juegoSeleccionadoCompra.titulo }}</h5>
+                        <div class="text-muted small mb-2">Licencia Digital Standard</div>
+                        <h4 class="text-nordico-claro fw-bold">${{ juegoSeleccionadoCompra.precio }}</h4>
                     </div>
-                    <div *ngIf="mensajeCompra" class="alert alert-success shadow-sm">
-                        <i class="bi bi-check-circle-fill me-2"></i> {{ mensajeCompra }}
-                    </div>
-
-                    <div class="d-flex align-items-center mb-4 p-3 bg-light rounded-3 border">
-                        <img [src]="juegoSeleccionadoCompra.imagen ? 'data:image/jpeg;base64,' + juegoSeleccionadoCompra.imagen : 'https://placehold.co/100'"
-                            class="rounded shadow-sm" width="80" height="80" style="object-fit: cover;">
-                        <div class="ms-3">
-                            <h5 class="mb-1 fw-bold">{{ juegoSeleccionadoCompra.titulo }}</h5>
-                            <span class="badge bg-primary">{{ juegoSeleccionadoCompra.clasificacionEdad }}</span>
-                            <span class="text-success fw-bold ms-2 fs-5">${{ juegoSeleccionadoCompra.precio }}</span>
-                        </div>
-                    </div>
-
-                    <div class="mb-3" *ngIf="!mensajeCompra">
-                        <label class="form-label small fw-bold text-secondary">
-                            <i class="bi bi-calendar3"></i> Fecha de Compra
-                        </label>
-                        <input type="date" class="form-control" [(ngModel)]="fechaSimulada" readonly
-                            style="background-color: #f8f9fa; cursor: not-allowed;">
-                        <small class="text-muted">La fecha se establece automáticamente al momento de la compra</small>
-                    </div>
-
                 </div>
 
-                <div class="modal-footer border-0" *ngIf="!mensajeCompra">
-                    <button type="button" class="btn btn-outline-secondary" (click)="cerrarModalCompra()"
-                        [disabled]="procesandoCompra">
-                        Cancelar
-                    </button>
-                    <button type="button" class="btn btn-success px-4 fw-bold" (click)="confirmarCompra()"
-                        [disabled]="procesandoCompra">
-                        <span *ngIf="procesandoCompra" class="spinner-border spinner-border-sm me-2"></span>
-                        <i *ngIf="!procesandoCompra" class="bi bi-credit-card me-1"></i>
-                        {{ procesandoCompra ? 'Procesando...' : 'Confirmar Pago' }}
-                    </button>
+                <div class="mb-3" *ngIf="!mensajeCompra">
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Fecha de transacción</label>
+                    <input type="date" class="form-control bg-light" [(ngModel)]="fechaSimulada" readonly>
                 </div>
+            </div>
 
+            <div class="modal-footer border-0 bg-light" *ngIf="!mensajeCompra">
+                <button type="button" class="btn btn-link text-muted text-decoration-none" (click)="cerrarModalCompra()" [disabled]="procesandoCompra">
+                    Cancelar
+                </button>
+                <button type="button" class="btn boton-nordico px-4 rounded-3" (click)="confirmarCompra()" [disabled]="procesandoCompra">
+                    <span *ngIf="procesandoCompra" class="spinner-border spinner-border-sm me-2"></span>
+                    {{ procesandoCompra ? 'Procesando...' : 'Pagar y Descargar' }}
+                </button>
             </div>
         </div>
     </div>
