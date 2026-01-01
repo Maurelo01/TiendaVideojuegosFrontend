@@ -69,4 +69,9 @@ export class UsuarioService
         let params = new HttpParams().set('q', query);
         return this.http.get<any[]>(`${this.API_URL}/buscar`, { params });
     }
+
+    obtenerAnalisisGamer(idUsuario: number): Observable<any> 
+    {
+        return this.http.get<any>(`${this.API_URL}/gamer/${idUsuario}/analisis`);
+    }
 }
