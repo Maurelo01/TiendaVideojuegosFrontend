@@ -121,4 +121,13 @@ export class ComprasService
     {
         return this.http.get<any[]>(`${this.API_URL}/reporte/ranking-reviewers`);
     }
+    
+    obtenerTopJuegos(idCategoria?: number, clasificacion?: string): Observable<any[]> 
+    {
+        let params = new HttpParams();
+        if (idCategoria) params = params.set('categoria', idCategoria.toString());
+        if (clasificacion) params = params.set('edad', clasificacion);
+
+        return this.http.get<any[]>(`${this.API_URL}/reporte/top-juegos`, { params });
+    }
 }

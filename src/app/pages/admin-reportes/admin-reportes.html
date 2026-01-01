@@ -11,14 +11,17 @@
 
         <div class="btn-group shadow-sm" role="group">
             <button type="button" class="btn"
-                [ngClass]="vistaActual === 'global' ? 'btn-primary' : 'btn-outline-primary'"
-                (click)="generarReporte()">
+                [ngClass]="vistaActual === 'global' ? 'btn-primary' : 'btn-outline-primary'" (click)="generarReporte()">
                 <i class="bi bi-cash-stack"></i> Finanzas Globales
             </button>
             <button type="button" class="btn"
                 [ngClass]="vistaActual === 'ranking' ? 'btn-primary' : 'btn-outline-primary'"
                 (click)="cargarRankings()">
                 <i class="bi bi-trophy-fill"></i> Ranking Usuarios
+            </button>
+            <button type="button" class="btn" [ngClass]="vistaActual === 'top' ? 'btn-primary' : 'btn-outline-primary'"
+                (click)="cargarTopJuegos()">
+                <i class="bi bi-star-fill"></i> Top Ventas y Calidad
             </button>
         </div>
     </div>
@@ -45,6 +48,7 @@
                         <i class="bi bi-arrow-counterclockwise"></i> Limpiar
                     </button>
                 </div>
+
             </div>
         </div>
 
@@ -62,7 +66,7 @@
                             <th class="py-3 ps-4">Empresa</th>
                             <th class="text-center">Ventas Totales</th>
                             <th class="text-end">Ingresos Brutos</th>
-                            <th class="text-end">Comisión (15%)</th>
+                            <th class="text-end">Comisión</th>
                             <th class="text-end pe-4">Ganancia Neta Empresa</th>
                         </tr>
                     </thead>
@@ -72,10 +76,10 @@
                             <td class="text-center">
                                 <span class="badge bg-secondary rounded-pill">{{ item.totalVentas }}</span>
                             </td>
-                            <td class="text-end text-primary">Q{{ item.totalIngresos | number:'1.2-2' }}</td>
-                            <td class="text-end text-success fw-bold">Q{{ item.gananciaPlataforma | number:'1.2-2' }}
+                            <td class="text-end text-primary">${{ item.totalIngresos | number:'1.2-2' }}</td>
+                            <td class="text-end text-success fw-bold">${{ item.gananciaPlataforma | number:'1.2-2' }}
                             </td>
-                            <td class="text-end text-muted pe-4">Q{{ item.gananciaEmpresa | number:'1.2-2' }}</td>
+                            <td class="text-end text-muted pe-4">${{ item.gananciaEmpresa | number:'1.2-2' }}</td>
                         </tr>
                         <tr *ngIf="reporte.length === 0">
                             <td colspan="5" class="text-center py-5 text-muted">
@@ -88,8 +92,8 @@
                         <tr>
                             <td class="text-end ps-4 text-uppercase text-secondary">Totales Globales:</td>
                             <td class="text-center">-</td>
-                            <td class="text-end">Q{{ totalGlobalIngresos | number:'1.2-2' }}</td>
-                            <td class="text-end text-success fs-5">Q{{ totalGlobalGanancia | number:'1.2-2' }}</td>
+                            <td class="text-end">${{ totalGlobalIngresos | number:'1.2-2' }}</td>
+                            <td class="text-end text-success fs-5">${{ totalGlobalGanancia | number:'1.2-2' }}</td>
                             <td></td>
                         </tr>
                     </tfoot>
@@ -134,7 +138,7 @@
                                         <span class="badge bg-light text-dark border">{{ u.cantidad }}</span>
                                     </td>
                                     <td class="text-end text-success fw-bold pe-3">
-                                        Q{{ u.totalGastado | number:'1.2-2' }}
+                                        ${{ u.totalGastado | number:'1.2-2' }}
                                     </td>
                                 </tr>
                                 <tr *ngIf="rankingCompradores.length === 0">
@@ -186,7 +190,71 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
+    <div *ngIf="vistaActual === 'top'" class="animate__animated animate__fadeIn">
+
+        <div class="card p-3 mb-3 bg-light border-0 shadow-sm">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-secondary">Categoría</label>
+                    <select class="form-select" [(ngModel)]="filtroCategoria" (change)="cargarTopJuegos()">
+                        <option [value]="0">Todas</option>
+                        <option *ngFor="let c of categorias" [value]="c.idCategoria">{{ c.nombreCategoria }}</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label small fw-bold text-secondary">Clasificación Edad</label>
+                    <select class="form-select" [(ngModel)]="filtroEdad" (change)="cargarTopJuegos()">
+                        <option value="">Todas</option>
+                        <option value="E">E - Todo Público</option>
+                        <option value="T">T - Adolescentes</option>
+                        <option value="M">M - Adultos</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-outline-secondary w-100"
+                        (click)="filtroCategoria=0; filtroEdad=''; cargarTopJuegos()">
+                        <i class="bi bi-arrow-counterclockwise"></i> Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow border-0 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4 py-3">Juego</th>
+                            <th>Empresa</th>
+                            <th class="text-center">Ventas</th>
+                            <th class="text-center">Calif. Promedio</th>
+                            <th class="text-center pe-4">Puntaje Balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let j of topJuegos">
+                            <td class="ps-4 fw-bold text-primary">{{ j.titulo }}</td>
+                            <td>{{ j.nombreEmpresa }}</td>
+                            <td class="text-center">{{ j.totalVentas }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-warning text-dark border">
+                                    <i class="bi bi-star-fill"></i> {{ j.promedioCalificacion | number:'1.1-1' }}
+                                </span>
+                            </td>
+                            <td class="text-center pe-4 fw-bold text-success fs-5">{{ j.puntajeBalance | number:'1.1-1'}}</td>
+                        </tr>
+                        <tr *ngIf="topJuegos.length === 0">
+                            <td colspan="5" class="text-center py-5 text-muted">
+                                <i class="bi bi-search fs-1 d-block mb-2 opacity-50"></i>
+                                No se encontraron juegos con estos filtros.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
