@@ -1,3 +1,5 @@
+import { Comentario } from "./comentario";
+
 export interface ReporteVentasEmpresa
 {
     tituloJuego: string;
@@ -14,4 +16,18 @@ export interface ReporteAdmin
     totalIngresos: number;
     gananciaPlataforma: number;
     gananciaEmpresa: number;
+}
+
+export interface JuegoCalificacion 
+{
+    titulo: string;
+    promedio: number;
+    totalResenas: number;
+}
+
+export interface ReporteFeedback 
+{
+    promedios: JuegoCalificacion[];
+    topComentarios: Comentario[];
+    peoresComentarios: Comentario[];
 }

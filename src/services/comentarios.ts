@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Comentario } from '../models/comentario';
+import { ReporteFeedback } from '../models/reportes';
 
 @Injectable({ providedIn: 'root' })
 export class ComentariosService 
@@ -35,5 +36,10 @@ export class ComentariosService
     {
         let params = new HttpParams().set('idUsuario', idUsuario.toString()).set('ocultar', ocultar.toString());
         return this.http.put(`${this.API_URL}/${idComentario}/moderacion`, {}, { params });
+    }
+
+    obtenerReporteFeedback(idEmpresa: number): Observable<ReporteFeedback> 
+    {
+        return this.http.get<ReporteFeedback>(`${this.API_URL}/reporte/feedback/${idEmpresa}`);
     }
 }

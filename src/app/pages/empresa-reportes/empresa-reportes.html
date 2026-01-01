@@ -1,0 +1,116 @@
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-dark"><i class="bi bi-bar-chart-line-fill"></i> Reporte de Feedback</h2>
+        <button class="btn btn-outline-secondary" routerLink="/home">
+            <i class="bi bi-arrow-left"></i> Volver al Inicio
+        </button>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+        <p class="mt-2 text-muted">Analizando opiniones...</p>
+    </div>
+
+    <div *ngIf="!cargando && reporte" class="animate__animated animate__fadeIn">
+
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="bi bi-star-half"></i> Calificación Promedio por Juego</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Juego</th>
+                                <th class="text-center">Reseñas</th>
+                                <th class="text-center">Promedio</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of reporte.promedios">
+                                <td class="fw-bold">{{ item.titulo }}</td>
+                                <td class="text-center">{{ item.totalResenas }}</td>
+                                <td class="text-center">
+                                    <span class="badge fs-6"
+                                        [ngClass]="item.promedio >= 4 ? 'bg-success' : (item.promedio >= 3 ? 'bg-warning text-dark' : 'bg-danger')">
+                                        {{ item.promedio | number:'1.1-1' }} <i class="bi bi-star-fill"></i>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="progress" style="height: 6px;">
+                                        <div class="progress-bar" role="progressbar"
+                                            [style.width]="(item.promedio * 20) + '%'"
+                                            [ngClass]="item.promedio >= 4 ? 'bg-success' : 'bg-warning'">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr *ngIf="reporte.promedios.length === 0">
+                                <td colspan="4" class="text-center text-muted">No tienes juegos calificados aún.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0"><i class="bi bi-chat-dots-fill"></i> Comentarios Más Debatidos</h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <li *ngFor="let c of reporte.topComentarios" class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <small class="text-muted fw-bold">{{ c.nicknameGamer }}</small>
+                                    <span class="badge bg-primary rounded-pill">
+                                        {{ c.calificacion }} Respuestas
+                                    </span>
+                                </div>
+                                <p class="mb-1 mt-1 small fst-italic">"{{ c.texto }}"</p>
+                            </li>
+                            <li *ngIf="reporte.topComentarios.length === 0"
+                                class="list-group-item text-center text-muted py-3">
+                                Sin interacciones destacadas.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-danger text-white">
+                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Alertas: Calificaciones Bajas
+                        </h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-group list-group-flush">
+                            <li *ngFor="let c of reporte.peoresComentarios"
+                                class="list-group-item list-group-item-danger list-group-item-action">
+                                <div class="d-flex justify-content-between">
+                                    <small class="fw-bold">{{ c.nicknameGamer }}</small>
+                                    <div class="text-danger small">
+                                        <i class="bi bi-star-fill"
+                                            *ngFor="let s of generarEstrellas(c.calificacion)"></i>
+                                    </div>
+                                </div>
+                                <p class="mb-0 mt-1 small">"{{ c.texto }}"</p>
+                            </li>
+                            <li *ngIf="reporte.peoresComentarios.length === 0"
+                                class="list-group-item text-center text-success py-3">
+                                <i class="bi bi-check-circle fs-4 d-block"></i>
+                                ¡Genial! No tienes calificaciones negativas recientes.
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
