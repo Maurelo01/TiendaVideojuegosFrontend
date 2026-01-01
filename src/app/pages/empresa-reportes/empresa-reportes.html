@@ -1,18 +1,32 @@
 <div class="container mt-4 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="fw-bold text-dark"><i class="bi bi-bar-chart-line-fill"></i> Reporte de Feedback</h2>
-        <button class="btn btn-outline-secondary" routerLink="/home">
-            <i class="bi bi-arrow-left"></i> Volver al Inicio
+        <div>
+            <h2 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-line-fill"></i> Reportes de Empresa</h2>
+            <p class="text-muted small m-0">Análisis de rendimiento y calidad</p>
+        </div>
+        <button class="btn btn-outline-secondary" routerLink="/empresa/dashboard">
+            <i class="bi bi-arrow-left"></i> Volver al Panel
         </button>
     </div>
 
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link cursor-pointer" [class.active]="vistaActual === 'feedback'" 
+               (click)="cambiarVista('feedback')">Calidad y Opiniones</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link cursor-pointer" [class.active]="vistaActual === 'top5'" 
+               (click)="cambiarVista('top5')">Top 5 Ventas</a>
+        </li>
+    </ul>
+
     <div *ngIf="cargando" class="text-center py-5">
         <div class="spinner-border text-primary" role="status"></div>
-        <p class="mt-2 text-muted">Analizando opiniones...</p>
+        <p class="mt-2 text-muted">Procesando datos...</p>
     </div>
 
-    <div *ngIf="!cargando && reporte" class="animate__animated animate__fadeIn">
-
+    <div *ngIf="!cargando && reporte && vistaActual === 'feedback'" class="animate__animated animate__fadeIn">
+        
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0"><i class="bi bi-star-half"></i> Calificación Promedio por Juego</h5>
@@ -33,16 +47,16 @@
                                 <td class="fw-bold">{{ item.titulo }}</td>
                                 <td class="text-center">{{ item.totalResenas }}</td>
                                 <td class="text-center">
-                                    <span class="badge fs-6"
-                                        [ngClass]="item.promedio >= 4 ? 'bg-success' : (item.promedio >= 3 ? 'bg-warning text-dark' : 'bg-danger')">
+                                    <span class="badge fs-6" 
+                                          [ngClass]="item.promedio >= 4 ? 'bg-success' : (item.promedio >= 3 ? 'bg-warning text-dark' : 'bg-danger')">
                                         {{ item.promedio | number:'1.1-1' }} <i class="bi bi-star-fill"></i>
                                     </span>
                                 </td>
                                 <td>
                                     <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar" role="progressbar"
-                                            [style.width]="(item.promedio * 20) + '%'"
-                                            [ngClass]="item.promedio >= 4 ? 'bg-success' : 'bg-warning'">
+                                        <div class="progress-bar" role="progressbar" 
+                                             [style.width]="(item.promedio * 20) + '%'"
+                                             [ngClass]="item.promedio >= 4 ? 'bg-success' : 'bg-warning'">
                                         </div>
                                     </div>
                                 </td>
@@ -73,8 +87,7 @@
                                 </div>
                                 <p class="mb-1 mt-1 small fst-italic">"{{ c.texto }}"</p>
                             </li>
-                            <li *ngIf="reporte.topComentarios.length === 0"
-                                class="list-group-item text-center text-muted py-3">
+                            <li *ngIf="reporte.topComentarios.length === 0" class="list-group-item text-center text-muted py-3">
                                 Sin interacciones destacadas.
                             </li>
                         </ul>
@@ -85,24 +98,20 @@
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 h-100">
                     <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Alertas: Calificaciones Bajas
-                        </h5>
+                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Alertas: Calificaciones Bajas</h5>
                     </div>
                     <div class="card-body p-0">
                         <ul class="list-group list-group-flush">
-                            <li *ngFor="let c of reporte.peoresComentarios"
-                                class="list-group-item list-group-item-danger list-group-item-action">
+                            <li *ngFor="let c of reporte.peoresComentarios" class="list-group-item list-group-item-danger list-group-item-action">
                                 <div class="d-flex justify-content-between">
                                     <small class="fw-bold">{{ c.nicknameGamer }}</small>
                                     <div class="text-danger small">
-                                        <i class="bi bi-star-fill"
-                                            *ngFor="let s of generarEstrellas(c.calificacion)"></i>
+                                        <i class="bi bi-star-fill" *ngFor="let s of generarEstrellas(c.calificacion)"></i>
                                     </div>
                                 </div>
                                 <p class="mb-0 mt-1 small">"{{ c.texto }}"</p>
                             </li>
-                            <li *ngIf="reporte.peoresComentarios.length === 0"
-                                class="list-group-item text-center text-success py-3">
+                            <li *ngIf="reporte.peoresComentarios.length === 0" class="list-group-item text-center text-success py-3">
                                 <i class="bi bi-check-circle fs-4 d-block"></i>
                                 ¡Genial! No tienes calificaciones negativas recientes.
                             </li>
@@ -111,6 +120,60 @@
                 </div>
             </div>
         </div>
-
     </div>
+
+    <div *ngIf="!cargando && vistaActual === 'top5'" class="animate__animated animate__fadeIn">
+        
+        <div class="card p-3 mb-4 bg-light border-0">
+            <div class="row g-2 align-items-end">
+                <div class="col-md-4">
+                    <label class="small fw-bold">Fecha Inicio</label>
+                    <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+                </div>
+                <div class="col-md-4">
+                    <label class="small fw-bold">Fecha Fin</label>
+                    <input type="date" class="form-control" [(ngModel)]="fechaFin">
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-primary w-100" (click)="cargarTop5()">
+                        <i class="bi bi-filter"></i> Filtrar Resultados
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-0">
+                <table class="table table-striped mb-0 align-middle">
+                    <thead class="table-dark">
+                        <tr>
+                            <th class="ps-4">#</th>
+                            <th>Videojuego</th>
+                            <th class="text-center">Unidades Vendidas</th>
+                            <th class="text-end pe-4">Ganancia Generada</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let juego of top5Juegos; let i = index">
+                            <td class="ps-4 fw-bold lead text-secondary">{{ i + 1 }}</td>
+                            <td class="fw-bold text-primary">{{ juego.tituloJuego }}</td>
+                            <td class="text-center">
+                                <span class="badge bg-success rounded-pill fs-6">{{ juego.copiasVendidas }}</span>
+                            </td>
+                            <td class="text-end pe-4 fw-bold text-dark">
+                                {{ juego.gananciaNeta | currency }}
+                            </td>
+                        </tr>
+                        <tr *ngIf="top5Juegos.length === 0">
+                            <td colspan="4" class="text-center py-5 text-muted">
+                                <i class="bi bi-graph-down fs-1 d-block mb-2"></i>
+                                No se encontraron ventas en este periodo.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
 </div>
