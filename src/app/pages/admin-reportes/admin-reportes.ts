@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ComprasService } from '../../../services/compras';
 import { ReporteAdmin } from '../../../models/reportes';
 import { RouterLink } from '@angular/router';
+import { VideojuegosService } from '../../../services/videojuegoServices/videojuegos';
 
 @Component({
   selector: 'app-admin-reportes',
@@ -21,12 +22,21 @@ export class AdminReportesComponent implements OnInit
   rankingCompradores: any[] = [];
   rankingReviewers: any[] = [];
   vistaActual: string = 'global';
+  topJuegos: any[] = [];
+  categorias: any[] = [];
+  filtroCategoria: number = 0;
+  filtroEdad: string = '';
 
-  constructor(private comprasService: ComprasService) {}
+  constructor
+  (
+    private comprasService: ComprasService,
+    private videojuegosService: VideojuegosService
+  ){}
 
   ngOnInit(): void 
   {
     this.generarReporte();
+    this.cargarCategorias();
   }
 
   generarReporte()
@@ -42,6 +52,11 @@ export class AdminReportesComponent implements OnInit
     );
   }
 
+  cargarCategorias()
+  {
+      this.videojuegosService.obtenerCategorias().subscribe(data => this.categorias = data);
+  }
+
   cargarRankings() 
   {
     this.vistaActual = 'ranking';
@@ -55,6 +70,18 @@ export class AdminReportesComponent implements OnInit
         data => this.rankingReviewers = data,
         error => console.error('Error cargando reviewers', error)
     );
+  }
+
+  cargarTopJuegos()
+  {
+      this.vistaActual = 'top';
+      this.comprasService.obtenerTopJuegos(this.filtroCategoria, this.filtroEdad).subscribe
+      (
+        {
+          next: (data) => this.topJuegos = data,
+          error: (e) => console.error(e)
+        }
+      );
   }
 
   calcularTotales()
