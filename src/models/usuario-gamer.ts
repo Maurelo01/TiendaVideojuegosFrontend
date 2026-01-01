@@ -8,4 +8,5 @@ export interface UsuarioGamer extends Usuario
     pais?: string;
     saldoCartera?: number;
     avatar?: string;
+    perfilPublico?: boolean;
 }

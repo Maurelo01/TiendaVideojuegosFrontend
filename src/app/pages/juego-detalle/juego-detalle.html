@@ -1,5 +1,4 @@
 <div class="container mt-5 mb-5" *ngIf="juego">
-    <!-- Información principal del juego -->
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card shadow border-0">
@@ -38,7 +37,6 @@
         </div>
     </div>
 
-    <!-- Galería y Contenido Extra -->
     <div *ngIf="multimedia && multimedia.length > 0" class="mb-5 animate__animated animate__fadeIn">
         <h3 class="border-bottom pb-2 mb-4 text-secondary">
             <i class="bi bi-images"></i> Galería y Contenido Extra
@@ -55,7 +53,6 @@
                          [attr.data-bs-target]="'#modalMedia' + media.idMedia">
                 </div>
 
-                <!-- Modal para ampliar imagen -->
                 <div class="modal fade" 
                      [id]="'modalMedia' + media.idMedia" 
                      tabindex="-1" 
@@ -78,14 +75,12 @@
         </div>
     </div>
 
-    <!-- Sección de reseñas -->
     <div class="row">
         <div class="col-12">
             <h3 class="border-bottom pb-2 mb-4">
                 <i class="bi bi-chat-square-text-fill"></i> Reseñas de la Comunidad
             </h3>
 
-            <!-- Formulario de reseña (solo si tiene el juego) -->
             <div *ngIf="tieneElJuego" id="form-comentario" class="card mb-5 border-primary shadow-sm">
                 <div class="card-header bg-primary text-white">
                     <i class="bi bi-pen-fill me-2"></i>
@@ -122,28 +117,29 @@
                 </div>
             </div>
 
-            <!-- Mensaje si no tiene el juego -->
             <div *ngIf="!tieneElJuego && usuarioActual?.rol === 'GAMER'" class="alert alert-info shadow-sm">
                 <i class="bi bi-info-circle-fill me-2"></i>
                 Adquiere este juego para poder escribir una reseña.
             </div>
 
-            <!-- Mensaje cuando no hay reseñas -->
             <div *ngIf="comentarios.length === 0" class="text-center py-5 text-muted bg-light rounded">
                 <i class="bi bi-chat-quote fs-1"></i>
                 <p class="mt-3 fs-5">Aún no hay reseñas. ¡Sé el primero en opinar!</p>
             </div>
 
-            <!-- Lista de reseñas -->
             <div class="card mb-3 border-0 shadow-sm" *ngFor="let c of comentarios">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="fw-bold mb-1 text-primary">
-                                <i class="bi bi-person-circle"></i> {{ c.nicknameGamer }}
+                            <h6 class="fw-bold mb-1" [ngClass]="c.esMio ? 'text-success' : 'text-primary'">
+                                <a [routerLink]="['/usuario', c.idGamer]" 
+                                   class="text-decoration-none text-reset hover-underline cursor-pointer"
+                                   title="Ver perfil de {{ c.nicknameGamer }}">
+                                    <i class="bi bi-person-circle"></i> {{ c.nicknameGamer }}
+                                </a>
+                                <span *ngIf="c.esMio" class="badge bg-success ms-1" style="font-size: 0.7em">Tú</span>
                             </h6>
                             
-                            <!-- Estrellas con calificación numérica -->
                             <div class="text-warning small mb-2">
                                 <i class="bi bi-star-fill" *ngFor="let s of generarEstrellas(c.calificacion)"></i>
                                 <i class="bi bi-star" *ngFor="let s of generarEstrellasVacias(c.calificacion)"></i>
@@ -156,12 +152,10 @@
                         <small class="text-muted">{{ c.fecha | date:'mediumDate' }}</small>
                     </div>
                     
-                    <!-- Texto del comentario -->
                     <p class="card-text mt-1 ms-3 border-start border-3 border-secondary ps-3">
                         {{ c.texto }}
                     </p>
                     
-                    <!-- Botones de edición/eliminación (solo para el autor) -->
                     <div *ngIf="c.esMio" class="text-end border-top pt-2 mt-2">
                         <button class="btn btn-sm btn-link text-decoration-none fw-bold" (click)="iniciarEdicion(c)">
                             <i class="bi bi-pencil"></i> Editar
