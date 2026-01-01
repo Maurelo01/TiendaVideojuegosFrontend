@@ -99,20 +99,41 @@ export class AdminReportesComponent implements OnInit
 
   exportarPDF() 
   {
-    this.comprasService.descargarReporteAdminPDF(this.fechaInicio, this.fechaFin).subscribe
-    (
-        (data: Blob) => 
-        {
-            const url = window.URL.createObjectURL(data);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Reporte_Global_Ventas.pdf';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-        },
-        error => console.error('Error al descargar PDF', error)
-    );
+    if (this.vistaActual === 'ranking') 
+    {
+      this.comprasService.descargarRankingPDF().subscribe
+      (
+        (data: Blob) => this.descargarArchivo(data, 'Ranking_Usuarios.pdf'),
+        error => console.error('Error al descargar Ranking PDF', error)
+      );
+    }
+    else if (this.vistaActual === 'top') 
+    {
+      this.comprasService.descargarTopJuegosPDF(this.filtroCategoria, this.filtroEdad).subscribe
+      (
+        (data: Blob) => this.descargarArchivo(data, 'Top_Juegos_Calidad.pdf'),
+        error => console.error('Error al descargar Top Juegos PDF', error)
+      );
+  }
+    else 
+    {
+      this.comprasService.descargarReporteAdminPDF(this.fechaInicio, this.fechaFin).subscribe
+      (
+        (data: Blob) => this.descargarArchivo(data, 'Reporte_Global_Ventas.pdf'),
+        error => console.error('Error al descargar PDF Global', error)
+      );
+    }
+  }
+
+  private descargarArchivo(data: Blob, nombre: string) 
+  {
+    const url = window.URL.createObjectURL(data);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombre;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 }

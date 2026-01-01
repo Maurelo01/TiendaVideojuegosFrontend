@@ -138,4 +138,30 @@ export class ComprasService
         if (fin) params = params.set('fin', fin);
         return this.http.get<any[]>(`${this.API_URL}/reporte/empresa/${idEmpresa}/top5`, { params });
     }
+
+    descargarRankingPDF(): Observable<Blob>
+    {
+        return this.http.get(`${this.API_URL}/reporte/ranking/pdf`, { responseType: 'blob' });
+    }
+
+    descargarTopJuegosPDF(idCategoria: number, edad: string): Observable<Blob>
+    {
+        let params = new HttpParams();
+        if(idCategoria) params = params.set('categoria', idCategoria);
+        if(edad) params = params.set('edad', edad);
+        return this.http.get(`${this.API_URL}/reporte/top-juegos/pdf`, { params, responseType: 'blob' });
+    }
+
+    descargarFeedbackPDF(idEmpresa: number): Observable<Blob>
+    {
+        return this.http.get(`${this.API_URL}/reporte/feedback/${idEmpresa}/pdf`, { responseType: 'blob' });
+    }
+
+    descargarTop5PDF(idEmpresa: number, inicio: string, fin: string): Observable<Blob>
+    {
+        let params = new HttpParams();
+        if(inicio) params = params.set('inicio', inicio);
+        if(fin) params = params.set('fin', fin);
+        return this.http.get(`${this.API_URL}/reporte/empresa/${idEmpresa}/top5/pdf`, { params, responseType: 'blob' });
+    }
 }
