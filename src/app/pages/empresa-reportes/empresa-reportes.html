@@ -1,68 +1,81 @@
-<div class="container mt-4 mb-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container mt-5 mb-5">
+    
+    <div class="d-flex justify-content-between align-items-center mb-5">
         <div>
-            <h2 class="fw-bold text-dark m-0"><i class="bi bi-bar-chart-line-fill"></i> Reportes de Empresa</h2>
-            <p class="text-muted small m-0">Análisis de rendimiento y calidad</p>
+            <h2 class="texto-nordico fw-bold m-0">
+                <i class="bi bi-graph-up-arrow me-2"></i>Reportes y Métricas
+            </h2>
+            <p class="text-muted small mb-0">Análisis de rendimiento y calidad del catálogo</p>
         </div>
-        <button class="btn btn-outline-secondary" routerLink="/empresa/dashboard">
-            <i class="bi bi-arrow-left"></i> Volver al Panel
+        <button class="btn btn-outline-secondary rounded-3" routerLink="/empresa/dashboard">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Panel
         </button>
     </div>
 
-    <ul class="nav nav-tabs mb-4">
+    <ul class="nav nav-pills mb-4 gap-2">
         <li class="nav-item">
-            <a class="nav-link cursor-pointer" [class.active]="vistaActual === 'feedback'" 
-               (click)="cambiarVista('feedback')">Calidad y Opiniones</a>
+            <button class="nav-link rounded-3 fw-bold px-4" 
+                [ngClass]="vistaActual === 'feedback' ? 'bg-nordico text-white shadow' : 'bg-white text-secondary border'"
+                (click)="cambiarVista('feedback')">
+                <i class="bi bi-chat-quote-fill me-2"></i> Calidad y Opiniones
+            </button>
         </li>
         <li class="nav-item">
-            <a class="nav-link cursor-pointer" [class.active]="vistaActual === 'top5'" 
-               (click)="cambiarVista('top5')">Top 5 Ventas</a>
+            <button class="nav-link rounded-3 fw-bold px-4" 
+                [ngClass]="vistaActual === 'top5' ? 'bg-nordico text-white shadow' : 'bg-white text-secondary border'"
+                (click)="cambiarVista('top5')">
+                <i class="bi bi-trophy-fill me-2"></i> Top Ventas
+            </button>
         </li>
     </ul>
 
     <div *ngIf="cargando" class="text-center py-5">
-        <div class="spinner-border text-primary" role="status"></div>
+        <div class="spinner-border text-nordico-claro" role="status" style="width: 3rem; height: 3rem;"></div>
         <p class="mt-2 text-muted">Procesando datos...</p>
     </div>
 
     <div *ngIf="!cargando && reporte && vistaActual === 'feedback'" class="animate__animated animate__fadeIn">
         
-        <div class="card shadow-sm border-0 mb-4">
-            <div class="card-header bg-primary text-white">
-                <h5 class="mb-0"><i class="bi bi-star-half"></i> Calificación Promedio por Juego</h5>
-            </div>
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
+        <div class="card tarjeta-nordica mb-5 overflow-hidden">
+            <div class="card-body p-4">
+                <h5 class="texto-nordico fw-bold mb-4">
+                    <i class="bi bi-star-half me-2"></i>Calificación Promedio por Juego
+                </h5>
+                
+                <div class="table-responsive rounded-3 border">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light text-secondary text-uppercase small">
                             <tr>
-                                <th>Juego</th>
-                                <th class="text-center">Reseñas</th>
-                                <th class="text-center">Promedio</th>
-                                <th>Estado</th>
+                                <th class="py-3 ps-4 border-0">Juego</th>
+                                <th class="py-3 text-center border-0">Total Reseñas</th>
+                                <th class="py-3 text-center border-0">Promedio</th>
+                                <th class="py-3 pe-4 border-0" style="width: 30%;">Indicador Visual</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr *ngFor="let item of reporte.promedios">
-                                <td class="fw-bold">{{ item.titulo }}</td>
-                                <td class="text-center">{{ item.totalResenas }}</td>
+                                <td class="ps-4 fw-bold text-dark">{{ item.titulo }}</td>
+                                <td class="text-center text-muted">{{ item.totalResenas }}</td>
                                 <td class="text-center">
-                                    <span class="badge fs-6" 
-                                          [ngClass]="item.promedio >= 4 ? 'bg-success' : (item.promedio >= 3 ? 'bg-warning text-dark' : 'bg-danger')">
-                                        {{ item.promedio | number:'1.1-1' }} <i class="bi bi-star-fill"></i>
+                                    <span class="fw-bold fs-5" 
+                                        [ngClass]="item.promedio >= 4 ? 'text-success' : (item.promedio >= 3 ? 'text-warning' : 'text-danger')">
+                                        {{ item.promedio | number:'1.1-1' }}
                                     </span>
+                                    <small class="text-muted">/ 5</small>
                                 </td>
-                                <td>
-                                    <div class="progress" style="height: 6px;">
-                                        <div class="progress-bar" role="progressbar" 
+                                <td class="pe-4">
+                                    <div class="progress rounded-pill" style="height: 8px;">
+                                        <div class="progress-bar rounded-pill" role="progressbar" 
                                              [style.width]="(item.promedio * 20) + '%'"
-                                             [ngClass]="item.promedio >= 4 ? 'bg-success' : 'bg-warning'">
+                                             [ngClass]="item.promedio >= 4 ? 'bg-success' : (item.promedio >= 3 ? 'bg-warning' : 'bg-danger')">
                                         </div>
                                     </div>
                                 </td>
                             </tr>
                             <tr *ngIf="reporte.promedios.length === 0">
-                                <td colspan="4" class="text-center text-muted">No tienes juegos calificados aún.</td>
+                                <td colspan="4" class="text-center py-5 text-muted">
+                                    No tienes juegos calificados aún.
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -70,52 +83,63 @@
             </div>
         </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-info text-white">
-                        <h5 class="mb-0"><i class="bi bi-chat-dots-fill"></i> Comentarios Más Debatidos</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush">
-                            <li *ngFor="let c of reporte.topComentarios" class="list-group-item">
-                                <div class="d-flex justify-content-between align-items-start">
-                                    <small class="text-muted fw-bold">{{ c.nicknameGamer }}</small>
-                                    <span class="badge bg-primary rounded-pill">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card tarjeta-nordica h-100 p-3">
+                    <div class="card-body">
+                        <h6 class="texto-nordico fw-bold mb-4 border-bottom pb-2">
+                            <i class="bi bi-fire text-warning me-2"></i>Más Debatidos
+                        </h6>
+                        
+                        <div class="d-flex flex-column gap-3">
+                            <div *ngFor="let c of reporte.topComentarios" class="p-3 bg-light rounded-3 border border-light shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <div class="rounded-circle bg-white border d-flex align-items-center justify-content-center fw-bold text-secondary" style="width: 25px; height: 25px; font-size: 0.7rem;">
+                                            {{ c.nicknameGamer?.charAt(0) }}
+                                        </div>
+                                        <small class="fw-bold text-dark">{{ c.nicknameGamer }}</small>
+                                    </div>
+                                    <span class="badge bg-nordico text-white rounded-pill px-3">
                                         {{ c.calificacion }} Respuestas
                                     </span>
                                 </div>
-                                <p class="mb-1 mt-1 small fst-italic">"{{ c.texto }}"</p>
-                            </li>
-                            <li *ngIf="reporte.topComentarios.length === 0" class="list-group-item text-center text-muted py-3">
+                                <p class="mb-0 small text-secondary fst-italic">"{{ c.texto }}"</p>
+                            </div>
+
+                            <div *ngIf="reporte.topComentarios.length === 0" class="text-center text-muted py-4 opacity-50">
+                                <i class="bi bi-chat-square-text fs-1 mb-2 d-block"></i>
                                 Sin interacciones destacadas.
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 h-100">
-                    <div class="card-header bg-danger text-white">
-                        <h5 class="mb-0"><i class="bi bi-exclamation-triangle-fill"></i> Alertas: Calificaciones Bajas</h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush">
-                            <li *ngFor="let c of reporte.peoresComentarios" class="list-group-item list-group-item-danger list-group-item-action">
-                                <div class="d-flex justify-content-between">
-                                    <small class="fw-bold">{{ c.nicknameGamer }}</small>
+            <div class="col-lg-6">
+                <div class="card tarjeta-nordica h-100 p-3 border-danger border-top border-4">
+                    <div class="card-body">
+                        <h6 class="text-danger fw-bold mb-4 border-bottom pb-2">
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>Atención Requerida (Baja Calificación)
+                        </h6>
+
+                        <div class="d-flex flex-column gap-3">
+                            <div *ngFor="let c of reporte.peoresComentarios" class="p-3 bg-danger bg-opacity-10 rounded-3 border border-danger border-opacity-25">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <small class="fw-bold text-danger">{{ c.nicknameGamer }}</small>
                                     <div class="text-danger small">
                                         <i class="bi bi-star-fill" *ngFor="let s of generarEstrellas(c.calificacion)"></i>
                                     </div>
                                 </div>
-                                <p class="mb-0 mt-1 small">"{{ c.texto }}"</p>
-                            </li>
-                            <li *ngIf="reporte.peoresComentarios.length === 0" class="list-group-item text-center text-success py-3">
-                                <i class="bi bi-check-circle fs-4 d-block"></i>
-                                ¡Genial! No tienes calificaciones negativas recientes.
-                            </li>
-                        </ul>
+                                <p class="mb-0 small text-dark opacity-75">"{{ c.texto }}"</p>
+                            </div>
+
+                            <div *ngIf="reporte.peoresComentarios.length === 0" class="text-center text-success py-5">
+                                <i class="bi bi-check-circle-fill fs-1 mb-2 d-block"></i>
+                                <p class="mb-0 fw-bold">¡Todo en orden!</p>
+                                <small>No hay calificaciones negativas recientes.</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -124,50 +148,65 @@
 
     <div *ngIf="!cargando && vistaActual === 'top5'" class="animate__animated animate__fadeIn">
         
-        <div class="card p-3 mb-4 bg-light border-0">
-            <div class="row g-2 align-items-end">
+        <div class="card tarjeta-nordica mb-4 p-4">
+            <h5 class="texto-nordico fw-bold mb-3">Filtrar Ventas</h5>
+            <div class="row g-3 align-items-end">
                 <div class="col-md-4">
-                    <label class="small fw-bold">Fecha Inicio</label>
-                    <input type="date" class="form-control" [(ngModel)]="fechaInicio">
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Fecha Inicio</label>
+                    <input type="date" class="form-control bg-light" [(ngModel)]="fechaInicio">
                 </div>
                 <div class="col-md-4">
-                    <label class="small fw-bold">Fecha Fin</label>
-                    <input type="date" class="form-control" [(ngModel)]="fechaFin">
+                    <label class="form-label small fw-bold text-secondary text-uppercase">Fecha Fin</label>
+                    <input type="date" class="form-control bg-light" [(ngModel)]="fechaFin">
                 </div>
                 <div class="col-md-4">
-                    <button class="btn btn-primary w-100" (click)="cargarTop5()">
-                        <i class="bi bi-filter"></i> Filtrar Resultados
+                    <button class="btn boton-nordico w-100 fw-bold" (click)="cargarTop5()">
+                        <i class="bi bi-search me-1"></i> Generar Reporte
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="card shadow-sm border-0">
-            <div class="card-body p-0">
-                <table class="table table-striped mb-0 align-middle">
-                    <thead class="table-dark">
+        <div class="card tarjeta-nordica overflow-hidden">
+            <div class="card-header bg-nordico text-white py-3 border-0">
+                <h5 class="m-0 fw-bold"><i class="bi bi-trophy me-2 text-warning"></i> Top 5 Juegos Más Vendidos</h5>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary text-uppercase small">
                         <tr>
-                            <th class="ps-4">#</th>
-                            <th>Videojuego</th>
-                            <th class="text-center">Unidades Vendidas</th>
-                            <th class="text-end pe-4">Ganancia Generada</th>
+                            <th class="ps-4 py-3 border-0" style="width: 50px;">#</th>
+                            <th class="border-0">Videojuego</th>
+                            <th class="text-center border-0">Unidades</th>
+                            <th class="text-end pe-4 border-0">Ganancia Neta</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let juego of top5Juegos; let i = index">
-                            <td class="ps-4 fw-bold lead text-secondary">{{ i + 1 }}</td>
-                            <td class="fw-bold text-primary">{{ juego.tituloJuego }}</td>
-                            <td class="text-center">
-                                <span class="badge bg-success rounded-pill fs-6">{{ juego.copiasVendidas }}</span>
+                            <td class="ps-4">
+                                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center fw-bold text-secondary" 
+                                     style="width: 30px; height: 30px;">
+                                    {{ i + 1 }}
+                                </div>
                             </td>
-                            <td class="text-end pe-4 fw-bold text-dark">
-                                {{ juego.gananciaNeta | currency }}
+                            <td>
+                                <span class="fw-bold text-dark">{{ juego.tituloJuego }}</span>
+                            </td>
+                            <td class="text-center">
+                                <span class="badge bg-white text-dark border shadow-sm px-3 py-2 rounded-pill">
+                                    {{ juego.copiasVendidas }} copias
+                                </span>
+                            </td>
+                            <td class="text-end pe-4">
+                                <span class="fw-bold text-success fs-5">{{ juego.gananciaNeta | currency }}</span>
                             </td>
                         </tr>
                         <tr *ngIf="top5Juegos.length === 0">
                             <td colspan="4" class="text-center py-5 text-muted">
-                                <i class="bi bi-graph-down fs-1 d-block mb-2"></i>
-                                No se encontraron ventas en este periodo.
+                                <div class="opacity-50">
+                                    <i class="bi bi-graph-down fs-1 mb-2 d-block"></i>
+                                    No se encontraron ventas en el rango de fechas seleccionado.
+                                </div>
                             </td>
                         </tr>
                     </tbody>

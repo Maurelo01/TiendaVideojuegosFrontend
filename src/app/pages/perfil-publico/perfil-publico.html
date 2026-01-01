@@ -1,48 +1,90 @@
-<div class="container mt-5" *ngIf="!cargando && perfil">
-    <div class="row justify-content-center">
-        <div class="col-md-4 text-center">
-            <div class="card shadow border-0 p-4">
-                <div class="mb-3">
+<div class="container mt-5 mb-5">
+
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <h2 class="texto-nordico fw-bold m-0 mt-4">
+            <i class="bi bi-person-badge-fill me-2"></i>Perfil de Jugador
+        </h2>
+        <button class="btn btn-outline-secondary rounded-3" routerLink="/home">
+            <i class="bi bi-arrow-left me-1"></i> Volver al Inicio
+        </button>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-nordico-claro" role="status" style="width: 3rem; height: 3rem;"></div>
+        <p class="text-muted mt-2">Cargando perfil...</p>
+    </div>
+
+    <div class="row g-4" *ngIf="!cargando && perfil">
+        
+        <div class="col-md-4">
+            <div class="card tarjeta-nordica p-4 text-center h-100">
+                <div class="mb-4 position-relative d-inline-block">
                     <img [src]="perfil.avatar ? 'data:image/jpeg;base64,' + perfil.avatar : 'https://placehold.co/150'" 
-                         class="rounded-circle shadow-lg object-fit-cover" 
-                         style="width: 150px; height: 150px;">
+                         class="rounded-circle shadow-sm border p-1 bg-white object-fit-cover" 
+                         style="width: 160px; height: 160px;">
+                    
+                    <span *ngIf="esPrivado" class="position-absolute bottom-0 end-0 badge bg-warning text-dark border border-white rounded-pill shadow-sm px-3 py-2" 
+                          title="Perfil Privado">
+                        <i class="bi bi-lock-fill"></i>
+                    </span>
                 </div>
-                <h2 class="fw-bold text-primary">{{ perfil.nickname }}</h2>
-                <p class="text-muted"><i class="bi bi-geo-alt-fill"></i> {{ perfil.pais }}</p>
-                
-                <div *ngIf="esPrivado" class="alert alert-warning mt-3">
-                    <i class="bi bi-lock-fill"></i> Este perfil es privado.
-                </div>
+
+                <h3 class="fw-bold texto-nordico mb-1">{{ perfil.nickname }}</h3>
+                <p class="text-muted mb-4">
+                    <i class="bi bi-geo-alt-fill me-1 text-nordico-claro"></i> {{ perfil.pais || 'Ubicación desconocida' }}
+                </p>
+
+                <hr class="opacity-25 my-4">
             </div>
         </div>
         
-        <div class="col-md-8" *ngIf="!esPrivado">
-            <h3 class="border-bottom pb-2 mb-4">
-                <i class="bi bi-controller"></i> Biblioteca de Juegos
-            </h3>
+        <div class="col-md-8">
+            <div class="card tarjeta-nordica p-4 h-100">
+                
+                <div *ngIf="!esPrivado">
+                    <h5 class="texto-nordico fw-bold mb-4 border-bottom pb-3">
+                        <i class="bi bi-controller me-2"></i>Biblioteca de Juegos
+                        <span class="badge bg-light text-muted border ms-2 rounded-pill">{{ perfil.biblioteca?.length || 0 }}</span>
+                    </h5>
 
-            <div class="row g-3" *ngIf="perfil.biblioteca?.length > 0; else sinJuegos">
-                <div class="col-sm-6 col-lg-4" *ngFor="let juego of perfil.biblioteca">
-                    <div class="card h-100 shadow-sm border-0">
-                        <div class="card-body text-center">
-                            <h6 class="fw-bold text-dark">{{ juego.titulo }}</h6>
-                            <span class="badge bg-secondary">Nivel {{ juego.nivel || 1 }}</span>
+                    <div class="row row-cols-1 row-cols-sm-2 g-3" *ngIf="perfil.biblioteca?.length > 0; else sinJuegos">
+                        <div class="col" *ngFor="let juego of perfil.biblioteca">
+                            <div class="card h-100 border bg-light bg-opacity-25 hover-shadow transition-all rounded-3 overflow-hidden">
+                                <div class="card-body d-flex align-items-center gap-3 p-3">
+                                    <div class="rounded bg-white border d-flex align-items-center justify-content-center text-nordico-claro fs-4" 
+                                         style="width: 50px; height: 50px; min-width: 50px;">
+                                        <i class="bi bi-joystick"></i>
+                                    </div>
+                                    <div class="overflow-hidden">
+                                        <h6 class="fw-bold text-dark mb-1 text-truncate">{{ juego.titulo }}</h6>
+                                        <span class="badge bg-white text-secondary border shadow-sm" style="font-size: 0.7rem;">
+                                            Nivel {{ juego.nivel || 1 }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    
+                    <ng-template #sinJuegos>
+                        <div class="text-center py-5 opacity-50">
+                            <i class="bi bi-box-seam fs-1 mb-2 d-block"></i>
+                            <p>Este usuario aún no tiene juegos en su biblioteca.</p>
+                        </div>
+                    </ng-template>
                 </div>
+
+                <div *ngIf="esPrivado" class="h-100 d-flex flex-column justify-content-center align-items-center text-center py-5">
+                    <div class="bg-light rounded-circle p-4 mb-3 text-secondary shadow-inner">
+                        <i class="bi bi-shield-lock-fill display-4"></i>
+                    </div>
+                    <h4 class="texto-nordico fw-bold">Este perfil es privado</h4>
+                    <p class="text-muted w-75 mx-auto">
+                        La información detallada de la biblioteca y actividad reciente está oculta por configuración de privacidad del usuario.
+                    </p>
+                </div>
+
             </div>
-            
-            <ng-template #sinJuegos>
-                <div class="alert alert-light text-center">
-                    Este usuario aún no tiene juegos visibles.
-                </div>
-            </ng-template>
         </div>
-        
-        <div class="col-md-8 text-center mt-5" *ngIf="esPrivado">
-            <i class="bi bi-eye-slash-fill display-1 text-muted"></i>   
-            <h4 class="mt-3 text-secondary">La información de juegos está oculta.</h4>
-        </div>
-        </div>
-    <button class="btn btn-outline-secondary mb-3 mt-3" routerLink="/home"> Volver al inicio </button>
+    </div>
 </div>
