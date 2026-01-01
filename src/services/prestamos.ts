@@ -31,4 +31,9 @@ export class PrestamosService
     {
         return this.http.put(`${this.API_URL}/devolver`, solicitud, this.httpOptions);
     }
+
+    obtenerReporteUsoFamiliar(idUsuario: number): Observable<any[]> 
+    {
+        return this.http.get<any[]>(`${this.API_URL}/reporte/usuario/${idUsuario}`);
+    }
 }
