@@ -128,7 +128,14 @@ export class ComprasService
         let params = new HttpParams();
         if (idCategoria) params = params.set('categoria', idCategoria.toString());
         if (clasificacion) params = params.set('edad', clasificacion);
-
         return this.http.get<any[]>(`${this.API_URL}/reporte/top-juegos`, { params });
+    }
+
+    obtenerTop5Empresa(idEmpresa: number, inicio: string, fin: string): Observable<any[]> 
+    {
+        let params = new HttpParams();
+        if (inicio) params = params.set('inicio', inicio);
+        if (fin) params = params.set('fin', fin);
+        return this.http.get<any[]>(`${this.API_URL}/reporte/empresa/${idEmpresa}/top5`, { params });
     }
 }

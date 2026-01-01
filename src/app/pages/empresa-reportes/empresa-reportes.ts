@@ -4,15 +4,21 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { ReporteFeedback } from '../../../models/reportes';
 import { ComentariosService } from '../../../services/comentarios';
+import { ComprasService } from '../../../services/compras';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-empresa-reportes',
   standalone: true,
-  imports: [CommonModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink],
   templateUrl: './empresa-reportes.html'
 })
 export class EmpresaReportesComponent implements OnInit
 {
+  vistaActual: string = 'feedback'; // feedback o top5
+  top5Juegos: any[] = [];
+  fechaInicio: string = '';
+  fechaFin: string = '';
   cargando: boolean = true;
   reporte: ReporteFeedback | null = null;
   idEmpresa: number = 0;
@@ -20,6 +26,7 @@ export class EmpresaReportesComponent implements OnInit
   constructor
   (
     private authService: AuthService,
+    private comprasService: ComprasService,
     private comentariosService: ComentariosService,
     private router: Router
   ) { }
@@ -63,4 +70,33 @@ export class EmpresaReportesComponent implements OnInit
   {
     return Array(calificacion).fill(0);
   }
+
+  cambiarVista(vista: string) 
+  {
+        this.vistaActual = vista;
+        if (vista === 'top5') 
+        {
+          this.cargarTop5();
+        }
+        else
+        {
+          this.cargarDatos();
+        }
+    }
+
+    cargarTop5()
+    {
+      this.cargando = true;
+      this.comprasService.obtenerTop5Empresa(this.idEmpresa, this.fechaInicio, this.fechaFin).subscribe
+      (
+        {
+          next: (data) => 
+          {
+              this.top5Juegos = data;
+              this.cargando = false;
+          },
+          error: (err) => this.cargando = false
+        }
+      );
+    }
 }
