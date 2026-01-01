@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Comentario } from '../models/comentario';
 
@@ -29,5 +29,11 @@ export class ComentariosService
     eliminarComentario(idComentario: number, idUsuario: number): Observable<any>
     {
         return this.http.delete(`${this.API_URL}/${idComentario}/usuario/${idUsuario}`);
+    }
+
+    moderarComentario(idComentario: number, idUsuario: number, ocultar: boolean): Observable<any>
+    {
+        let params = new HttpParams().set('idUsuario', idUsuario.toString()).set('ocultar', ocultar.toString());
+        return this.http.put(`${this.API_URL}/${idComentario}/moderacion`, {}, { params });
     }
 }
