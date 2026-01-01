@@ -7,6 +7,7 @@ import { VideojuegosService } from '../../../services/videojuegoServices/videoju
 import { ComprasService, SolicitudCompra } from '../../../services/compras';
 import { Videojuego } from '../../../models/videojuego';
 import { Categoria } from '../../../models/categoria';
+import { UsuarioService } from '../../../services/usuarioServices/UsuarioService';
 import { AuthService } from '../../../services/auth.service';
 import { Router } from '@angular/router';
 import { forkJoin } from 'rxjs';
@@ -39,12 +40,15 @@ export class HomePage implements OnInit
   categoriaSeleccionada: number = 0;
   buscando: boolean = false;
   comprando: { [key: number]: boolean } = {};
+  busquedaUsuario: string = '';
+  usuariosEncontrados: any[] = [];
 
   constructor
   (
     private adminService: AdminService,
     private videojuegosService: VideojuegosService,
     private comprasService: ComprasService,
+    private usuarioService: UsuarioService,
     private authService: AuthService,
     private router: Router
   ) {}
@@ -291,4 +295,43 @@ export class HomePage implements OnInit
       }
     );
   }
-}
+
+  buscarUsuarios()
+  {
+    if (this.busquedaUsuario.trim().length < 3)
+    {
+      this.usuariosEncontrados = [];
+      return;
+    }
+    this.usuarioService.buscarUsuarios(this.busquedaUsuario).subscribe
+    (
+      {
+        next: (data) => this.usuariosEncontrados = data,
+        error: () => this.usuariosEncontrados = []
+      }
+    );
+  }
+
+  irAPerfil(resultado: any)
+  {
+    this.busquedaUsuario = '';
+    this.usuariosEncontrados = [];
+    this.textoBusqueda = '';
+
+    if (resultado.tipo === 'EMPRESA')
+    {
+      this.router.navigate(['/ver-empresa', resultado.id]);
+    } 
+    else
+    {
+      if (this.usuarioId && this.usuarioId === resultado.id)
+      {
+        this.router.navigate(['/mi-perfil']);
+      } 
+      else
+      {
+        this.router.navigate(['/usuario', resultado.id]);
+      }
+    }
+  }
+} 

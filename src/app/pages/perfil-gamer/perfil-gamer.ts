@@ -229,4 +229,25 @@ export class PerfilGamerComponent implements OnInit
             }
         );
     }
+
+    cambiarPrivacidad() 
+    {
+        if (!this.gamer) return;
+
+        const nuevoEstado = !this.gamer.perfilPublico;
+        
+        this.usuarioService.cambiarPrivacidad(this.idUsuario, nuevoEstado).subscribe(
+        {
+            next: () => 
+            {
+                if (this.gamer) 
+                {
+                    this.gamer.perfilPublico = nuevoEstado;
+                }
+                const estado = nuevoEstado ? 'PÚBLICO' : 'PRIVADO';
+                alert(`Tu perfil ahora es ${estado}`);
+            },
+            error: () => alert('Error al actualizar privacidad')
+        });
+    }
 }

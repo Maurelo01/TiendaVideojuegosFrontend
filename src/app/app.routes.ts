@@ -12,11 +12,13 @@ import { JuegoDetalleComponent } from './pages/juego-detalle/juego-detalle';
 import { AdminReportesComponent } from './pages/admin-reportes/admin-reportes';
 import { EmpresaVentasComponent } from './pages/empresa-ventas/empresa-ventas';
 import { GrupoFamiliarComponent } from './pages/grupo-familiar/grupo-familiar';
+import { PerfilPublicoComponent } from './pages/perfil-publico/perfil-publico';
 import { AdminEmpresas } from './pages/admin-empresas/admin-empresas';
 import { AdminConfiguracion } from './pages/admin-configuracion/admin-configuracion';
 import { AdminBanner } from './pages/admin-banner/admin-banner';
 
-export const routes: Routes = [
+export const routes: Routes = 
+[
     { path: 'login', component: LoginPage },
     { path: 'registro', component: RegistroPage },
     { path: 'home', component: HomePage },
@@ -30,6 +32,7 @@ export const routes: Routes = [
     { path: 'reportes-admin', component: AdminReportesComponent },
     { path: 'mis-ventas', component: EmpresaVentasComponent },
     { path: 'mi-grupo', component: GrupoFamiliarComponent },
+    { path: 'usuario/:id', component: PerfilPublicoComponent },
     { path: 'admin/empresas', component: AdminEmpresas },
     { path: 'admin/config', component: AdminConfiguracion },
     { path: 'admin/banner', component: AdminBanner },
