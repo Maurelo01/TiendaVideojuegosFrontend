@@ -111,4 +111,14 @@ export class ComprasService
     {
         return this.http.get(`${this.API_URL}/historial/${idUsuario}/pdf`, { responseType: 'blob' });
     }
+
+    obtenerRankingCompradores(): Observable<any[]> 
+    {
+        return this.http.get<any[]>(`${this.API_URL}/reporte/ranking-compradores`);
+    }
+
+    obtenerRankingReviewers(): Observable<any[]> 
+    {
+        return this.http.get<any[]>(`${this.API_URL}/reporte/ranking-reviewers`);
+    }
 }

@@ -18,6 +18,9 @@ export class AdminReportesComponent implements OnInit
   fechaFin: string = '';
   totalGlobalIngresos: number = 0;
   totalGlobalGanancia: number = 0;
+  rankingCompradores: any[] = [];
+  rankingReviewers: any[] = [];
+  vistaActual: string = 'global';
 
   constructor(private comprasService: ComprasService) {}
 
@@ -28,6 +31,7 @@ export class AdminReportesComponent implements OnInit
 
   generarReporte()
   {
+    this.vistaActual = 'global';
     this.comprasService.obtenerReporteAdmin(this.fechaInicio, this.fechaFin).subscribe
     (
         data => 
@@ -35,6 +39,21 @@ export class AdminReportesComponent implements OnInit
             this.reporte = data;
             this.calcularTotales();
         }
+    );
+  }
+
+  cargarRankings() 
+  {
+    this.vistaActual = 'ranking';
+    this.comprasService.obtenerRankingCompradores().subscribe
+    (
+        data => this.rankingCompradores = data,
+        error => console.error('Error cargando compradores', error)
+    );
+    this.comprasService.obtenerRankingReviewers().subscribe
+    (
+        data => this.rankingReviewers = data,
+        error => console.error('Error cargando reviewers', error)
     );
   }
 
