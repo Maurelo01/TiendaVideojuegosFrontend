@@ -17,6 +17,7 @@ import { AdminEmpresas } from './pages/admin-empresas/admin-empresas';
 import { AdminConfiguracion } from './pages/admin-configuracion/admin-configuracion';
 import { AdminBanner } from './pages/admin-banner/admin-banner';
 import { EmpresaReportesComponent } from './pages/empresa-reportes/empresa-reportes';
+import { GamerReportesComponent } from './pages/gamer-reportes/gamer-reportes';
 
 export const routes: Routes = 
 [
@@ -35,6 +36,7 @@ export const routes: Routes =
     { path: 'mi-grupo', component: GrupoFamiliarComponent },
     { path: 'usuario/:id', component: PerfilPublicoComponent },
     { path: 'empresa/reportes', component: EmpresaReportesComponent },
+    { path: 'mi-analisis', component: GamerReportesComponent },
     { path: 'admin/empresas', component: AdminEmpresas },
     { path: 'admin/config', component: AdminConfiguracion },
     { path: 'admin/banner', component: AdminBanner },

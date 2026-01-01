@@ -41,8 +41,7 @@
                             <li class="list-group-item bg-transparent"><strong>Correo:</strong> {{ gamer.correo }}</li>
                             <li class="list-group-item bg-transparent"><strong>Teléfono:</strong> {{ gamer.telefono ||
                                 'No registrado' }}</li>
-                            <li class="list-group-item bg-transparent"><strong>País:</strong> {{ gamer.pais || 'No
-                                especificado' }}</li>
+                            <li class="list-group-item bg-transparent"><strong>País:</strong> {{ gamer.pais || 'No especificado' }}</li>
                             <li class="list-group-item bg-transparent"><strong>Fecha Nacimiento:</strong>
                                 {{gamer.fechaNacimiento | date:'longDate' }}</li>
                             <li class="list-group-item bg-transparent">
@@ -53,6 +52,7 @@
                     </div>
                 </div>
                 <div class="text-end">
+                    <button class="btn btn-info text-white me-2" routerLink="/mi-analisis"> <i class="bi bi-pie-chart-fill"></i> Ver Análisis de Biblioteca </button>
                     <button class="btn btn-primary px-4" (click)="activarEdicion()">Editar Perfil</button>
                 </div>
             </div>

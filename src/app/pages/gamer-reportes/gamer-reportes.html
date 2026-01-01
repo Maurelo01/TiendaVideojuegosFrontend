@@ -1,0 +1,79 @@
+<div class="container mt-4 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold text-primary"><i class="bi bi-pie-chart-fill"></i> Análisis de mi Biblioteca</h2>
+        <button class="btn btn-outline-secondary" routerLink="/mi-perfil">
+            <i class="bi bi-arrow-left"></i> Volver al Perfil
+        </button>
+    </div>
+
+    <div *ngIf="cargando" class="text-center py-5">
+        <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div *ngIf="!cargando && reporte" class="animate__animated animate__fadeIn">
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-dark text-white fw-bold">
+                        <i class="bi bi-heart-fill text-danger"></i> Categorías Favoritas
+                    </div>
+                    <div class="card-body">
+                        <div *ngFor="let cat of reporte.categoriasFavoritas" class="mb-3">
+                            <div class="d-flex justify-content-between small mb-1">
+                                <span>{{ cat.categoria }}</span>
+                                <span class="fw-bold">{{ cat.cantidad }} juegos</span>
+                            </div>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar bg-primary" role="progressbar"
+                                    [style.width.%]="(cat.cantidad * 10) + 10"> </div>
+                            </div>
+                        </div>
+                        <div *ngIf="reporte.categoriasFavoritas.length === 0" class="text-center text-muted py-4">
+                            No tienes suficientes juegos para analizar tus gustos.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-header bg-success text-white fw-bold">
+                        <i class="bi bi-people-fill"></i> Mi Opinión vs La Comunidad
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-striped mb-0 small">
+                            <thead>
+                                <tr>
+                                    <th>Juego</th>
+                                    <th class="text-center">Mi Nota</th>
+                                    <th class="text-center">Comunidad</th>
+                                    <th class="text-center">Diferencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of reporte.comparativaCalificaciones">
+                                    <td>{{ item.tituloJuego }}</td>
+                                    <td class="text-center fw-bold">{{ item.miCalificacion }}</td>
+                                    <td class="text-center">{{ item.promedioComunidad | number:'1.1-1' }}</td>
+                                    <td class="text-center">
+                                        <span class="badge"
+                                            [ngClass]="item.miCalificacion > item.promedioComunidad ? 'bg-success' : (item.miCalificacion < item.promedioComunidad ? 'bg-danger' : 'bg-secondary')">
+                                            {{ (item.miCalificacion - item.promedioComunidad) | number:'1.1-1' }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                <tr *ngIf="reporte.comparativaCalificaciones.length === 0">
+                                    <td colspan="4" class="text-center py-4 text-muted">
+                                        Aún no has calificado ningún juego.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
