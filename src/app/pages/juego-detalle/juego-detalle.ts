@@ -27,6 +27,7 @@ export class JuegoDetalleComponent implements OnInit
     idJuego: number = 0;
     usuarioActual: any = null;
     tieneElJuego: boolean = false;
+    esModerador: boolean = false;
 
     nuevoComentario: Comentario = { idGamer: 0, idJuego: 0, texto: '', calificacion: 5 };
     editandoComentarioId: number | null = null;
@@ -68,6 +69,7 @@ export class JuegoDetalleComponent implements OnInit
                     this.verificarPropiedad();
                 }
                 this.cargarComentarios();
+                this.verificarPermisosModeracion();
                 this.cargando = false;
             }
         );
@@ -80,6 +82,39 @@ export class JuegoDetalleComponent implements OnInit
                 lista => 
             {
                 this.tieneElJuego = lista.some(item => item.idJuego === this.idJuego);
+            }
+        );
+    }
+
+    verificarPermisosModeracion() 
+    {
+        if (this.usuarioActual && this.juego) 
+        {
+            if (this.usuarioActual.rol === 'ADMIN') 
+            {
+                this.esModerador = true;
+            } 
+            else if (this.usuarioActual.rol === 'EMPRESA' && this.usuarioActual.idEmpresa === this.juego.idEmpresa) 
+            {
+                this.esModerador = true;
+            }
+        }
+    }
+
+    herramientaModeracion(comentario: Comentario) 
+    {
+        if (!this.usuarioActual || !comentario.idComentario) return;
+        const nuevoEstado = !comentario.oculto;
+        const accion = nuevoEstado ? 'ocultar' : 'mostrar';
+        if (!confirm(`¿Deseas ${accion} el contenido de este comentario? Las estrellas seguirán visibles.`)) return;
+        this.comentariosService.moderarComentario(comentario.idComentario, this.usuarioActual.idUsuario, nuevoEstado).subscribe
+        (
+            {
+                next: () =>
+                {
+                    comentario.oculto = nuevoEstado;
+                },
+                error: (err) => alert('Error al moderar: ' + (err.error?.error || err.message))
             }
         );
     }

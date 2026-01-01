@@ -10,4 +10,5 @@ export interface Comentario
     fecha?: string;
     esMio?: boolean; 
     respuestas?: Comentario[];
+    oculto?: boolean;
 }
